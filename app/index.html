@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sos" class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Six Second Monks - Display</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="app.css">
+	</head>
+	<body>
+	
+	<div class="container-fluid">
+	
+		<div class="row">
+			<nav class="navbar navbar-default navbar-static-top">
+			  <div class="container">
+				  <div class="navbar-header">
+					  <a class="navbar-brand">Six Second Monks</a>
+				  </div>
+			  	<ul class="nav navbar-nav">
+<!-- 				  	<li><a href="#">Canvas Display</a></li> -->
+<!-- 				  	<li><a href="#settings">Setting</a></li> -->
+			  	</ul>
+			  </div>
+			</nav>
+		</div>
+		
+		<div class="row" ng-controller="CanvasCtrl">
+			<div class="col-md-6">
+				<canvas id="sos-canvas" ng-init="initCanvas()"></canvas>
+			</div>
+			<div class="col-md-6">
+				
+			<!-- canvas controls panel -->	
+			<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Canvas Controls</h3>
+			</div>
+			<div class="panel-body">
+				<div class="input-group">
+					  <span class="input-group-addon" id="canvas-width">Canvas Width</span>
+					  <input type="text" class="form-control" ng-model="canvasDim.width" aria-describedby="canvas-width">
+				</div>
+				<div class="input-group">
+					  <span class="input-group-addon" id="canvas-width">Canvas Height</span>
+					  <input type="text" class="form-control" ng-model="canvasDim.height" aria-describedby="canvas-width">
+				</div>
+			</div>
+			</div>
+			<!-- END: canvas control panel
+				
+			<!-- media panel -->	
+			<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Select Media</h3>
+			</div>
+			<div class="panel-body">
+				<div class="list-group">
+					<a href="#" class="list-group-item" ng-repeat="media in mediaList" ng-click="playMedia($index)">{{media.name}}</a>
+				</div>
+			<div>
+			</div>
+			<!-- END: media panel -->			
+			
+			<button class="btn" ng-click="clearStage()">Clear Stage</button>
+			
+			</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<video width="320" height="240" id="testvideo" src="media/small.mp4" type="video/mp4" autoplay loop></video>
+		</div>
+	
+	</div>
+	
+	<!-- In production use:
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+	-->
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-route/angular-route.js"></script>
+	<script src="bower_components/preloadjs/dist/preload.min.js"></script>
+	<script src="bower_components/easeljs/lib/easeljs-0.8.0.combined.js"></script>
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="app.js"></script>
+	<script src="canvas/canvas.js"></script>
+	<script src="components/version/version.js"></script>
+	<script src="components/version/version-directive.js"></script>
+	<script src="components/version/interpolate-filter.js"></script>
+</body>
+</html>
