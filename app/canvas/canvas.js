@@ -52,9 +52,9 @@ angular.module('sos.canvas', [])
 					console.log("done adding video");
 				}		
 			}},
-			{ name: "Get back to Twerk", fn: function() {
+			{ name: "Slow Clap", fn: function() {
 
-				var gif = new createjs.Bitmap("media/get-back-to-twerk.gif");
+				var gif = new createjs.Bitmap("media/citizen-kane-clapping.gif");
 				gif.image.onload = function() {
 					console.log("gif completely loaded.");
 					gif.scaleX = $scope.canvasDim.width / gif.getBounds().width;

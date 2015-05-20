@@ -11,9 +11,9 @@
     "angular-loader": "1.2.x",
     "angular-mocks": "~1.2.x",
     "html5-boilerplate": "~4.3.0",
-    "bootstrap": "~3.3.4",
     "easeljs": "~0.8.0",
-    "preloadjs": "*"
+    "preloadjs": "*",
+    "angular-bootstrap": "~0.13.0"
   },
   "devDependencies": {
     "bootstrap": "~3.3.4"
