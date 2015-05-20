@@ -1,3 +1,8 @@
+# Sanctuary of Self Display UI
+
+Content below is original content from angular-seed copy.  Might discard eventually.
+
+
 # angular-seed — the seed for AngularJS apps
 
 This project is an application skeleton for a typical [AngularJS](http://angularjs.org/) web app.
