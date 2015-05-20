@@ -38,9 +38,6 @@ angular.module('sos.canvas', [])
 				
 				var vidEl = document.createElement('video');
 				vidEl.src = "media/small.mp4";
-				vidEl.autoplay = true;
-				vidEl.loop = true;
-				vidEl.width = 560;
 
 				vidEl.oncanplaythrough = function() {
 
@@ -49,6 +46,7 @@ angular.module('sos.canvas', [])
 					video.scaleX = 2;
 					video.scaleY = 2;
 					$scope.stage.addChild(video);
+					vidEl.play();
 					console.log("done adding video");
 				}		
 			}},
