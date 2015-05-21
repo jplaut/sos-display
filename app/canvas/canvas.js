@@ -60,6 +60,21 @@ angular.module('sos.canvas', [])
 					$scope.stage.addChild(gif);
 					$scope.stage.update();
 				};
+			}},
+			{ name: "Spritesheet Slow Clap", fn: function() {
+				
+				var data = {
+				    images: ["media/spritesheet.png"],
+				    frames: {width:400, height:300},
+				    animations: {
+				        def: [0,6,"def"]
+				    }
+				};
+				var spriteSheet = new createjs.SpriteSheet(data);
+				var sprite = new createjs.Sprite(spriteSheet);
+				
+				sprite.gotoAndPlay("def");
+				$scope.stage.addChild(sprite);
 			}}
 		];
 		
