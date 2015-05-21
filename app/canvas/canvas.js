@@ -26,7 +26,7 @@ angular.module('sos.canvas', [])
 	
 	$scope.initCanvas = function() {
 		
-		console.log("Initializing canvas at div:", $scope.canvasID);
+		console.log("Initializing <CANVAS> with id:", $scope.canvasID);
 		
 		// create the media list
 			// available media 
@@ -34,31 +34,25 @@ angular.module('sos.canvas', [])
 			{ name: "Draw red circle", fn: $scope.drawRedCircle },
 			{ name: "Play movie.", fn: function() {
 				
-				console.log("playing video");
-				
 				var vidEl = document.createElement('video');
 				vidEl.src = "media/small.mp4";
 
 				vidEl.oncanplaythrough = function() {
 
 					var video = new createjs.Bitmap(vidEl);
-					console.log("video:", vidEl.width, vidEl.height, video.getBounds());
 					video.scaleX = 2;
 					video.scaleY = 2;
 					$scope.stage.addChild(video);
 					vidEl.play();
-					console.log("done adding video");
 				}		
 			}},
 			{ name: "Slow Clap", fn: function() {
 
 				var gif = new createjs.Bitmap("media/citizen-kane-clapping.gif");
 				gif.image.onload = function() {
-					console.log("gif completely loaded.");
 					gif.scaleX = $scope.canvasDim.width / gif.getBounds().width;
 					gif.scaleY = $scope.canvasDim.height / gif.getBounds().height;
 					$scope.stage.addChild(gif);
-					$scope.stage.update();
 				};
 			}},
 			{ name: "Spritesheet Slow Clap", fn: function() {
@@ -100,15 +94,17 @@ angular.module('sos.canvas', [])
 	}
 	
 	$scope.playMedia = function(index) {
-		console.log("play media");
+		
 		$scope.clearStage();
-		$scope.mediaList[index]['fn']()
+		
+		var media = $scope.mediaList[index];
+		console.log("Playing media:", media.name);
+		media['fn']()
 	}
 	
 	$scope.clearStage = function() {
-		console.log("clearing stage");
+		console.log("Clearing stage...");
 		$scope.stage.removeAllChildren();
-		$scope.stage.update();
 	}
 	
 	$scope.setCanvasSize = function(width, height, doUpdate) {
