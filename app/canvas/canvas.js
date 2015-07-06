@@ -6,15 +6,33 @@ angular.module('sos.canvas', [])
 	$scope.stage = null;
 	$scope.canvasID = "sos-canvas";
 	$scope.canvasDim = {
-		width: 600,
-		height: 600
+		width: 192,
+		height: 320
 	};
 	$scope.canvasPos = {
 		x: 10,
 		y: 10
 	};
 	
+	$scope.devProdToggle = true;
+	
 	$scope.mediaList = [];
+	
+	$scope.$watch('devProdToggle', function(newState) {
+		
+		// prepare for rotation
+		$scope.canvasDim = { width: $scope.canvasDim.height, height: $scope.canvasDim.width };
+		
+		if(newState) {
+			// if newState is true, dev mode is enabled
+			console.log("DEV MODE");
+			$scope.stage.setTransform(0, 0, 1, 1, 0);
+		} else {
+			console.log("PROD MODE");
+			$scope.stage.setTransform(192, 0, 1, 1, 90);
+		}
+				
+	}, true);
 	
 	$scope.$watch('canvasDim', function(newDim) {
 		$scope.setCanvasSize(newDim.width, newDim.height, true);
@@ -77,7 +95,7 @@ angular.module('sos.canvas', [])
 	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, false);
 
 	    // set up the ticker
-	    createjs.Ticker.setFPS(30);
+	    createjs.Ticker.setFPS(20);
 	    createjs.Ticker.addEventListener('tick', function() {
 		   $scope.stage.update(); 
 	    });
