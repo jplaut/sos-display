@@ -3,6 +3,11 @@
 angular.module('sos.canvas', [])
 .controller('CanvasCtrl', ['$scope', function($scope) {
 	
+	$scope.wallDisplay = {
+		width: 192,
+		height: 320
+	}
+	
 	$scope.stage = null;
 	$scope.canvasID = "sos-canvas";
 	$scope.canvasDim = {
@@ -14,22 +19,21 @@ angular.module('sos.canvas', [])
 		y: 10
 	};
 	
-	$scope.devProdToggle = true;
+	$scope.isWallDisplayMode = false;
 	
 	$scope.mediaList = [];
 	
-	$scope.$watch('devProdToggle', function(newState) {
+	$scope.$watch('isWallDisplayMode', function(newMode) {
 		
-		// prepare for rotation
-		$scope.canvasDim = { width: $scope.canvasDim.height, height: $scope.canvasDim.width };
-		
-		if(newState) {
-			// if newState is true, dev mode is enabled
+		if(!newMode) {
+			// if newMode is true, dev mode is enabled
 			console.log("DEV MODE");
-			$scope.stage.setTransform(0, 0, 1, 1, 0);
+			$scope.canvasDim = { width: $scope.wallDisplay.width*2, height: $scope.wallDisplay.height*2 };
+			$scope.stage.setTransform(0, 0, 2, 2, 0);
 		} else {
-			console.log("PROD MODE");
-			$scope.stage.setTransform(192, 0, 1, 1, 90);
+			console.log("PROD (WALL) MODE");
+			$scope.canvasDim = { width: $scope.wallDisplay.height, height: $scope.wallDisplay.width };
+			$scope.stage.setTransform(0, 192, 1, 1, -90);
 		}
 				
 	}, true);
@@ -49,7 +53,7 @@ angular.module('sos.canvas', [])
 		// create the media list
 			// available media 
 		$scope.mediaList = [
-			{ name: "Draw red circle", fn: $scope.drawRedCircle },
+			{ name: "Draw Geometrical Shapes", fn: $scope.drawGeometricalShapes },
 			{ name: "Play movie.", fn: function() {
 				
 				var vidEl = document.createElement('video');
@@ -58,8 +62,8 @@ angular.module('sos.canvas', [])
 				vidEl.oncanplaythrough = function() {
 
 					var video = new createjs.Bitmap(vidEl);
-					video.scaleX = 2;
-					video.scaleY = 2;
+					video.scaleX = 1;
+					video.scaleY = 1;
 					$scope.stage.addChild(video);
 					vidEl.play();
 				}		
@@ -99,16 +103,20 @@ angular.module('sos.canvas', [])
 	    createjs.Ticker.addEventListener('tick', function() {
 		   $scope.stage.update(); 
 	    });
+	    
+	    $scope.playMedia(0);
 	}
 	
-	$scope.drawRedCircle = function() {
+	$scope.drawGeometricalShapes = function() {
 	    //Create a Shape DisplayObject.
 	    var circle = new createjs.Shape();
-	    circle.graphics.beginFill("red").drawCircle(0, 0, 40);
-	    //Set position of Shape instance.
-	    circle.x = circle.y = 50;
+	    circle.graphics.beginFill("red").drawCircle(50, 50, 40);
 	    //Add Shape instance to stage display list.
 	    $scope.stage.addChild(circle);		
+	    
+	    var box = new createjs.Shape();
+	    box.graphics.beginFill("blue").drawRect(10, 70, 5, 240)
+	    $scope.stage.addChild(box);
 	}
 	
 	$scope.playMedia = function(index) {
