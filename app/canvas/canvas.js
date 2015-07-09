@@ -46,6 +46,14 @@ angular.module('sos.canvas', [])
 		console.log("Registered error:", err);
 	});
 	
+	$scope.getWidthScaleFactor = function(origWidth) {
+		return $scope.wallDisplay.width / origWidth;
+	}
+	
+	$scope.getHeightScaleFactor = function(origHeight) {
+		return $scope.wallDisplay.height / origHeight;
+	}
+	
 	$scope.initCanvas = function() {
 		
 		console.log("Initializing <CANVAS> with id:", $scope.canvasID);
@@ -62,8 +70,15 @@ angular.module('sos.canvas', [])
 				vidEl.oncanplaythrough = function() {
 
 					var video = new createjs.Bitmap(vidEl);
-					video.scaleX = 1;
-					video.scaleY = 1;
+					
+					console.log(video);
+					
+					// figure out scale
+// 					var bounds = video.nominalBounds;
+					console.log("video width and height is: ", video.image.videoWidth, video.image.videoHeight);
+					
+					video.scaleX = $scope.getWidthScaleFactor(video.image.videoWidth);
+					video.scaleY = $scope.getHeightScaleFactor(video.image.videoHeight);
 					$scope.stage.addChild(video);
 					vidEl.play();
 				}		
@@ -72,16 +87,19 @@ angular.module('sos.canvas', [])
 
 				var gif = new createjs.Bitmap("media/citizen-kane-clapping.gif");
 				gif.image.onload = function() {
-					gif.scaleX = $scope.canvasDim.width / gif.getBounds().width;
-					gif.scaleY = $scope.canvasDim.height / gif.getBounds().height;
+					gif.scaleX = $scope.getWidthScaleFactor(gif.getBounds().width);
+					gif.scaleY = $scope.getHeightScaleFactor(gif.getBounds().height);
 					$scope.stage.addChild(gif);
 				};
 			}},
 			{ name: "Spritesheet Slow Clap", fn: function() {
-				
+								
+				var spriteWidth = 400;
+				var spriteHeight = 300;				
+								
 				var data = {
 				    images: ["media/spritesheet.png"],
-				    frames: {width:400, height:300},
+				    frames: {width: spriteWidth, height: spriteHeight},
 				    animations: {
 				        def: [0,6,"def"]
 				    }
@@ -89,7 +107,10 @@ angular.module('sos.canvas', [])
 				var spriteSheet = new createjs.SpriteSheet(data);
 				var sprite = new createjs.Sprite(spriteSheet);
 				
+				sprite.setTransform(0, 0, $scope.getWidthScaleFactor(spriteWidth), $scope.getHeightScaleFactor(spriteHeight));
+				
 				sprite.gotoAndPlay("def");
+				
 				$scope.stage.addChild(sprite);
 			}}
 		];
