@@ -28,8 +28,8 @@ angular.module('sos.canvas', [])
 		if(!newMode) {
 			// if newMode is true, dev mode is enabled
 			console.log("DEV MODE");
-			$scope.canvasDim = { width: $scope.wallDisplay.width*2, height: $scope.wallDisplay.height*2 };
-			$scope.stage.setTransform(0, 0, 2, 2, 0);
+			$scope.canvasDim = { width: $scope.wallDisplay.width, height: $scope.wallDisplay.height };
+			$scope.stage.setTransform(0, 0, 1, 1, 0);
 		} else {
 			console.log("PROD (WALL) MODE");
 			$scope.canvasDim = { width: $scope.wallDisplay.height, height: $scope.wallDisplay.width };
