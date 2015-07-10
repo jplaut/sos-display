@@ -3,19 +3,19 @@
 ### Installation Steps
 
 1. `git clone https://github.com/timkettering/sos-display.git` to the directory of your choice.
-1. cd into cloned project
+1. `cd` into cloned project
 1. `npm install` to pull down deps
 1. `npm start` to run instance. (usually at `http://localhost:8000`, but see console output)
 
 ### Development / Production Rotation Toggle
 
-The toggle rotates the `<canvas>` 90-degrees for correct display when used in production with the LED wall.  
+The toggle rotates the `<canvas>` 90-degrees for correct display when used in production with the LED wall.
 
-When programming with coordinates, assume that 0,0 on X,Y axis are at top left corner of a 192x320 rectangle.  X/Y does not change when the rotation is applied (it is now at bottom left corner with X going up vertically, and Y going horizionally).  But rather than concern yourself with rotation nuances, just don't worry about production mode.  If you code for dev, it'll work in prod orientation.
+When programming with coordinates, assume that 0,0 on X,Y axis are at top left corner of a 192x320 rectangle.  X/Y does not change when the rotation is applied (it is now at bottom left corner with X going up vertically, and Y going horizontally).  But rather than concern yourself with rotation nuances, just don't worry about production mode.  If you code for dev, it'll work in prod orientation.
 
-### LED Wall Technical Details.
+### LED Wall Technical Details
 
-LED wall is composed of (30) 64x32 LED matrices.  They are laid out long-side going vertical.  So there are (6) panels horiziontal and (5) panels vertical.  There are 61,440 individual LEDs.  
+LED wall is composed of (30) 64x32 LED matrices.  They are laid out long-side going vertical.  So there are (6) panels horizontal and (5) panels vertical.  There are 61,440 individual LEDs.
 
 Full RGB color.  When plugged in to a computer via HDMI, it will not display the entire screen, but rather it will display a 320x192 sub-section of the HDMI output.
 
@@ -32,6 +32,33 @@ So on the source display for the HDMI, it is capturing a 320x192 section, and th
 * Linsn Hardware controller with HDMI input.
 
 * With an estimated max draw of 36W per panel, the entire display in theory would draw at most 1080 watts when displaying full-white at 100% brightness.  (Add in Kill-a-Watt analysis after Saturday)
+
+### Kinect and Processing.js
+
+[processing.js](http://processingjs.org/) support exists for the Kinect. A [Kinect Server](https://github.com/cantsin/KinectServer) is required (during hack day, this server will be running continuously).
+
+A `KinectData` object is provided in Processing scripts. You may call
+
+  KinectData.initialize()
+
+to initialize communication with the Kinect and start receiving data. (For obvious reasons, it is strongly suggested to call this function once in `void setup()`.)
+
+Currently, the Javascript backend is set up to track only one primary user at a time (due to the original SDK Javascript code). Multiple people are not supported (but we can add this functionality if people wish).
+
+There are four main streams of Kinect information:
+
+- User viewer. This is a [PImage](http://processingjs.org/reference/PImage/) that shows the primary user sans background. It is 192x320 so please develop in `prod` mode.
+- Silhouette viewer. A PImage that contains one layer of depth information for the primary user. 192x320 ditto.
+- Skeleton data.
+  - `position`: {x: float, y: float, z: float}.
+  - `joints`: Array[20] of {position: {x: float, y: float, z: float}, and `jointType`}.
+  - `boneOrientations`: Array[20] of { `endJoint`: int, `startJoint`: int, `hierarchicalRotation`: (matrixes, quaternions), and `absoluteRotation`: (matrixes, quaternions) }.
+  - The rest (`trackingState`, `trackingId`, `clippedEdges`, etc) can be safely ignored.
+- “Cursor” data. This is simply a convenient structure which tracks the primary user’s left or right hand (depending on visibility).
+
+To show the `PImage` data, a function like `image()` can be used.
+
+Several processing examples may get you started.
 
 ### angular-seed — the seed for AngularJS apps
 

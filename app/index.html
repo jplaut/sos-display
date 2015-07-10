@@ -11,9 +11,9 @@
 		<link rel="stylesheet" href="app.css">
 	</head>
 	<body>
-	
+
 	<div class="container-fluid">
-	
+
 		<div class="row">
 			<nav class="navbar navbar-default navbar-static-top">
 			  <div class="container">
@@ -27,14 +27,14 @@
 			  </div>
 			</nav>
 		</div>
-		
+
 		<div class="row" ng-controller="CanvasCtrl">
 			<div class="col-md-6">
 				<canvas id="sos-canvas" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }' ng-init="initCanvas()"></canvas>
 			</div>
 			<div class="col-md-6">
-				
-				<!-- media panel -->	
+
+				<!-- media panel -->
 				<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">Select Media</h3>
@@ -46,15 +46,15 @@
 					<button class="btn" ng-click="clearStage()">Clear Stage</button>
 				</div>
 				</div>
-				<!-- END: media panel -->			
-				
-				<!-- canvas controls panel -->	
+				<!-- END: media panel -->
+
+				<!-- canvas controls panel -->
 				<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">Canvas Controls</h3>
 				</div>
 				<div class="panel-body">
-					
+
 					<div class="btn-group" data-toggle="buttons">
 					  <label class="btn" ng-class="devModeInputGroupClass">
 					    <input type="radio" name="display-rotate" id="dev-mode" ng-model="wallDisplayMode" value="DEV" autocomplete="off">Development Mode
@@ -63,7 +63,7 @@
 					    <input type="radio" name="display-rotate" id="prod-mode" ng-model="wallDisplayMode" value="PROD" autocomplete="off" checked="checked">LED Display Mode (rotated)</label>
 					  </label>
 					</div>
-					
+
 					<div ng-if="wallDisplayMode == 'DEV'">
 						<h4>Currently in DEV mode.</h4>
 						<p>The canvas element on your left is displaying in the same manner that it would appear on the LED wall.</p>
@@ -72,7 +72,7 @@
 						<h4>Currently in Wall Display (PROD) mode.</h4>
 						<p>The canvas element on your left is rotated -90 degrees, so it will appear correctly on the LED wall.</p>
 					</div>
-					
+
 					<h4>Add offset to CANVAS position</h4>
 					<form class="form-inline">
 					  <div class="form-group">
@@ -84,17 +84,17 @@
 					    <input type="text" class="form-control" id="yOffset" ng-model="offsetStyle.top">
 					  </div>
 					</form>
-					
-					
+
+
 				</div>
 				</div>
 				<!-- END: canvas control panel -->
-			
+
 			</div>
 		</div>
-	
+
 	</div>
-	
+
 	<!-- In production use:
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
 	-->
@@ -109,5 +109,10 @@
 	<script src="components/version/version.js"></script>
 	<script src="components/version/version-directive.js"></script>
 	<script src="components/version/interpolate-filter.js"></script>
+        <!-- kinect specific -->
+        <script src="javascript/jquery-1.9.1.min.js"></script>
+        <script src="javascript/processing-1.4.8.js"></script>
+        <script src="javascript/Kinect-1.8.0.js"></script>
+        <script src="javascript/processing-kinect.js"></script>
 </body>
 </html>
