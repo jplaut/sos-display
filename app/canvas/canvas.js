@@ -14,24 +14,30 @@ angular.module('sos.canvas', [])
 		width: 192,
 		height: 320
 	};
-	$scope.canvasPos = {
-		x: 10,
-		y: 10
+	$scope.offsetStyle = {
+		left: 20,
+		top: 0,
 	};
 	
-	$scope.isWallDisplayMode = false;
+	$scope.wallDisplayMode = "DEV";
+	$scope.devModeInputGroupClass = "btn-primary active";
+	$scope.prodModeInputGroupClass = "btn-primary"
 	
 	$scope.mediaList = [];
 	
-	$scope.$watch('isWallDisplayMode', function(newMode) {
+	$scope.$watch('wallDisplayMode', function(newMode) {
 		
-		if(!newMode) {
+		if(newMode == "DEV") {
 			// if newMode is true, dev mode is enabled
 			console.log("DEV MODE");
+			$scope.devModeInputGroupClass = "btn-primary active";
+			$scope.prodModeInputGroupClass = "btn-default";
 			$scope.canvasDim = { width: $scope.wallDisplay.width, height: $scope.wallDisplay.height };
 			$scope.stage.setTransform(0, 0, 1, 1, 0);
 		} else {
 			console.log("PROD (WALL) MODE");
+			$scope.devModeInputGroupClass = "btn-default";
+			$scope.prodModeInputGroupClass = "btn-primary active";
 			$scope.canvasDim = { width: $scope.wallDisplay.height, height: $scope.wallDisplay.width };
 			$scope.stage.setTransform(0, 192, 1, 1, -90);
 		}
@@ -83,9 +89,9 @@ angular.module('sos.canvas', [])
 					vidEl.play();
 				}		
 			}},
-			{ name: "Slow Clap", fn: function() {
+			{ name: "Image", fn: function() {
 
-				var gif = new createjs.Bitmap("media/citizen-kane-clapping.gif");
+				var gif = new createjs.Bitmap("media/winter-is-coming.jpg");
 				gif.image.onload = function() {
 					gif.scaleX = $scope.getWidthScaleFactor(gif.getBounds().width);
 					gif.scaleY = $scope.getHeightScaleFactor(gif.getBounds().height);
