@@ -1,0 +1,3 @@
+[submodule "app/media/soundfonts"]
+	path = app/media/soundfonts
+	url = https://github.com/gleitz/midi-js-soundfonts

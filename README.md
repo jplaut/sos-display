@@ -2,6 +2,9 @@
 
 ### Installation Steps
 
+Install and run the midi2funk server first.
+https://github.com/Iteratix/midi2funk 
+
 1. `git clone https://github.com/timkettering/sos-display.git` to the directory of your choice.
 1. `cd` into cloned project
 1. `npm install` to pull down deps
