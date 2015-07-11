@@ -15,7 +15,7 @@ angular.module('sos.canvas', [])
 		height: 320
 	};
 	$scope.offsetStyle = {
-		left: 20,
+		left: 15,
 		top: 0,
 	};
 

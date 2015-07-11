@@ -40,5 +40,5 @@
 
 .rotate {
 	transform-origin: 0 0;
-	transform: translateY(192px) rotate(-90deg);
+	transform: translateX(320px) rotate(90deg);
 }
