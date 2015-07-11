@@ -20,6 +20,7 @@ angular.module('sos.canvas', [])
 	};
 
 	$scope.wallDisplayMode = "DEV";
+	$scope.rotateForProduction = false;
 	$scope.devModeInputGroupClass = "btn-primary active";
 	$scope.prodModeInputGroupClass = "btn-primary"
 
@@ -32,14 +33,12 @@ angular.module('sos.canvas', [])
 			console.log("DEV MODE");
 			$scope.devModeInputGroupClass = "btn-primary active";
 			$scope.prodModeInputGroupClass = "btn-default";
-			$scope.canvasDim = { width: $scope.wallDisplay.width, height: $scope.wallDisplay.height };
-			$scope.stage.setTransform(0, 0, 1, 1, 0);
+			$scope.rotateForProduction = false;
 		} else {
 			console.log("PROD (WALL) MODE");
 			$scope.devModeInputGroupClass = "btn-default";
 			$scope.prodModeInputGroupClass = "btn-primary active";
-			$scope.canvasDim = { width: $scope.wallDisplay.height, height: $scope.wallDisplay.width };
-			$scope.stage.setTransform(0, 192, 1, 1, -90);
+			$scope.rotateForProduction = true;
 		}
 
 	}, true);
@@ -186,37 +185,6 @@ angular.module('sos.canvas', [])
 	}
 
 	$scope.setCanvasSize = function(width, height, doUpdate) {
-		// browser viewport size
-/*
-		var w = window.innerWidth;
-		var h = window.innerHeight;
-
-		// stage dimensions
-		var ow = 640; // your stage width
-		var oh = 480; // your stage height
-
-		if (keepAspectRatio)
-		{
-		    // keep aspect ratio
-		    var scale = Math.min(w / ow, h / oh);
-		    stage.scaleX = scale;
-		    stage.scaleY = scale;
-
-		   // adjust canvas size
-		   stage.canvas.width = ow * scale;
-		  stage.canvas.height = oh * scale;
-		}
-		else
-		{
-		    // scale to exact fit
-		    stage.scaleX = w / ow;
-		    stage.scaleY = h / oh;
-
-		    // adjust canvas size
-		    stage.canvas.width = ow * stage.scaleX;
-		    stage.canvas.height = oh * stage.scaleY;
-		   }
-*/
 
 		$scope.stage.canvas.width = width;
 		$scope.stage.canvas.height = height;

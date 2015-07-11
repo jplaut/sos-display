@@ -30,7 +30,7 @@
 
 		<div class="row" ng-controller="CanvasCtrl">
 			<div class="col-md-6">
-				<canvas id="sos-canvas" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }' ng-init="initCanvas()"></canvas>
+				<canvas id="sos-canvas" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }' ng-init="initCanvas()"></canvas>
 			</div>
 			<div class="col-md-6">
 
