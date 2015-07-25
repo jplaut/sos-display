@@ -63,14 +63,6 @@ angular.module('sos.canvas', [])
 
 		console.log("Initializing <CANVAS> with id:", $scope.canvasID);
 
-                // create canvas buffers (PImages) for incoming Kinect data. this
-                // must be done before KinectData.initialize is called, so we set up
-                // the PImages as early as possible.
-		console.log("Initializing PImages for processing.js:", $scope.canvasID);
-                var p = new Processing();
-                KinectData.silhouette = new p.PImage(KinectData.width, KinectData.height, p.PConstants.RGBA);
-                KinectData.userViewer = new p.PImage(KinectData.width, KinectData.height, p.PConstants.RGBA);
-
 		// create the media list
 			// available media
 		$scope.mediaList = [
@@ -127,16 +119,6 @@ angular.module('sos.canvas', [])
 
 				$scope.stage.addChild(sprite);
 			}},
-                        { name: "Processing-JS Example", fn: function() {
-                                var req = new XMLHttpRequest();
-                                req.overrideMimeType("text/plain");
-                                req.open("GET", "sketches/sample.pde");
-                                req.onload = function() {
-                                        $scope.kinect = new Processing($scope.canvasID, this.response);;
-                                };
-                                req.error = function() {};
-                                req.send();
-                        }},
 		];
 
 		 //Create a stage by getting a reference to the canvas
@@ -146,9 +128,6 @@ angular.module('sos.canvas', [])
 	    // set up the ticker
 	    createjs.Ticker.setFPS(20);
 	    createjs.Ticker.addEventListener('tick', function() {
-                   // processing and easeljs uneasily co-exist with
-                   // each other, so don't destroy their illusions.
-                   if($scope.kinect) { return; }
 		   $scope.stage.update();
 	    });
 
@@ -166,7 +145,7 @@ angular.module('sos.canvas', [])
 	    box.graphics.beginFill("blue").drawRect(10, 70, 5, 240)
 	    $scope.stage.addChild(box);
 	}
-	
+
 	$scope.midiKeyboard = function() {
 
 		MIDI.loadPlugin({
@@ -198,16 +177,12 @@ angular.module('sos.canvas', [])
     //Set position of Shape instance.
     circle.x = circle.y = 50;
     //Add Shape instance to stage display list.
-    $scope.stage.addChild(circle);		
+    $scope.stage.addChild(circle);
 	}
 
 	$scope.playMedia = function(index) {
 
 		$scope.clearStage();
-                if($scope.kinect) {
-                        $scope.kinect.exit();
-                        $scope.kinect = null;
-                }
 
 		var media = $scope.mediaList[index];
 		console.log("Playing media:", media.name);
