@@ -1,3 +1,38 @@
+'use strict';
+
+var mode = angular.module('sos.modes.skeletalFun', []);
+
+mode.factory('modeSkeletalFun', function($log) {
+	
+	var mode = {};
+	mode.id = 'modeSkeletalFun';
+	mode.title = "Sample Skeletal Tracking";
+	
+	mode.init = function($scope) {
+		// init method
+		$log.info("init:", mode.id);
+	}
+	
+	mode.update = function($scope) {
+
+/*
+		var gif = new createjs.Bitmap("media/winter-is-coming.jpg");
+		gif.image.onload = function() {
+			gif.scaleX = $scope.getWidthScaleFactor(gif.getBounds().width);
+			gif.scaleY = $scope.getHeightScaleFactor(gif.getBounds().height);
+			$scope.stage.addChild(gif);
+		};	
+*/
+	}
+	
+	mode.deinit = function($scope) {
+		// do clean up
+		$log.info("deinit:", mode.id);
+	}
+	
+	return mode;
+});
+
 /*
 	$scope.createProton = function() {
 		proton = new Proton;
@@ -27,6 +62,7 @@
 	}
 */
 
+/*
 	$scope.createProton = function(image) {
 		proton = new Proton;
 		emitter = new Proton.Emitter();
@@ -92,7 +128,6 @@
 		renderer.start();
 		renderer.blendFunc("SRC_ALPHA", "ONE");
 	}
-*/
 
 	$scope.k2SkeletalTracking = function() {
 		console.log("Initializing k2 skeletal tracking");
@@ -140,7 +175,6 @@
 		socket.on('bodyFrame', function(bodies){
 
 			var body = bodies[1];
-/*
 			// if you wish to view all dots all joints
 			$scope.stage.removeAllChildren();
 			angular.forEach(body.joints, function(joint) {
@@ -148,7 +182,6 @@
 				jointDot.graphics.beginFill("red").drawCircle(joint.x,joint.y,4);
 				$scope.stage.addChild(jointDot);
 			});
-*/
 
 		    leftHand.x = body.joints["HandLeft"].x;
 		    leftHand.y = body.joints["HandLeft"].y;
@@ -209,3 +242,4 @@
 		    });
 		});
 	}
+*/

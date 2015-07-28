@@ -11,10 +11,8 @@ mode.factory('modeSlowClap', function($log) {
 	
 	mode.init = function($scope) {
 		// init method
-		$log.info("Init: ", mode.id);
-	}
-	
-	mode.run = function($scope) {
+		$log.info("init:", mode.id);
+
 		var spriteWidth = 400;
 		var spriteHeight = 300;
 
@@ -33,12 +31,17 @@ mode.factory('modeSlowClap', function($log) {
 		sprite.gotoAndPlay("def");
 
 		$scope.stage = new createjs.Stage($scope.canvasID);
-		$scope.stage.addChild(sprite);		
+		$scope.stage.addChild(sprite);	
 	}
 	
-	mode.end = function($scope) {
+	mode.update = function($scope) {
+		// not required
+		$log.log("update");
+	}
+	
+	mode.deinit = function($scope) {
 		// do clean up
-		$log.info("end called.");
+		$log.info("deinit:", mode.id);
 	}
 	
 	return mode;

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sos.canvas', [])
-.controller('CanvasCtrl', ['$scope', '$log', 'modeSlowClap', 'modeSampleImage', function($scope, $log, modeSlowClap, modeSampleImage) {
+.controller('CanvasCtrl', ['$scope', '$log', 'modeSlowClap', 'modeSampleImage', 'modeSkeletalFun', function($scope, $log, modeSlowClap, modeSampleImage, modeSkeletalFun) {
 
 	$scope.wallDisplay = {
 		width: 192,
@@ -19,6 +19,7 @@ angular.module('sos.canvas', [])
 		top: 0,
 	};
 
+	$scope.activeMode = null;
 	$scope.wallDisplayMode = "DEV";
 	$scope.rotateForProduction = false;
 	$scope.devModeInputGroupClass = "btn-primary active";
@@ -67,6 +68,7 @@ angular.module('sos.canvas', [])
 			// available media
 		$scope.modeList = [
 			{ name: "Image", fn: modeSampleImage },
+			{ name: "Skeletal Fun", fn: modeSkeletalFun },
 			{ name: "Spritesheet Slow Clap", fn: modeSlowClap }
 		];
 
@@ -78,6 +80,7 @@ angular.module('sos.canvas', [])
 	    createjs.Ticker.setFPS(20);
 	    createjs.Ticker.addEventListener('tick', function() {
 // 			proton.update();
+			$scope.activeMode.update();
 			$scope.stage.update();
 	    });
 
@@ -86,11 +89,16 @@ angular.module('sos.canvas', [])
 
 	$scope.showMode = function(index) {
 
+		if($scope.activeMode) {
+			$scope.activeMode.deinit();	
+		}
+
+		// clear stage
 		$scope.clearStage();
 
-		var media = $scope.modeList[index];
-		$log.log("Playing media:", media.title);
-		media['fn'].run($scope)
+		var mode = $scope.modeList[index].fn;
+		mode.init($scope);
+		$scope.activeMode = mode;
 	}
 
 	$scope.clearStage = function() {

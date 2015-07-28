@@ -5,13 +5,12 @@ var mode = angular.module('sos.modes.sampleImage', []);
 mode.factory('modeSampleImage', function($log) {
 	
 	var mode = {};
+	mode.id = "modeSampleImage";
+	mode.title = "Sample Image";	
 	
 	mode.init = function($scope) {
 		// init method
-		$log.info("mode init called.");
-	}
-	
-	mode.run = function($scope) {
+		$log.info("init: ", mode.id);
 
 		var gif = new createjs.Bitmap("media/winter-is-coming.jpg");
 		gif.image.onload = function() {
@@ -21,9 +20,13 @@ mode.factory('modeSampleImage', function($log) {
 		};	
 	}
 	
-	mode.end = function($scope) {
+	mode.update = function($scope) {
+		// no updates needed for image
+	}
+	
+	mode.deinit = function($scope) {
 		// do clean up
-		$log.info("end called.");
+		$log.info("deinit:", mode.id);
 	}
 	
 	return mode;
