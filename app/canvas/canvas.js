@@ -335,7 +335,7 @@ angular.module('sos.canvas', [])
 	    box.graphics.beginFill("blue").drawRect(10, 70, 5, 240)
 	    $scope.stage.addChild(box);
 	}
-	
+
 	$scope.midiKeyboard = function() {
 
 		MIDI.loadPlugin({
@@ -367,7 +367,7 @@ angular.module('sos.canvas', [])
     //Set position of Shape instance.
     circle.x = circle.y = 50;
     //Add Shape instance to stage display list.
-    $scope.stage.addChild(circle);		
+    $scope.stage.addChild(circle);
 	}
 
 	$scope.showMode = function(index) {
