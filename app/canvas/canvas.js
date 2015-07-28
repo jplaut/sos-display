@@ -1,19 +1,8 @@
 'use strict';
 
 angular.module('sos.canvas', [])
-    .controller('CanvasCtrl',
-                ['$scope', '$log',
-                 'modeSlowClap',
-                 'modeSampleImage',
-                 'modeSkeletalFun',
-                 'modeMIDI',
-                 'modeKinectWebcam',
-                 function($scope, $log,
-                          modeSlowClap,
-                          modeSampleImage,
-                          modeSkeletalFun,
-                          modeMIDI,
-                          modeKinectWebcam) {
+    .controller('CanvasCtrl', ['$scope', '$log', '$injector',
+                 function($scope, $log, $injector) {
 
 	$scope.wallDisplay = {
 		width: 192,
@@ -79,11 +68,11 @@ angular.module('sos.canvas', [])
 		// create the media list
 			// available media
 		$scope.modeList = [
-			{ name: "Image", fn: modeSampleImage },
-			{ name: "Skeletal Fun", fn: modeSkeletalFun },
-			{ name: "Spritesheet Slow Clap", fn: modeSlowClap },
-		        { name: "MIDI Mode", fn: modeMIDI },
-			{ name: "Kinect Webcam", fn: modeKinectWebcam }
+			{ name: "Image", modeName: 'modeSampleImage' },
+			{ name: "Skeletal Fun", modeName: 'modeSkeletalFun', },
+			{ name: "Spritesheet Slow Clap", modeName: 'modeSlowClap' },
+		    { name: "MIDI Mode", modeName: 'modeMIDI' },
+			{ name: "Kinect Webcam", modeName: 'modeKinectWebcam' }
 		];
 
 		 //Create a stage by getting a reference to the canvas
@@ -93,7 +82,6 @@ angular.module('sos.canvas', [])
 	    // set up the ticker
 	    createjs.Ticker.setFPS(20);
 	    createjs.Ticker.addEventListener('tick', function() {
-// 			proton.update();
 			$scope.activeMode.update();
 			$scope.stage.update();
 	    });
@@ -111,7 +99,8 @@ angular.module('sos.canvas', [])
 		// clear stage
 		$scope.clearStage();
 
-		var mode = $scope.modeList[index].fn;
+		var modeName = $scope.modeList[index].modeName;
+		var mode = $injector.get(modeName);
 		$log.info("init:", mode.id);
 		mode.init($scope);
 		$scope.activeMode = mode;
