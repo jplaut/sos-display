@@ -1,0 +1,17 @@
+{
+  "name": "k2json-playback",
+  "version": "0.0.0",
+  "description": "plays back JSON files to faciliate kinect js dev",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tim Kettering <tim@blackcore.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "~4.9.5",
+    "json-file": "^0.1.0",
+    "lodash": "^3.10.0",
+    "socket.io": "~1.1.0"
+  }
+}
