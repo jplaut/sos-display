@@ -5,11 +5,13 @@ var mode = angular.module('sos.modes.kinectWebcam', []);
 mode.factory('modeKinectWebcam', function($log) {
 
     var mode = {};
-    var thread = new Worker("canvas/colorWorker.js");
-    var socket = io.connect('http://localhost:8008');
+    var thread = undefined;
+    var socket = undefined;
     var colorProcessing = false;
 
     mode.init = function($scope) {
+        thread = new Worker("canvas/colorWorker.js");
+        socket = io.connect('http://localhost:8008');
 	$log.info("modeKinectWebcam init called.");
         var context = $scope.stage.canvas.getContext('2d');
         thread.addEventListener("message", function (event) {
