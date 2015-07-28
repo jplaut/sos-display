@@ -1,7 +1,19 @@
 'use strict';
 
 angular.module('sos.canvas', [])
-.controller('CanvasCtrl', ['$scope', '$log', 'modeSlowClap', 'modeSampleImage', 'modeSkeletalFun', 'modeMIDI', function($scope, $log, modeSlowClap, modeSampleImage, modeSkeletalFun, modeMIDI) {
+    .controller('CanvasCtrl',
+                ['$scope', '$log',
+                 'modeSlowClap',
+                 'modeSampleImage',
+                 'modeSkeletalFun',
+                 'modeMIDI',
+                 'modeKinectWebcam',
+                 function($scope, $log,
+                          modeSlowClap,
+                          modeSampleImage,
+                          modeSkeletalFun,
+                          modeMIDI,
+                          modeKinectWebcam) {
 
 	$scope.wallDisplay = {
 		width: 192,
@@ -70,7 +82,8 @@ angular.module('sos.canvas', [])
 			{ name: "Image", fn: modeSampleImage },
 			{ name: "Skeletal Fun", fn: modeSkeletalFun },
 			{ name: "Spritesheet Slow Clap", fn: modeSlowClap },
-			{ name: "MIDI Mode", fn: modeMIDI }
+		        { name: "MIDI Mode", fn: modeMIDI },
+			{ name: "Kinect Webcam", fn: modeKinectWebcam }
 		];
 
 		 //Create a stage by getting a reference to the canvas
@@ -92,7 +105,7 @@ angular.module('sos.canvas', [])
 
 		if($scope.activeMode) {
 			$log.info("deinit:", $scope.activeMode.id);
-			$scope.activeMode.deinit();	
+			$scope.activeMode.deinit();
 		}
 
 		// clear stage

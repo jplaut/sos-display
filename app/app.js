@@ -6,5 +6,6 @@ angular.module('sos', [
   'sos.modes.slowClap',
   'sos.modes.sampleImage',
   'sos.modes.skeletalFun',
-  'sos.modes.midi'
+  'sos.modes.midi',
+  'sos.modes.kinectWebcam'
 ])

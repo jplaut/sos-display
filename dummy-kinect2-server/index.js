@@ -11,13 +11,13 @@ io.on('connection', function(socket){
 	console.log("Received connection.");
 	var counter = 0;
 	var arraySize = array.length;
-	
+
 	setInterval(function() {
 		socket.emit("bodyFrame", array[counter]);
-		
+
 		counter++;
 		if(counter >= array.length) {
 			counter = 0;
-		}		
-	}, 33);	
+		}
+	}, 33);
 });
