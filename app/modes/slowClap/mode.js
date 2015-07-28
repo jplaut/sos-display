@@ -35,8 +35,7 @@ mode.factory('modeSlowClap', function($log) {
 	}
 	
 	mode.update = function($scope) {
-		// not required
-		$log.log("update");
+		// no-op
 	}
 	
 	mode.deinit = function($scope) {
