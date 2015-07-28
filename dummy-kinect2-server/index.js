@@ -3,7 +3,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(3000);
 var json = require('json-file');
 var _ = require('lodash');
-var sleep = require('sleep');
 
 var output = json.read('./skeletal-output-02.json');
 var array = output.get('bodiesData')
