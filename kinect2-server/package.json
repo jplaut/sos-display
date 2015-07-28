@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "express": "latest",
+    "socket.io": "latest",
+    "edge": "latest",
+    "lodash": "latest"
+  }
+}
