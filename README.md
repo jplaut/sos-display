@@ -36,6 +36,10 @@ So on the source display for the HDMI, it is capturing a 320x192 section, and th
 
 * With an estimated max draw of 36W per panel, the entire display in theory would draw at most 1080 watts when displaying full-white at 100% brightness.  (Add in Kill-a-Watt analysis after Saturday)
 
+### MIDI setup
+
+Run the MIDI server on this end: https://github.com/Iteratix/midi2funk
+
 ### Kinect and Processing.js
 
 [processing.js](http://processingjs.org/) support exists for the Kinect. A [Kinect Server](https://github.com/cantsin/KinectServer) is required (during hack day, this server will be running continuously).

@@ -41,7 +41,7 @@
 				</div>
 				<div class="panel-body">
 					<div class="list-group">
-						<a href="#" class="list-group-item" ng-repeat="media in mediaList" ng-click="playMedia($index)">{{media.name}}</a>
+						<a href="#" class="list-group-item" ng-repeat="mode in modeList" ng-click="showMode($index)">{{mode.name}}</a>
 					</div>
 					<button class="btn" ng-click="clearStage()">Clear Stage</button>
 				</div>
@@ -95,9 +95,6 @@
 
 	</div>
 
-	<!-- In production use:
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-	-->
 	<script src="bower_components/angular/angular.js"></script>
 	<script src="bower_components/angular-route/angular-route.js"></script>
 	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
@@ -105,11 +102,15 @@
 	<script src="bower_components/preloadjs/dist/preload.min.js"></script>
 	<script src="bower_components/easeljs/lib/easeljs-0.8.1.combined.js"></script>
 	
+	<!-- proton -->
+	<script src="bower_components/proton/build/proton-1.0.0.js" type="text/javascript"></script>
+	
 	<!-- polyfill -->
 	<script src="bower_components/midi/inc/shim/Base64.js" type="text/javascript"></script>
 	<script src="bower_components/midi/inc/shim/Base64binary.js" type="text/javascript"></script>
 	<script src="bower_components/midi/inc/shim/WebAudioAPI.js" type="text/javascript"></script>
 	<script src="bower_components/midi/examples/inc/colorspace.js" type="text/javascript"></script>
+	
 	<!-- midi.js package -->
 	<script src="bower_components/midi/js/midi/audioDetect.js" type="text/javascript"></script>
 	<script src="bower_components/midi/js/midi/gm.js" type="text/javascript"></script>
@@ -122,17 +123,16 @@
 	<script src="bower_components/midi/js/util/dom_request_xhr.js" type="text/javascript"></script>
 	<script src="bower_components/midi/js/util/dom_request_script.js" type="text/javascript"></script>
 
-	<script src="http://localhost:1337/socket.io/socket.io.js"></script>
+	<!-- socket.io -->
+	<script src="bower_components/socket.io-client/socket.io.js"></script>
 
+	<!-- APP SPECIFIC -->
 	<script src="app.js"></script>
 	<script src="canvas/canvas.js"></script>
-	<script src="components/version/version.js"></script>
-	<script src="components/version/version-directive.js"></script>
-	<script src="components/version/interpolate-filter.js"></script>
-        <!-- kinect specific -->
-        <script src="javascript/jquery-1.9.1.min.js"></script>
-        <script src="javascript/processing-1.4.8.js"></script>
-        <script src="javascript/Kinect-1.8.0.js"></script>
-        <script src="javascript/processing-kinect.js"></script>
+	
+	<!-- links to respective mode.js files -->
+	<script src="modes/slowClap/mode.js"></script>
+	<script src="modes/sampleImage/mode.js"></script>
+	
 </body>
 </html>
