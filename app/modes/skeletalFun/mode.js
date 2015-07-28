@@ -68,7 +68,19 @@ mode.factory('modeSkeletalFun', function($log) {
 	
 	mode.init = function($scope) {
 		// init method
-		socket = io.connect('http://localhost:3000');
+		socket = io.connect('http://localhost:3000', {
+			'reconnect': true,
+			'reconnection delay': 500,
+			'forceNew': true
+		});
+
+		socket.on('connect', function() {
+			$log.info("socket.io connect:");
+		});	
+
+		socket.on('error', function(err) {
+			$log.warn("socket.io error:", err);
+		});
 
 		$scope.stage.compositeOperation = "lighter";
 		

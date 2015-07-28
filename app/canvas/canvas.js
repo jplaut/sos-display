@@ -65,8 +65,7 @@ angular.module('sos.canvas', [])
 
 		$log.info("Initializing <CANVAS> with id:", $scope.canvasID);
 
-		// create the media list
-			// available media
+		// available modes
 		$scope.modeList = [
 			{ name: "Image", modeName: 'modeSampleImage' },
 			{ name: "Skeletal Fun", modeName: 'modeSkeletalFun', },
@@ -76,7 +75,6 @@ angular.module('sos.canvas', [])
 		];
 
 		 //Create a stage by getting a reference to the canvas
-	    $scope.stage = new createjs.Stage($scope.canvasID);
 	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, false);
 
 	    // set up the ticker
@@ -96,9 +94,8 @@ angular.module('sos.canvas', [])
 			$scope.activeMode.deinit();
 		}
 
-		// clear stage
-		$scope.clearStage();
-
+		// create a new stage instance for the mode
+		$scope.stage = new createjs.Stage($scope.canvasID);
 		var modeName = $scope.modeList[index].modeName;
 		var mode = $injector.get(modeName);
 		$log.info("init:", mode.id);
@@ -106,19 +103,16 @@ angular.module('sos.canvas', [])
 		$scope.activeMode = mode;
 	}
 
-	$scope.clearStage = function() {
-		$log.info("Clearing stage...");
-		$scope.stage.removeAllChildren();
-	}
-
 	$scope.setCanvasSize = function(width, height, doUpdate) {
 
+		if($scope.stage) {
 		$scope.stage.canvas.width = width;
 		$scope.stage.canvas.height = height;
 
-		 // update the stage
-		 if(doUpdate) {
+			// update the stage
+			if(doUpdate) {
 			 $scope.stage.update();
-		 }
+			}
+		}
 	}
 }]);
