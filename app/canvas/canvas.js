@@ -4,15 +4,15 @@ angular.module('sos.canvas', [])
 .controller('CanvasCtrl', ['$scope', '$log', 'modeSlowClap', 'modeSampleImage', 'modeSkeletalFun', function($scope, $log, modeSlowClap, modeSampleImage, modeSkeletalFun) {
 
 	$scope.wallDisplay = {
-		width: 192,
-		height: 320
+		width: 600,
+		height: 600
 	}
 
 	$scope.stage = null;
 	$scope.canvasID = "sos-canvas";
 	$scope.canvasDim = {
-		width: 192,
-		height: 320
+		width: 600,
+		height: 600
 	};
 	$scope.offsetStyle = {
 		left: 15,

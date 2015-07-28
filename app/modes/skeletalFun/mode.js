@@ -8,62 +8,33 @@ mode.factory('modeSkeletalFun', function($log) {
 	mode.id = 'modeSkeletalFun';
 	mode.title = "Sample Skeletal Tracking";
 	
-	mode.init = function($scope) {
-		// init method
-		$log.info("init:", mode.id);
-	}
+	var proton;
+	var emitter;
+	var renderer;
+	var socket;
 	
-	mode.update = function($scope) {
-
-/*
-		var gif = new createjs.Bitmap("media/winter-is-coming.jpg");
-		gif.image.onload = function() {
-			gif.scaleX = $scope.getWidthScaleFactor(gif.getBounds().width);
-			gif.scaleY = $scope.getHeightScaleFactor(gif.getBounds().height);
-			$scope.stage.addChild(gif);
-		};	
-*/
-	}
-	
-	mode.deinit = function($scope) {
-		// do clean up
-		$log.info("deinit:", mode.id);
-	}
-	
-	return mode;
-});
-
-/*
-	$scope.createProton = function() {
+	mode.createProton1 = function($scope, image) {
+		
 		proton = new Proton;
-		$scope.createImageEmitter();
-
-		renderer = new Proton.Renderer('easel', proton, $scope.canvas);
-		//renderer.blendFunc("SRC_ALPHA", "ONE");
-		renderer.start();
-	}
-
-	$scope.createImageEmitter = function() {
 		emitter = new Proton.Emitter();
-		emitter.rate = new Proton.Rate(new Proton.Span(5, 10), new Proton.Span(.01, .015));
+		emitter.rate = new Proton.Rate(new Proton.Span(1, 5));
 		emitter.addInitialize(new Proton.Mass(1));
-		emitter.addInitialize(new Proton.Life(1, 2));
-		emitter.addInitialize(new Proton.ImageTarget(['media/particle.png'], 32));
-		emitter.addInitialize(new Proton.Radius(40));
-		emitter.addInitialize(new Proton.V(new Proton.Span(1, 3), 65, 'polar'));
-		emitter.addBehaviour(new Proton.Alpha(1, 0));
-		emitter.addBehaviour(new Proton.Color('#4F1500', '#0029FF'));
-		emitter.addBehaviour(new Proton.Scale(3, 0.1));
-		emitter.addBehaviour(new Proton.CrossZone(new Proton.RectZone(0, 0, 1003, 610), 'dead'));
-		emitter.p.x = 1003 / 2;
-		emitter.p.y = 610 / 2;
+		emitter.addInitialize(new Proton.Radius(3, 40));
+		emitter.addInitialize(new Proton.Life(1, 3));
+		emitter.addInitialize(new Proton.Velocity(new Proton.Span(-1, 1), new Proton.Span(-3, 0), 'vector'));
+		emitter.addBehaviour(new Proton.Gravity(9.8));
+		emitter.addBehaviour(new Proton.Color('random'));
+		emitter.addBehaviour(new Proton.RandomDrift(30, 0, .035));
 		emitter.emit();
 		proton.addEmitter(emitter);
-	}
-*/
 
-/*
-	$scope.createProton = function(image) {
+		renderer = new Proton.Renderer('easel', proton, $scope.stage);
+		renderer.start();
+		renderer.blendFunc("SRC_ALPHA", "ONE");
+	}
+	
+	mode.createProton2 = function($scope, image) {
+		
 		proton = new Proton;
 		emitter = new Proton.Emitter();
 		
@@ -94,52 +65,16 @@ mode.factory('modeSkeletalFun', function($log) {
 		renderer.start();
 		renderer.blendFunc("SRC_ALPHA", "ONE");
 	}
+	
+	mode.init = function($scope) {
+		// init method
+		$log.info("init:", mode.id);
+		socket = io.connect('http://localhost:3000');
 
-	$scope.loadImage = function() {
-		var image = new Image()
-		image.onload = function(e) {
-			console.log("e: ", e.target);
-			$scope.createProton(e.target);
-// 			tick();
-		}
-		image.onerror = function() {
-			console.log("error loading image");
-		}
-		image.src = 'media/particle.png';
-	}
-
-/*
-	$scope.createProton = function(image) {
-		
-		proton = new Proton;
-		var emitter = new Proton.Emitter();
-		emitter.rate = new Proton.Rate(new Proton.Span(1, 5));
-		emitter.addInitialize(new Proton.Mass(1));
-		emitter.addInitialize(new Proton.Radius(3, 40));
-		emitter.addInitialize(new Proton.Life(1, 3));
-		emitter.addInitialize(new Proton.Velocity(new Proton.Span(-1, 1), new Proton.Span(-3, 0), 'vector'));
-		emitter.addBehaviour(new Proton.Gravity(9.8));
-		emitter.addBehaviour(new Proton.Color('random'));
-		emitter.addBehaviour(new Proton.RandomDrift(30, 0, .035));
-		emitter.emit();
-		proton.addEmitter(emitter);
-
-		renderer = new Proton.Renderer('easel', proton, $scope.stage);
-		renderer.start();
-		renderer.blendFunc("SRC_ALPHA", "ONE");
-	}
-
-	$scope.k2SkeletalTracking = function() {
-		console.log("Initializing k2 skeletal tracking");
-		
-		$scope.stage.x = $scope.stage.x - 0;
-		$scope.stage.y = $scope.stage.y + 100;		
 		$scope.stage.compositeOperation = "lighter";
 		
-		$scope.createProton();
+		mode.createProton2($scope);
 		
-		var socket = io.connect('http://localhost:3000');
-
 	    var leftHand = new createjs.Shape();
 	    leftHand.graphics.beginFill("blue").drawCircle(0,0, 10);
 	    $scope.stage.addChild(leftHand);
@@ -174,7 +109,8 @@ mode.factory('modeSkeletalFun', function($log) {
 		
 		socket.on('bodyFrame', function(bodies){
 
-			var body = bodies[1];
+			var body = bodies[0];
+/*
 			// if you wish to view all dots all joints
 			$scope.stage.removeAllChildren();
 			angular.forEach(body.joints, function(joint) {
@@ -182,7 +118,7 @@ mode.factory('modeSkeletalFun', function($log) {
 				jointDot.graphics.beginFill("red").drawCircle(joint.x,joint.y,4);
 				$scope.stage.addChild(jointDot);
 			});
-
+*/
 		    leftHand.x = body.joints["HandLeft"].x;
 		    leftHand.y = body.joints["HandLeft"].y;
 			
@@ -233,7 +169,6 @@ mode.factory('modeSkeletalFun', function($log) {
 		    emitter.p.x = leftHand.x;
 			emitter.p.y = leftHand.y;
 		    
-		    
 		    // we need to send a refresh because socket.io might not flush?  
 		    // TODO: fix this, eliminate the need for this.
 		    socket.emit("refresh", "callback hell", function(data) {
@@ -242,4 +177,69 @@ mode.factory('modeSkeletalFun', function($log) {
 		    });
 		});
 	}
+	
+	mode.update = function($scope) {
+		proton.update();
+	}
+	
+	mode.deinit = function($scope) {
+		// do clean up
+		$log.info("deinit:", mode.id);
+		if(socket) {
+			socket.disconnect();
+		}
+	}
+	
+	return mode;
+});
+
+/*
+	$scope.createProton = function() {
+		proton = new Proton;
+		$scope.createImageEmitter();
+
+		renderer = new Proton.Renderer('easel', proton, $scope.canvas);
+		//renderer.blendFunc("SRC_ALPHA", "ONE");
+		renderer.start();
+	}
+
+	$scope.createImageEmitter = function() {
+		emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(5, 10), new Proton.Span(.01, .015));
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.Life(1, 2));
+		emitter.addInitialize(new Proton.ImageTarget(['media/particle.png'], 32));
+		emitter.addInitialize(new Proton.Radius(40));
+		emitter.addInitialize(new Proton.V(new Proton.Span(1, 3), 65, 'polar'));
+		emitter.addBehaviour(new Proton.Alpha(1, 0));
+		emitter.addBehaviour(new Proton.Color('#4F1500', '#0029FF'));
+		emitter.addBehaviour(new Proton.Scale(3, 0.1));
+		emitter.addBehaviour(new Proton.CrossZone(new Proton.RectZone(0, 0, 1003, 610), 'dead'));
+		emitter.p.x = 1003 / 2;
+		emitter.p.y = 610 / 2;
+		emitter.emit();
+		proton.addEmitter(emitter);
+	}
+*/
+
+/*
+	$scope.createProton = function(image) {
+
+	}
+
+	$scope.loadImage = function() {
+		var image = new Image()
+		image.onload = function(e) {
+			console.log("e: ", e.target);
+			$scope.createProton(e.target);
+// 			tick();
+		}
+		image.onerror = function() {
+			console.log("error loading image");
+		}
+		image.src = 'media/particle.png';
+	}
+
+/*
+
 */
