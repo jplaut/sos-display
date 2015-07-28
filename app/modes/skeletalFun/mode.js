@@ -68,7 +68,6 @@ mode.factory('modeSkeletalFun', function($log) {
 	
 	mode.init = function($scope) {
 		// init method
-		$log.info("init:", mode.id);
 		socket = io.connect('http://localhost:3000');
 
 		$scope.stage.compositeOperation = "lighter";
@@ -184,7 +183,6 @@ mode.factory('modeSkeletalFun', function($log) {
 	
 	mode.deinit = function($scope) {
 		// do clean up
-		$log.info("deinit:", mode.id);
 		if(socket) {
 			socket.disconnect();
 		}

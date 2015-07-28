@@ -91,6 +91,7 @@ angular.module('sos.canvas', [])
 	$scope.showMode = function(index) {
 
 		if($scope.activeMode) {
+			$log.info("deinit:", $scope.activeMode.id);
 			$scope.activeMode.deinit();	
 		}
 
@@ -98,6 +99,7 @@ angular.module('sos.canvas', [])
 		$scope.clearStage();
 
 		var mode = $scope.modeList[index].fn;
+		$log.info("init:", mode.id);
 		mode.init($scope);
 		$scope.activeMode = mode;
 	}

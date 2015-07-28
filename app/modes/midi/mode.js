@@ -8,6 +8,7 @@ mode.factory('modeMIDI', function($log) {
   
   mode.id = "modeMIDI";
   mode.title = "MIDI Keyboard Mode";
+  mode.socket = {};
 
   mode.init = function($scope) {
     
@@ -16,8 +17,8 @@ mode.factory('modeMIDI', function($log) {
       onsuccess: function() { }
     });
 
-    var socket = io.connect('http://localhost:1337');
-    socket.on('message', function(data){
+    mode.socket = io.connect('http://localhost:1337');
+    mode.socket.on('message', function(data){
       console.log(data);
 
       var note = data.note;
@@ -30,7 +31,7 @@ mode.factory('modeMIDI', function($log) {
       MIDI.noteOn(0, note, 100, 0);
       $scope.stage.addChild(shape);
 
-      socket.emit('launchpad-key-color', [note, map.hex]);
+      mode.socket.emit('launchpad-key-color', [note, map.hex]);
     });
 
 
@@ -48,8 +49,7 @@ mode.factory('modeMIDI', function($log) {
   }
   
   mode.deinit = function($scope) {
-    // do clean up
-    $log.info("deinit:", mode.id);
+    mode.socket.close();
   }
 
   return mode;
