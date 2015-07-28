@@ -10,7 +10,6 @@ mode.factory('modeSampleImage', function($log) {
 	
 	mode.init = function($scope) {
 		// init method
-		$log.info("init: ", mode.id);
 
 		var gif = new createjs.Bitmap("media/winter-is-coming.jpg");
 		gif.image.onload = function() {
@@ -26,7 +25,6 @@ mode.factory('modeSampleImage', function($log) {
 	
 	mode.deinit = function($scope) {
 		// do clean up
-		$log.info("deinit:", mode.id);
 	}
 	
 	return mode;

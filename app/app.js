@@ -5,5 +5,6 @@ angular.module('sos', [
   'sos.canvas',
   'sos.modes.slowClap',
   'sos.modes.sampleImage',
-  'sos.modes.skeletalFun'
+  'sos.modes.skeletalFun',
+  'sos.modes.midi'
 ])
