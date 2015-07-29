@@ -84,19 +84,19 @@ function SkeletalBody() {
 
 var mode = angular.module('sos.modes.skeletalFun', []);
 
-mode.factory('modeSkeletalFun', function($log, $injector) {
-	
+mode.factory('modeSkeletalFun', function($log) {
+
 	var mode = {};
 	mode.id = 'modeSkeletalFun';
 	mode.title = "Sample Skeletal Tracking";
-	
+
 	var proton;
 	var emitter;
 	var renderer;
 	var socket;
-	
+
 	mode.createProton1 = function($scope, image) {
-		
+
 		proton = new Proton;
 		emitter = new Proton.Emitter();
 		emitter.rate = new Proton.Rate(new Proton.Span(1, 5));
@@ -114,27 +114,27 @@ mode.factory('modeSkeletalFun', function($log, $injector) {
 		renderer.start();
 		renderer.blendFunc("SRC_ALPHA", "ONE");
 	}
-	
+
 	mode.createProton2 = function($scope, image) {
-		
+
 		proton = new Proton;
 		emitter = new Proton.Emitter();
-		
+
 		// sets rate of particles from emitter
 		emitter.rate = new Proton.Rate(new Proton.Span(10, 50), new Proton.Span(.05, .1));
 		emitter.addInitialize(new Proton.ImageTarget(image, 5, 5));
-		
+
 		// sets the 'mass' of the particle, affects how it interacts with the gravity
 		emitter.addInitialize(new Proton.Mass(1.0));
-		
+
 		// sets lifespan of the particle
 		emitter.addInitialize(new Proton.Life(1, 3));
 		emitter.addInitialize(new Proton.Position(new Proton.CircleZone(0, 0, 10)));
 		emitter.addInitialize(new Proton.Velocity(new Proton.Span(5, 8), new Proton.Span(-15, 15), 'polar'));
 		emitter.addBehaviour(new Proton.RandomDrift(5, 5, .05));
 		emitter.addBehaviour(new Proton.Alpha(0.75, 0));
-		
-		// sets range of size of particle objects 
+
+		// sets range of size of particle objects
 		emitter.addBehaviour(new Proton.Scale(new Proton.Span(1, 0.1), 1));
 		emitter.addBehaviour(new Proton.G(12));
 		emitter.addBehaviour(new Proton.Color("random"));
@@ -147,10 +147,10 @@ mode.factory('modeSkeletalFun', function($log, $injector) {
 		renderer.start();
 		renderer.blendFunc("SRC_ALPHA", "ONE");
 	}
-	
+
 	mode.init = function($scope) {
 		// init method
-		socket = io.connect('http://localhost:3000', {
+		socket = io.connect('http://localhost:8008', {
 			'reconnect': true,
 			'reconnection delay': 500,
 			'forceNew': true
@@ -204,9 +204,8 @@ mode.factory('modeSkeletalFun', function($log, $injector) {
 		    // reposition emitter
 		    emitter.p.x = leftHand.x;
 			emitter.p.y = leftHand.y;
-*/
-		    
-		    // we need to send a refresh because socket.io might not flush?  
+
+		    // we need to send a refresh because socket.io might not flush?
 		    // TODO: fix this, eliminate the need for this.
 		    socket.emit("refresh", "callback hell", function(data) {
 		        //console.log(data);
@@ -214,18 +213,21 @@ mode.factory('modeSkeletalFun', function($log, $injector) {
 		    });
 		});
 	}
-	
+	*/
+		});
+	}
+
 	mode.update = function($scope) {
 		//proton.update();
 	}
-	
+
 	mode.deinit = function($scope) {
 		// do clean up
 		if(socket) {
 			socket.disconnect();
 		}
 	}
-	
+
 	return mode;
 });
 

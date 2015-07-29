@@ -12,7 +12,7 @@ if(kinect.open()) {
     server.listen(port);
     console.log("Kinect server at " + port);
 
-    kinect.on('bodyFrame', function(data) {
+    kinect.on('bodyFrame', function(bodies) {
 	io.sockets.emit('bodyFrame', bodies);
         io.flush();
     });
