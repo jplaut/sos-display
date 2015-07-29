@@ -53,7 +53,7 @@ function SkeletalBody() {
 	
 	this.drawToStage = function() {
 		
-		if(_bodyData.joints) {
+		if(_bodyData && _bodyData.joints) {
 			_shapesData.head.x = _bodyData.joints["Head"].x;
 			_shapesData.head.y = _bodyData.joints["Head"].y;
 	

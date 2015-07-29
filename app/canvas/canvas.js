@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sos.canvas', [])
-    .controller('CanvasCtrl', ['$scope', '$log', '$injector',
-                 function($scope, $log, $injector) {
+    .controller('CanvasCtrl', ['$scope', '$log', '$injector', '$document',
+                 function($scope, $log, $injector, $document) {
 
 	$scope.wallDisplay = {
 		width: 192,
@@ -52,6 +52,30 @@ angular.module('sos.canvas', [])
 		$scope.setCanvasSize(newDim.width, newDim.height, true);
 	}, true);
 */
+
+	$document.bind("keypress", function(event) {
+		var charCode = event.charCode;
+		console.log(charCode);
+		switch(charCode) {
+			case 97: 
+				console.log("moving right");
+				$scope.offsetStyle.left--;
+				console.log($scope.offsetStyle.left);
+				break;
+			case 119:
+				$scope.offsetStyle.top--;
+				break;
+			case 115:
+				$scope.offsetStyle.top++;
+				break;
+			case 100:
+				$scope.offsetStyle.left++;
+				break;
+			default:
+				// no op
+		}
+		$scope.$digest();
+	});
 
 	$scope.$on("error", function(err) {
 		$log.warn("Registered error:", err);
