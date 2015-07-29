@@ -53,52 +53,54 @@ function SkeletalBody() {
 	
 	this.drawToStage = function() {
 		
-		_shapesData.head.x = _bodyData.joints["Head"].x;
-		_shapesData.head.y = _bodyData.joints["Head"].y;
-
-		_shapesData.leftHand.x = _bodyData.joints["HandLeft"].x;
-	    _shapesData.leftHand.y = _bodyData.joints["HandLeft"].y;
+		if(_bodyData.joints) {
+			_shapesData.head.x = _bodyData.joints["Head"].x;
+			_shapesData.head.y = _bodyData.joints["Head"].y;
+	
+			_shapesData.leftHand.x = _bodyData.joints["HandLeft"].x;
+		    _shapesData.leftHand.y = _bodyData.joints["HandLeft"].y;
+				
+			_shapesData.rightHand.x = _bodyData.joints["HandRight"].x;
+			_shapesData.rightHand.y = _bodyData.joints["HandRight"].y;
 			
-		_shapesData.rightHand.x = _bodyData.joints["HandRight"].x;
-		_shapesData.rightHand.y = _bodyData.joints["HandRight"].y;
-		
-		// clear all lines data
-	    angular.forEach(_linesData, function(line, key) {
-			line.graphics.clear();
-	    });		
-		
-		var lineConfig = { color: _color };
-		
-		// neck line
-		this.drawLineBetweenJoints("Neck", "Head", lineConfig);
-		
-	    // spine line
-	    this.drawLineBetweenJoints("Neck", "SpineMid", lineConfig);
-	    this.drawLineBetweenJoints("SpineBase", "SpineMid", lineConfig);
-	    
-	    // left arm
-	    this.drawLineBetweenJoints("ShoulderLeft", "ElbowLeft", lineConfig);
-	    this.drawLineBetweenJoints("ElbowLeft", "WristLeft", lineConfig);
-	    this.drawLineBetweenJoints("HandLeft", "WristLeft", lineConfig);
-	    
-	    // right arm
-	    this.drawLineBetweenJoints("ShoulderRight", "ElbowRight", lineConfig);
-	    this.drawLineBetweenJoints("ElbowRight", "WristRight", lineConfig);	 
-	    this.drawLineBetweenJoints("HandRight", "WristRight", lineConfig);
-	     
-	    // shoulder line
-	    this.drawLineBetweenJoints("ShoulderRight", "ShoulderLeft", lineConfig);
-	    
-	    // hip line
-	    this.drawLineBetweenJoints("HipRight", "HipLeft", lineConfig);
-	    
-	    // left leg
-	    this.drawLineBetweenJoints("HipLeft", "KneeLeft", lineConfig);
-	    this.drawLineBetweenJoints("KneeLeft", "AnkleLeft", lineConfig); 
-	    
-	    // right leg
-	    this.drawLineBetweenJoints("HipRight", "KneeRight", lineConfig);
-	    this.drawLineBetweenJoints("KneeRight", "AnkleRight", lineConfig);
+			// clear all lines data
+		    angular.forEach(_linesData, function(line, key) {
+				line.graphics.clear();
+		    });		
+			
+			var lineConfig = { color: _color };
+			
+			// neck line
+			this.drawLineBetweenJoints("Neck", "Head", lineConfig);
+			
+		    // spine line
+		    this.drawLineBetweenJoints("Neck", "SpineMid", lineConfig);
+		    this.drawLineBetweenJoints("SpineBase", "SpineMid", lineConfig);
+		    
+		    // left arm
+		    this.drawLineBetweenJoints("ShoulderLeft", "ElbowLeft", lineConfig);
+		    this.drawLineBetweenJoints("ElbowLeft", "WristLeft", lineConfig);
+		    this.drawLineBetweenJoints("HandLeft", "WristLeft", lineConfig);
+		    
+		    // right arm
+		    this.drawLineBetweenJoints("ShoulderRight", "ElbowRight", lineConfig);
+		    this.drawLineBetweenJoints("ElbowRight", "WristRight", lineConfig);	 
+		    this.drawLineBetweenJoints("HandRight", "WristRight", lineConfig);
+		     
+		    // shoulder line
+		    this.drawLineBetweenJoints("ShoulderRight", "ShoulderLeft", lineConfig);
+		    
+		    // hip line
+		    this.drawLineBetweenJoints("HipRight", "HipLeft", lineConfig);
+		    
+		    // left leg
+		    this.drawLineBetweenJoints("HipLeft", "KneeLeft", lineConfig);
+		    this.drawLineBetweenJoints("KneeLeft", "AnkleLeft", lineConfig); 
+		    
+		    // right leg
+		    this.drawLineBetweenJoints("HipRight", "KneeRight", lineConfig);
+		    this.drawLineBetweenJoints("KneeRight", "AnkleRight", lineConfig);
+	    }
 	}
 }
 
