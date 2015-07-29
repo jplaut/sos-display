@@ -261,8 +261,8 @@ mode.factory('modeSkeletalFun', function($log) {
 			});
 */
 		    // reposition emitter
-		    emitter.p.x = bodies[1].joints["HandRight"].x;
-			emitter.p.y = bodies[1].joints["HandRight"].y;
+		    emitter.p.x = bodies[0].joints["HandRight"].x;
+			emitter.p.y = bodies[0].joints["HandRight"].y;
 
 		    // we need to send a refresh because socket.io might not flush?
 		    // TODO: fix this, eliminate the need for this.
