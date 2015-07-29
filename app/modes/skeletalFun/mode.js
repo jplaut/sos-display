@@ -16,8 +16,8 @@ function SkeletalBody() {
 		// set up shapes
 		_shapesData.leftHand = new createjs.Shape();
 		_shapesData.rightHand = new createjs.Shape();
-	    _shapesData.leftHand.graphics.beginFill(color).drawCircle(0,0, 10);
-	    _shapesData.rightHand.graphics.beginFill(color).drawCircle(0,0, 10);
+	    _shapesData.leftHand.graphics.beginFill(color).drawCircle(0,0, 5);
+	    _shapesData.rightHand.graphics.beginFill(color).drawCircle(0,0, 5);
 		_shapesData.head = new createjs.Shape();
 		_shapesData.head.graphics.beginFill(color).drawCircle(0, 0, 25);
 	
@@ -28,6 +28,27 @@ function SkeletalBody() {
 	
 	this.setBodyData = function(bodyData) {
 		_bodyData = bodyData;
+	}
+	
+	this.drawLineBetweenJoints = function(j1Name, j2Name, config) {
+		
+		var j1 = _bodyData.joints[j1Name];
+		var j2 = _bodyData.joints[j2Name];
+		var lineName = j1Name+"_"+j2Name;
+		
+		var jointLine = _linesData[lineName];
+		
+		// create line if needed.
+		if(!jointLine) {
+			jointLine = new createjs.Shape();
+			
+			_stage.addChild(jointLine);
+			_linesData[lineName] = jointLine;
+		}
+
+		jointLine.graphics.beginStroke(config.color);
+		jointLine.graphics.moveTo(j1.x, j1.y);
+		jointLine.graphics.lineTo(j2.x, j2.y);
 	}
 	
 	this.drawToStage = function() {
@@ -46,39 +67,38 @@ function SkeletalBody() {
 			line.graphics.clear();
 	    });		
 		
+		var lineConfig = { color: _color };
+		
+		// neck line
+		this.drawLineBetweenJoints("Neck", "Head", lineConfig);
+		
+	    // spine line
+	    this.drawLineBetweenJoints("Neck", "SpineMid", lineConfig);
+	    this.drawLineBetweenJoints("SpineBase", "SpineMid", lineConfig);
+	    
+	    // left arm
+	    this.drawLineBetweenJoints("ShoulderLeft", "ElbowLeft", lineConfig);
+	    this.drawLineBetweenJoints("ElbowLeft", "WristLeft", lineConfig);
+	    this.drawLineBetweenJoints("HandLeft", "WristLeft", lineConfig);
+	    
+	    // right arm
+	    this.drawLineBetweenJoints("ShoulderRight", "ElbowRight", lineConfig);
+	    this.drawLineBetweenJoints("ElbowRight", "WristRight", lineConfig);	 
+	    this.drawLineBetweenJoints("HandRight", "WristRight", lineConfig);
+	     
 	    // shoulder line
-	    _linesData['shoulderLine'] = new createjs.Shape();
-		_linesData['shoulderLine'].graphics.beginStroke(_color);
-		_linesData['shoulderLine'].graphics.moveTo(_bodyData.joints['Neck'].x, _bodyData.joints['Neck'].y);
-		_linesData['shoulderLine'].graphics.lineTo(_bodyData.joints['SpineBase'].x, _bodyData.joints['SpineBase'].y);	    
-	    _stage.addChild(_linesData['shoulderLine']);
+	    this.drawLineBetweenJoints("ShoulderRight", "ShoulderLeft", lineConfig);
 	    
-	    // arms
-		_linesData['leftUpperArm'] = new createjs.Shape();
-		_linesData['leftLowerArm'] = new createjs.Shape();
-		_stage.addChild(_linesData['leftUpperArm']);
-		_stage.addChild(_linesData['leftLowerArm']);
-		
-		_linesData['rightUpperArm'] = new createjs.Shape();
-		_linesData['rightLowerArm'] = new createjs.Shape();
-		_stage.addChild(_linesData['rightUpperArm']);
-		_stage.addChild(_linesData['rightLowerArm']);
-		
-	    // draw left arm, upper and lower
-		_linesData['leftUpperArm'].graphics.beginStroke(_color);
-		_linesData['leftUpperArm'].graphics.moveTo(_bodyData.joints["ShoulderLeft"].x, _bodyData.joints["ShoulderLeft"].y);
-	    _linesData['leftUpperArm'].graphics.lineTo(_bodyData.joints["ElbowLeft"].x, _bodyData.joints["ElbowLeft"].y);
-		_linesData['leftLowerArm'].graphics.beginStroke(_color);
-		_linesData['leftLowerArm'].graphics.moveTo(_bodyData.joints["ElbowLeft"].x, _bodyData.joints["ElbowLeft"].y);
-	    _linesData['leftLowerArm'].graphics.lineTo(_bodyData.joints["WristLeft"].x, _bodyData.joints["WristLeft"].y);
+	    // hip line
+	    this.drawLineBetweenJoints("HipRight", "HipLeft", lineConfig);
 	    
-		// draw left arm, upper and lower
-		_linesData['rightUpperArm'].graphics.beginStroke(_color);
-		_linesData['rightUpperArm'].graphics.moveTo(_bodyData.joints["ShoulderRight"].x, _bodyData.joints["ShoulderRight"].y);
-	    _linesData['rightUpperArm'].graphics.lineTo(_bodyData.joints["ElbowRight"].x, _bodyData.joints["ElbowRight"].y);
-		_linesData['rightLowerArm'].graphics.beginStroke(_color);
-		_linesData['rightLowerArm'].graphics.moveTo(_bodyData.joints["ElbowRight"].x, _bodyData.joints["ElbowRight"].y);
-	    _linesData['rightLowerArm'].graphics.lineTo(_bodyData.joints["WristRight"].x, _bodyData.joints["WristRight"].y);
+	    // left leg
+	    this.drawLineBetweenJoints("HipLeft", "KneeLeft", lineConfig);
+	    this.drawLineBetweenJoints("KneeLeft", "AnkleLeft", lineConfig); 
+	    
+	    // right leg
+	    this.drawLineBetweenJoints("HipRight", "KneeRight", lineConfig);
+	    this.drawLineBetweenJoints("KneeRight", "AnkleRight", lineConfig);
 	}
 }
 
@@ -94,6 +114,9 @@ mode.factory('modeSkeletalFun', function($log) {
 	var emitter;
 	var renderer;
 	var socket;
+	var hcolor = 0;
+	var index = 0;
+	var colorBehaviour;
 
 	mode.createProton1 = function($scope, image) {
 
@@ -138,14 +161,52 @@ mode.factory('modeSkeletalFun', function($log) {
 		emitter.addBehaviour(new Proton.Scale(new Proton.Span(1, 0.1), 1));
 		emitter.addBehaviour(new Proton.G(12));
 		emitter.addBehaviour(new Proton.Color("random"));
-		emitter.p.x = 0;
-		emitter.p.y = 0;
+		emitter.p.x = 50;
+		emitter.p.y = 50;
 		emitter.emit();
 		proton.addEmitter(emitter);
 
 		renderer = new Proton.Renderer('easel', proton, $scope.stage);
 		renderer.start();
 		renderer.blendFunc("SRC_ALPHA", "ONE");
+		console.log("done creating emitter");
+	}
+
+	mode.createProton3 = function($scope) {
+		
+		proton = new Proton;
+		emitter = new Proton.Emitter();
+		//setRate
+		emitter.rate = new Proton.Rate(new Proton.Span(2, 8), new Proton.Span(.01));
+		//addInitialize
+		emitter.addInitialize(new Proton.Position(new Proton.PointZone(0, 0)));
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.Radius(6, 12));
+		emitter.addInitialize(new Proton.Life(2));
+		emitter.addInitialize(new Proton.V(new Proton.Span(0.3), new Proton.Span(0, 360), 'polar'));
+		//addBehaviour
+		emitter.addBehaviour(new Proton.Alpha(1, 0));
+		emitter.addBehaviour(new Proton.Scale(.1, 1.3));
+		var color1 = Color.parse("hsl(" + (hcolor % 360) + ", 100%, 50%)").hexTriplet();
+		var color2 = Color.parse("hsl(" + ((hcolor + 50) % 360) + ", 100%, 50%)").hexTriplet();
+		colorBehaviour = new Proton.Color(color1, color2);
+		emitter.addBehaviour(colorBehaviour);
+		
+		var canvas = $scope.stage.canvas;
+		
+		emitter.addBehaviour(new Proton.CrossZone(new Proton.RectZone(0, 0, canvas.width, canvas.height), 'collision'));
+		emitter.p.x = canvas.width / 2;
+		emitter.p.y = canvas.height / 2;
+		emitter.emit();
+		//add emitter
+		proton.addEmitter(emitter);
+
+		//canvas renderer
+		renderer = new Proton.Renderer('easel', proton, $scope.stage);
+		renderer.start();
+
+		//debug drawEmitter
+		//Proton.Debug.drawEmitter(proton, canvas, emitter);
 	}
 
 	mode.init = function($scope) {
@@ -178,7 +239,7 @@ mode.factory('modeSkeletalFun', function($log) {
 		skeleton2.init($scope.stage, "red");
 		
 		
-// 		mode.createProton2($scope);		
+		mode.createProton3($scope);		
 		socket.on('bodyFrame', function(bodies){
 
 // 			$log.info("Total bodies:", bodies.length);
@@ -199,11 +260,9 @@ mode.factory('modeSkeletalFun', function($log) {
 				$scope.stage.addChild(jointDot);
 			});
 */
-/*
-		    
 		    // reposition emitter
-		    emitter.p.x = leftHand.x;
-			emitter.p.y = leftHand.y;
+		    emitter.p.x = bodies[1].joints["HandRight"].x;
+			emitter.p.y = bodies[1].joints["HandRight"].y;
 
 		    // we need to send a refresh because socket.io might not flush?
 		    // TODO: fix this, eliminate the need for this.
@@ -213,12 +272,19 @@ mode.factory('modeSkeletalFun', function($log) {
 		    });
 		});
 	}
-	*/
-		});
-	}
 
 	mode.update = function($scope) {
-		//proton.update();
+		proton.update();
+		
+		//change color
+		index++;
+		if (index % 10 == 0) {
+			hcolor++;
+			var color1 = Color.parse("hsl(" + (hcolor % 360) + ", 100%, 50%)").hexTriplet();
+			var color2 = Color.parse("hsl(" + ((hcolor + 50) % 360) + ", 100%, 50%)").hexTriplet();
+			colorBehaviour.reset(color1, color2);
+			index = 0;
+		}
 	}
 
 	mode.deinit = function($scope) {

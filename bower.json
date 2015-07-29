@@ -17,7 +17,8 @@
     "midi": "*",
     "socket.io-client": "~1.3.6",
     "tweenjs": "*",
-    "proton": "*"
+    "proton": "*",
+    "three.js": "~0.71.0"
   },
   "devDependencies": {
     "bootstrap": "~3.3.4"

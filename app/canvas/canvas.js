@@ -5,15 +5,16 @@ angular.module('sos.canvas', [])
                  function($scope, $log, $injector) {
 
 	$scope.wallDisplay = {
-		width: 600,
-		height: 600
+		width: 192,
+		height: 320
 	}
 
 	$scope.stage = null;
 	$scope.canvasID = "sos-canvas";
+	$scope.canvasEl = null;
 	$scope.canvasDim = {
-		width: 600,
-		height: 600
+		width: 192,
+		height: 320
 	};
 	$scope.offsetStyle = {
 		left: 15,
@@ -45,9 +46,12 @@ angular.module('sos.canvas', [])
 
 	}, true);
 
+/*
 	$scope.$watch('canvasDim', function(newDim) {
+		console.log("canvasDim called");
 		$scope.setCanvasSize(newDim.width, newDim.height, true);
 	}, true);
+*/
 
 	$scope.$on("error", function(err) {
 		$log.warn("Registered error:", err);
@@ -64,25 +68,28 @@ angular.module('sos.canvas', [])
 	$scope.initCanvas = function() {
 
 		$log.info("Initializing <CANVAS> with id:", $scope.canvasID);
+		$scope.canvasEl = document.getElementById($scope.canvasID);
+		 //Create a stage by getting a reference to the canvas
+	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, false);
 
 		// available modes
 		$scope.modeList = [
 			{ name: "Image", modeName: 'modeSampleImage' },
 			{ name: "Skeletal Fun", modeName: 'modeSkeletalFun', },
 			{ name: "Spritesheet Slow Clap", modeName: 'modeSlowClap' },
-		        { name: "MIDI Mode", modeName: 'modeMIDI' },
-   		        { name: "Kinect Webcam", modeName: 'modeKinectWebcam' },
-		        { name: "Dance Wildly", modeName: 'modeDanceWildly' },
+		    { name: "MIDI Mode", modeName: 'modeMIDI' },
+			{ name: "Kinect Webcam", modeName: 'modeKinectWebcam' },
+			{ name: "Sample 3D Effect", modeName: 'modeSampleThree' },
+			{ name: "Dance Wildly", modeName: 'modeDanceWildly' }
 		];
-
-		 //Create a stage by getting a reference to the canvas
-	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, false);
 
 	    // set up the ticker
 	    createjs.Ticker.setFPS(20);
 	    createjs.Ticker.addEventListener('tick', function() {
 			$scope.activeMode.update();
-			$scope.stage.update();
+			if($scope.stage) {
+				$scope.stage.update();	
+			}
 	    });
 
 	    $scope.showMode(1);
@@ -92,7 +99,8 @@ angular.module('sos.canvas', [])
 
 		if($scope.activeMode) {
 			$log.info("deinit:", $scope.activeMode.id);
-			$scope.activeMode.deinit();
+			$scope.activeMode.deinit($scope);
+			//$scope.canvasEl.getContext('3d').clearRect(0, 0, $scope.canvasEl.width, $scope.canvasEl.height);
 		}
 
 		// create a new stage instance for the mode
@@ -106,14 +114,13 @@ angular.module('sos.canvas', [])
 
 	$scope.setCanvasSize = function(width, height, doUpdate) {
 
-		if($scope.stage) {
-		$scope.stage.canvas.width = width;
-		$scope.stage.canvas.height = height;
+		console.log("canvasEl width:", $scope.canvasEl.width);
+		$scope.canvasEl.width = width;
+		$scope.canvasEl.height = height;
 
-			// update the stage
-			if(doUpdate) {
+		// update the stage
+		if($scope.stage && doUpdate) {
 			 $scope.stage.update();
-			}
 		}
 	}
 }]);
