@@ -1,6 +1,6 @@
 var app = require('express')();
 var http = require('http').Server(app);
-var io = require('socket.io')(3000);
+var io = require('socket.io')(8008);
 var json = require('json-file');
 var _ = require('lodash');
 
