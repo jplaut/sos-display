@@ -13,6 +13,8 @@ function SkeletalBody() {
 		_stage = stage;
 		_color = color;
 		
+		stage.x = stage.x - 60;
+		
 		// set up shapes
 		_shapesData.leftHand = new createjs.Shape();
 		_shapesData.rightHand = new createjs.Shape();
