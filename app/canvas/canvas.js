@@ -5,15 +5,15 @@ angular.module('sos.canvas', [])
                  function($scope, $log, $injector) {
 
 	$scope.wallDisplay = {
-		width: 192,
-		height: 320
+		width: 600,
+		height: 600
 	}
 
 	$scope.stage = null;
 	$scope.canvasID = "sos-canvas";
 	$scope.canvasDim = {
-		width: 192,
-		height: 320
+		width: 600,
+		height: 600
 	};
 	$scope.offsetStyle = {
 		left: 15,
@@ -84,7 +84,7 @@ angular.module('sos.canvas', [])
 			$scope.stage.update();
 	    });
 
-	    $scope.showMode(0);
+	    $scope.showMode(1);
 	}
 
 	$scope.showMode = function(index) {

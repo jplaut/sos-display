@@ -1,8 +1,90 @@
 'use strict';
 
+function SkeletalBody() {
+
+	var _bodyData = {};
+	var _stage = null;
+	var _shapesData = {};
+	var _linesData = {};
+	var _color = null;
+	
+	this.init = function(stage, color) {
+		// set up stage reference
+		_stage = stage;
+		_color = color;
+		
+		// set up shapes
+		_shapesData.leftHand = new createjs.Shape();
+		_shapesData.rightHand = new createjs.Shape();
+	    _shapesData.leftHand.graphics.beginFill(color).drawCircle(0,0, 10);
+	    _shapesData.rightHand.graphics.beginFill(color).drawCircle(0,0, 10);
+		_shapesData.head = new createjs.Shape();
+		_shapesData.head.graphics.beginFill(color).drawCircle(0, 0, 25);
+	
+		angular.forEach(_shapesData, function(value, key) {
+			_stage.addChild(value);
+		});		
+	}
+	
+	this.setBodyData = function(bodyData) {
+		_bodyData = bodyData;
+	}
+	
+	this.drawToStage = function() {
+		
+		_shapesData.head.x = _bodyData.joints["Head"].x;
+		_shapesData.head.y = _bodyData.joints["Head"].y;
+
+		_shapesData.leftHand.x = _bodyData.joints["HandLeft"].x;
+	    _shapesData.leftHand.y = _bodyData.joints["HandLeft"].y;
+			
+		_shapesData.rightHand.x = _bodyData.joints["HandRight"].x;
+		_shapesData.rightHand.y = _bodyData.joints["HandRight"].y;
+		
+		// clear all lines data
+	    angular.forEach(_linesData, function(line, key) {
+			line.graphics.clear();
+	    });		
+		
+	    // shoulder line
+	    _linesData['shoulderLine'] = new createjs.Shape();
+		_linesData['shoulderLine'].graphics.beginStroke(_color);
+		_linesData['shoulderLine'].graphics.moveTo(_bodyData.joints['Neck'].x, _bodyData.joints['Neck'].y);
+		_linesData['shoulderLine'].graphics.lineTo(_bodyData.joints['SpineBase'].x, _bodyData.joints['SpineBase'].y);	    
+	    _stage.addChild(_linesData['shoulderLine']);
+	    
+	    // arms
+		_linesData['leftUpperArm'] = new createjs.Shape();
+		_linesData['leftLowerArm'] = new createjs.Shape();
+		_stage.addChild(_linesData['leftUpperArm']);
+		_stage.addChild(_linesData['leftLowerArm']);
+		
+		_linesData['rightUpperArm'] = new createjs.Shape();
+		_linesData['rightLowerArm'] = new createjs.Shape();
+		_stage.addChild(_linesData['rightUpperArm']);
+		_stage.addChild(_linesData['rightLowerArm']);
+		
+	    // draw left arm, upper and lower
+		_linesData['leftUpperArm'].graphics.beginStroke(_color);
+		_linesData['leftUpperArm'].graphics.moveTo(_bodyData.joints["ShoulderLeft"].x, _bodyData.joints["ShoulderLeft"].y);
+	    _linesData['leftUpperArm'].graphics.lineTo(_bodyData.joints["ElbowLeft"].x, _bodyData.joints["ElbowLeft"].y);
+		_linesData['leftLowerArm'].graphics.beginStroke(_color);
+		_linesData['leftLowerArm'].graphics.moveTo(_bodyData.joints["ElbowLeft"].x, _bodyData.joints["ElbowLeft"].y);
+	    _linesData['leftLowerArm'].graphics.lineTo(_bodyData.joints["WristLeft"].x, _bodyData.joints["WristLeft"].y);
+	    
+		// draw left arm, upper and lower
+		_linesData['rightUpperArm'].graphics.beginStroke(_color);
+		_linesData['rightUpperArm'].graphics.moveTo(_bodyData.joints["ShoulderRight"].x, _bodyData.joints["ShoulderRight"].y);
+	    _linesData['rightUpperArm'].graphics.lineTo(_bodyData.joints["ElbowRight"].x, _bodyData.joints["ElbowRight"].y);
+		_linesData['rightLowerArm'].graphics.beginStroke(_color);
+		_linesData['rightLowerArm'].graphics.moveTo(_bodyData.joints["ElbowRight"].x, _bodyData.joints["ElbowRight"].y);
+	    _linesData['rightLowerArm'].graphics.lineTo(_bodyData.joints["WristRight"].x, _bodyData.joints["WristRight"].y);
+	}
+}
+
 var mode = angular.module('sos.modes.skeletalFun', []);
 
-mode.factory('modeSkeletalFun', function($log) {
+mode.factory('modeSkeletalFun', function($log, $injector) {
 	
 	var mode = {};
 	mode.id = 'modeSkeletalFun';
@@ -75,8 +157,12 @@ mode.factory('modeSkeletalFun', function($log) {
 		});
 
 		socket.on('connect', function() {
-			$log.info("socket.io connect:");
+			//$log.info("socket.io connect:");
 		});	
+		
+		socket.on('disconnect', function() {
+			//$log.info("socket.io disconnect:");
+		});
 
 		socket.on('error', function(err) {
 			$log.warn("socket.io error:", err);
@@ -84,43 +170,26 @@ mode.factory('modeSkeletalFun', function($log) {
 
 		$scope.stage.compositeOperation = "lighter";
 		
-		mode.createProton2($scope);
+		// first body instance
+		var skeleton1 = new SkeletalBody();
+		var skeleton2 = new SkeletalBody();
 		
-	    var leftHand = new createjs.Shape();
-	    leftHand.graphics.beginFill("blue").drawCircle(0,0, 10);
-	    $scope.stage.addChild(leftHand);
-	    
-		var rightHand = new createjs.Shape();
-	    rightHand.graphics.beginFill("green").drawCircle(0,0, 10);
-	    $scope.stage.addChild(rightHand);
-	    
-	    var head = new createjs.Shape();
-	    head.graphics.beginFill("yellow").drawCircle(0, 0, 25);
-	    $scope.stage.addChild(head);
-	    
-	    // shoulder line
-	    var shoulderLine = new createjs.Shape();
-	    $scope.stage.addChild(shoulderLine);
-	    
-	    // spine
-	    var spineLine = new createjs.Shape();
-	    $scope.stage.addChild(spineLine);
-		
-		// two lines for left and right arms
-		var leftUpperArm = new createjs.Shape();
-		var leftLowerArm = new createjs.Shape();
-		$scope.stage.addChild(leftUpperArm);
-		$scope.stage.addChild(leftLowerArm);
-		
-		var rightUpperArm = new createjs.Shape();
-		var rightLowerArm = new createjs.Shape();
-		$scope.stage.addChild(rightUpperArm);
-		$scope.stage.addChild(rightLowerArm);		
+		skeleton1.init($scope.stage, "yellow");
+		skeleton2.init($scope.stage, "red");
 		
 		
+// 		mode.createProton2($scope);		
 		socket.on('bodyFrame', function(bodies){
 
-			var body = bodies[0];
+// 			$log.info("Total bodies:", bodies.length);
+
+// 			$log.info("body2", bodies[1].joints);
+
+			skeleton1.setBodyData(bodies[0]);
+			skeleton1.drawToStage();
+			
+			skeleton2.setBodyData(bodies[1]);
+			skeleton2.drawToStage();
 /*
 			// if you wish to view all dots all joints
 			$scope.stage.removeAllChildren();
@@ -130,55 +199,12 @@ mode.factory('modeSkeletalFun', function($log) {
 				$scope.stage.addChild(jointDot);
 			});
 */
-		    leftHand.x = body.joints["HandLeft"].x;
-		    leftHand.y = body.joints["HandLeft"].y;
-			
-			rightHand.x = body.joints["HandRight"].x;
-			rightHand.y = body.joints["HandRight"].y;
-
-			head.x = body.joints["Head"].x;
-			head.y = body.joints["Head"].y;				
-			
-			// draw the shoulders 
-			var lsj = body.joints["ShoulderLeft"];
-			var rsj = body.joints["ShoulderRight"];
-			
-			shoulderLine.graphics.clear();
-			shoulderLine.graphics.beginStroke("yellow");
-			shoulderLine.graphics.moveTo(lsj.x, lsj.y);
-			shoulderLine.graphics.lineTo(rsj.x, rsj.y);
-			
-			// draw the spine
-			var neckJoint = body.joints["Neck"];
-			var spineBase = body.joints["SpineBase"];
-			spineLine.graphics.clear();
-			shoulderLine.graphics.beginStroke("yellow");
-			shoulderLine.graphics.moveTo(neckJoint.x, neckJoint.y);
-			shoulderLine.graphics.lineTo(spineBase.x, spineBase.y);				
-		    
-		    // draw left arm, upper and lower	
-			leftUpperArm.graphics.clear();
-			leftUpperArm.graphics.beginStroke("blue");
-			leftUpperArm.graphics.moveTo(body.joints["ShoulderLeft"].x, body.joints["ShoulderLeft"].y);
-		    leftUpperArm.graphics.lineTo(body.joints["ElbowLeft"].x, body.joints["ElbowLeft"].y);
-			leftLowerArm.graphics.clear();
-			leftLowerArm.graphics.beginStroke("blue");
-			leftLowerArm.graphics.moveTo(body.joints["ElbowLeft"].x, body.joints["ElbowLeft"].y);
-		    leftLowerArm.graphics.lineTo(body.joints["WristLeft"].x, body.joints["WristLeft"].y);
-		    
-			// draw left arm, upper and lower	
-			rightUpperArm.graphics.clear();
-			rightUpperArm.graphics.beginStroke("green");
-			rightUpperArm.graphics.moveTo(body.joints["ShoulderRight"].x, body.joints["ShoulderRight"].y);
-		    rightUpperArm.graphics.lineTo(body.joints["ElbowRight"].x, body.joints["ElbowRight"].y);
-			rightLowerArm.graphics.clear();
-			rightLowerArm.graphics.beginStroke("green");
-			rightLowerArm.graphics.moveTo(body.joints["ElbowRight"].x, body.joints["ElbowRight"].y);
-		    rightLowerArm.graphics.lineTo(body.joints["WristRight"].x, body.joints["WristRight"].y);
+/*
 		    
 		    // reposition emitter
 		    emitter.p.x = leftHand.x;
 			emitter.p.y = leftHand.y;
+*/
 		    
 		    // we need to send a refresh because socket.io might not flush?  
 		    // TODO: fix this, eliminate the need for this.
@@ -190,7 +216,7 @@ mode.factory('modeSkeletalFun', function($log) {
 	}
 	
 	mode.update = function($scope) {
-		proton.update();
+		//proton.update();
 	}
 	
 	mode.deinit = function($scope) {
