@@ -70,8 +70,9 @@ angular.module('sos.canvas', [])
 			{ name: "Image", modeName: 'modeSampleImage' },
 			{ name: "Skeletal Fun", modeName: 'modeSkeletalFun', },
 			{ name: "Spritesheet Slow Clap", modeName: 'modeSlowClap' },
-		    { name: "MIDI Mode", modeName: 'modeMIDI' },
-			{ name: "Kinect Webcam", modeName: 'modeKinectWebcam' }
+		        { name: "MIDI Mode", modeName: 'modeMIDI' },
+   		        { name: "Kinect Webcam", modeName: 'modeKinectWebcam' },
+		        { name: "Dance Wildly", modeName: 'modeDanceWildly' },
 		];
 
 		 //Create a stage by getting a reference to the canvas
