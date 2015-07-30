@@ -8,10 +8,11 @@ mode.factory('modeSlowClap', function($log) {
 	
 	mode.id = "modeSlowClap";
 	mode.title = "Slow Clap GIF Style";
+	mode.stage = null;
 	
 	mode.init = function($scope) {
-		// init method
-		$log.info("init:", mode.id);
+	
+		mode.stage = new createjs.Stage($scope.canvasID);
 
 		var spriteWidth = 400;
 		var spriteHeight = 300;
@@ -30,17 +31,18 @@ mode.factory('modeSlowClap', function($log) {
 
 		sprite.gotoAndPlay("def");
 
-		$scope.stage = new createjs.Stage($scope.canvasID);
-		$scope.stage.addChild(sprite);	
+		
+		mode.stage.addChild(sprite);	
 	}
 	
 	mode.update = function($scope) {
+		mode.stage.update();
 		// no-op
 	}
 	
-	mode.deinit = function($scope) {
-		// do clean up
-		$log.info("deinit:", mode.id);
+	mode.deinit = function() {
+		mode.stage.removeAllChildren();
+		mode.stage = null;
 	}
 	
 	return mode;

@@ -41,9 +41,8 @@
 				</div>
 				<div class="panel-body">
 					<div class="list-group">
-						<a href="#" class="list-group-item" ng-repeat="mode in modeList" ng-click="showMode($index)">{{mode.name}}</a>
+						<a href="#" class="list-group-item" ng-repeat="mode in loadedModes" ng-click="showMode(mode.id)" ng-class='{ "active":(activeMode.id == mode.id) }'>{{mode.title}}</a>
 					</div>
-					<button class="btn" ng-click="clearStage()">Clear Stage</button>
 				</div>
 				</div>
 				<!-- END: media panel -->

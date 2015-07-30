@@ -21,7 +21,12 @@ angular.module('sos.canvas', [])
 		top: 0,
 	};
 
+	// mode metadata
 	$scope.activeMode = null;
+	$scope.modeModuleList = [ 'modeSampleImage', 'modeSkeletalFun', 'modeSlowClap', 'modeMIDI', 'modeKinectWebcam', 'modeSampleThree', 'modeDanceWildly' ];
+	$scope.loadedModes = {};
+	
+	// display metadata
 	$scope.wallDisplayMode = "DEV";
 	$scope.rotateForProduction = false;
 	$scope.devModeInputGroupClass = "btn-primary active";
@@ -55,21 +60,24 @@ angular.module('sos.canvas', [])
 
 	$document.bind("keypress", function(event) {
 		var charCode = event.charCode;
-		console.log(charCode);
 		switch(charCode) {
-			case 97: 
-				console.log("moving right");
+			case 97: // letter 'a' keypress
 				$scope.offsetStyle.left--;
-				console.log($scope.offsetStyle.left);
 				break;
-			case 119:
+			case 119: // letter 'w' keypress
 				$scope.offsetStyle.top--;
 				break;
-			case 115:
+			case 115: // letter 's' keypress
 				$scope.offsetStyle.top++;
 				break;
-			case 100:
+			case 100: // letter 'd' keypress
 				$scope.offsetStyle.left++;
+				break;
+			case 114: // letter 'r' keypress
+				$scope.toggleDisplayMode();
+				break;
+			case 32: // spacebar press
+				$scope.goToNextMode();
 				break;
 			default:
 				// no op
@@ -89,6 +97,31 @@ angular.module('sos.canvas', [])
 		return $scope.wallDisplay.height / origHeight;
 	}
 
+	$scope.toggleDisplayMode = function() {
+		if($scope.wallDisplayMode == "DEV") {
+			$scope.wallDisplayMode = "PROD";
+		} else {
+			$scope.wallDisplayMode = "DEV";
+		}
+	}
+
+	$scope.goToNextMode = function() {
+		console.log("Go to next mode");
+		// TODO: fill this out.
+	}
+
+	$scope.loadModules = function() {
+		angular.forEach($scope.modeModuleList, function(value) {
+			var mode = $injector.get(value);
+			if(mode) {
+				$scope.loadedModes[value] = mode;
+			} else {
+				$log.warn("Failed to load mode module: ", value);
+			}
+			
+		});
+	}
+
 	$scope.initCanvas = function() {
 
 		$log.info("Initializing <CANVAS> with id:", $scope.canvasID);
@@ -96,41 +129,32 @@ angular.module('sos.canvas', [])
 		 //Create a stage by getting a reference to the canvas
 	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, false);
 
-		// available modes
-		$scope.modeList = [
-			{ name: "Image", modeName: 'modeSampleImage' },
-			{ name: "Skeletal Fun", modeName: 'modeSkeletalFun', },
-			{ name: "Spritesheet Slow Clap", modeName: 'modeSlowClap' },
-		    { name: "MIDI Mode", modeName: 'modeMIDI' },
-			{ name: "Kinect Webcam", modeName: 'modeKinectWebcam' },
-			{ name: "Sample 3D Effect", modeName: 'modeSampleThree' },
-			{ name: "Dance Wildly", modeName: 'modeDanceWildly' }
-		];
+		// load modules
+		$scope.loadModules();
+		// set up default module
+		$scope.showMode($scope.modeModuleList[0]);
 
 	    // set up the ticker
-	    createjs.Ticker.setFPS(20);
+	    createjs.Ticker.setFPS(30);
 	    createjs.Ticker.addEventListener('tick', function() {
 			$scope.activeMode.update();
 			if($scope.stage) {
 				$scope.stage.update();	
 			}
 	    });
-
-	    $scope.showMode(1);
 	}
 
-	$scope.showMode = function(index) {
+	$scope.showMode = function(modeName) {
 
-		if($scope.activeMode) {
-			$log.info("deinit:", $scope.activeMode.id);
-			$scope.activeMode.deinit($scope);
-			//$scope.canvasEl.getContext('3d').clearRect(0, 0, $scope.canvasEl.width, $scope.canvasEl.height);
+		// deinit old module if it exists
+		var oldMode = $scope.activeMode;
+		if(oldMode) {
+			$log.info("deinit:", oldMode.id);
+			oldMode.deinit();
 		}
 
-		// create a new stage instance for the mode
-		$scope.stage = new createjs.Stage($scope.canvasID);
-		var modeName = $scope.modeList[index].modeName;
-		var mode = $injector.get(modeName);
+		// init new module and make active
+		var mode = $scope.loadedModes[modeName];
 		$log.info("init:", mode.id);
 		mode.init($scope);
 		$scope.activeMode = mode;

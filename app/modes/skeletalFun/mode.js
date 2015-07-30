@@ -113,7 +113,8 @@ mode.factory('modeSkeletalFun', function($log) {
 	var mode = {};
 	mode.id = 'modeSkeletalFun';
 	mode.title = "Sample Skeletal Tracking";
-
+	mode.stage = null;
+	
 	var proton;
 	var emitter;
 	var renderer;
@@ -122,7 +123,7 @@ mode.factory('modeSkeletalFun', function($log) {
 	var index = 0;
 	var colorBehaviour;
 
-	mode.createProton1 = function($scope, image) {
+	mode.createProton1 = function(image) {
 
 		proton = new Proton;
 		emitter = new Proton.Emitter();
@@ -137,19 +138,19 @@ mode.factory('modeSkeletalFun', function($log) {
 		emitter.emit();
 		proton.addEmitter(emitter);
 
-		renderer = new Proton.Renderer('easel', proton, $scope.stage);
+		renderer = new Proton.Renderer('easel', proton, mode.stage);
 		renderer.start();
 		renderer.blendFunc("SRC_ALPHA", "ONE");
 	}
 
-	mode.createProton2 = function($scope, image) {
+	mode.createProton2 = function(image) {
 
 		proton = new Proton;
 		emitter = new Proton.Emitter();
 
 		// sets rate of particles from emitter
 		emitter.rate = new Proton.Rate(new Proton.Span(10, 50), new Proton.Span(.05, .1));
-		emitter.addInitialize(new Proton.ImageTarget(image, 5, 5));
+		emitter.addInitialize(new Proton.ImageTarget(image));
 
 		// sets the 'mass' of the particle, affects how it interacts with the gravity
 		emitter.addInitialize(new Proton.Mass(1.0));
@@ -170,13 +171,13 @@ mode.factory('modeSkeletalFun', function($log) {
 		emitter.emit();
 		proton.addEmitter(emitter);
 
-		renderer = new Proton.Renderer('easel', proton, $scope.stage);
+		renderer = new Proton.Renderer('easel', proton, mode.stage);
 		renderer.start();
 		renderer.blendFunc("SRC_ALPHA", "ONE");
 		console.log("done creating emitter");
 	}
 
-	mode.createProton3 = function($scope) {
+	mode.createProton3 = function() {
 		
 		proton = new Proton;
 		emitter = new Proton.Emitter();
@@ -196,7 +197,7 @@ mode.factory('modeSkeletalFun', function($log) {
 		colorBehaviour = new Proton.Color(color1, color2);
 		emitter.addBehaviour(colorBehaviour);
 		
-		var canvas = $scope.stage.canvas;
+		var canvas = mode.stage.canvas;
 		
 		emitter.addBehaviour(new Proton.CrossZone(new Proton.RectZone(0, 0, canvas.width, canvas.height), 'collision'));
 		emitter.p.x = canvas.width / 2;
@@ -206,14 +207,26 @@ mode.factory('modeSkeletalFun', function($log) {
 		proton.addEmitter(emitter);
 
 		//canvas renderer
-		renderer = new Proton.Renderer('easel', proton, $scope.stage);
+		renderer = new Proton.Renderer('easel', proton, mode.stage);
 		renderer.start();
 
 		//debug drawEmitter
 		//Proton.Debug.drawEmitter(proton, canvas, emitter);
 	}
 
+	mode.createProton4 = function(stage) {
+		
+		var bitmap = new createjs.Bitmap("media/particle.png");
+		var texture = new createjs.Shape(new createjs.Graphics().beginBitmapFill(bitmap).drawRect(0, 0, 80, 80));
+		console.log("texture:", texture);
+		mode.createProton2(texture);
+	}
+
 	mode.init = function($scope) {
+		
+		// create stage instance
+		mode.stage = new createjs.Stage($scope.canvasID);
+		
 		// init method
 		socket = io.connect('http://localhost:8008', {
 			'reconnect': true,
@@ -233,14 +246,14 @@ mode.factory('modeSkeletalFun', function($log) {
 			$log.warn("socket.io error:", err);
 		});
 
-		$scope.stage.compositeOperation = "lighter";
+		mode.stage.compositeOperation = "lighter";
 		
 		// first body instance
 		var skeleton1 = new SkeletalBody();
 		var skeleton2 = new SkeletalBody();
 		
-		skeleton1.init($scope.stage, "yellow");
-		skeleton2.init($scope.stage, "red");
+		skeleton1.init(mode.stage, "yellow");
+		skeleton2.init(mode.stage, "red");
 		
 		
 		mode.createProton3($scope);		
@@ -279,7 +292,9 @@ mode.factory('modeSkeletalFun', function($log) {
 
 	mode.update = function($scope) {
 		proton.update();
+		mode.stage.update();
 		
+/*
 		//change color
 		index++;
 		if (index % 10 == 0) {
@@ -289,6 +304,7 @@ mode.factory('modeSkeletalFun', function($log) {
 			colorBehaviour.reset(color1, color2);
 			index = 0;
 		}
+*/
 	}
 
 	mode.deinit = function($scope) {

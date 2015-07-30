@@ -9,6 +9,9 @@ mode.factory('modeKinectWebcam', function($log) {
     var socket = undefined;
     var colorProcessing = false;
 
+	mode.id = 'modeKinectWebcam';
+	mode.title = 'Kinect Webcam';
+
     mode.init = function($scope) {
         thread = new Worker("canvas/colorWorker.js");
         socket = io.connect('http://localhost:8008');

@@ -29,6 +29,8 @@
   padding: 0;
 }
 
+/* DO NOT DEFINE WIDTH/HEIGHT IN CSS FOR CANVAS! 
+	MUCH BAD HOO-DOO-JOO WILL ENSUE  */
 #sos-canvas {
 	background-color: black;
 	position: absolute;
