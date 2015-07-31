@@ -11,6 +11,7 @@ mode.factory('modeTruchet', function($log) {
   var camera, scene, renderer, uniforms;
   var vertexShader, fragmentShader = null;
 
+  // pre-load shaders.
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if(xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200){
@@ -20,13 +21,21 @@ mode.factory('modeTruchet', function($log) {
   xmlhttp.open("GET", document.getElementById('truchetVert').src, true);
   xmlhttp.send();
 
-  xmlhttp.onreadystatechange = function() {
-    if(xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200){
-      fragmentShader = xmlhttp.responseText;
+  var xmlhttp2 = new XMLHttpRequest();
+  xmlhttp2.onreadystatechange = function() {
+    if(xmlhttp2.readyState == XMLHttpRequest.DONE && xmlhttp2.status == 200){
+      fragmentShader = xmlhttp2.responseText;
     }
   };
-  xmlhttp.open("GET", document.getElementById('truchetFrag').src, true);
-  xmlhttp.send();
+  xmlhttp2.open("GET", document.getElementById('truchetFrag').src, true);
+  xmlhttp2.send();
+  // pre-load images.
+  var cube = THREE.ImageUtils.loadTextureCube(['media/cube00.png',
+                                               'media/cube01.png',
+                                               'media/cube02.png',
+                                               'media/cube03.png',
+                                               'media/cube04.png',
+                                               'media/cube05.png']);
 
   mode.init = function($scope) {
 
@@ -43,8 +52,8 @@ mode.factory('modeTruchet', function($log) {
       // yes, the resolution given is not correct. this is because the
       // original shader code has a bug in it when y-res < x-res.
       input_resolution: { type: "v2", value: new THREE.Vector2(320.0, 480.0) },
-      input_globalTime: { type: "f", value: 1.0 }
-      //input_channel0: null,//TODO -- cubemap
+      input_globalTime: { type: "f", value: 1.0 },
+      input_channel0: { type: "t", value: cube },
     };
 
     var material = new THREE.ShaderMaterial({

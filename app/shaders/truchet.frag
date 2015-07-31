@@ -1,6 +1,6 @@
-
 uniform vec2 input_resolution;
 uniform float input_globalTime;
+uniform samplerCube input_channel0;
 
 float rand(vec3 r) { return fract(sin(dot(r.xy,vec2(1.38984*sin(r.z),1.13233*cos(r.z))))*653758.5453); }
 
@@ -95,9 +95,7 @@ void main()
     vec3 col=(cos(ray_pos/2.0)+2.0)/3.0;
 
     vec3 reflected=reflect(ray_dir,normal);
-    // TODO
-    //vec3 env=textureCube(input_channel0,reflected*reflected*reflected).xyz;
-    vec3 env=vec3(0.0,0.0,0.0);
+    vec3 env=textureCube(input_channel0,reflected*reflected*reflected).xyz;
 
     gl_FragColor=vec4(col*light+0.1*env,1.0);
 }
