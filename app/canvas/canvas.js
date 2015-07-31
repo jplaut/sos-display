@@ -5,15 +5,15 @@ angular.module('sos.canvas', [])
                  function($scope, $log, $injector, $document) {
 
 	$scope.wallDisplay = {
-		width: 192,
-		height: 320
+		width: 192*3,
+		height: 320*2
 	}
 
 	$scope.stage = null;
 
 	$scope.canvasDim = {
-		width: 192,
-		height: 320
+		width: 192*3,
+		height: 320*2
 	};
 	$scope.offsetStyle = {
 		left: 15,
@@ -145,8 +145,7 @@ angular.module('sos.canvas', [])
 	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, $scope.canvasWebGLEl);
 
 		// set up default module
-		$scope.loadModules();
-		$scope.showMode($scope.modeModuleList[0]);	
+		$scope.loadModules();	
 	}
 
 	$scope.showMode = function(modeName) {
@@ -188,7 +187,7 @@ angular.module('sos.canvas', [])
 
 		$scope.loadModules();
 		// set up default module
-		$scope.showMode($scope.modeModuleList[0]);	
+		$scope.showMode($scope.modeModuleList[6]);	
 		
 	    // set up the ticker
 	    createjs.Ticker.setFPS(30);

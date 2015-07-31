@@ -260,7 +260,7 @@ mode.factory('modeSkeletalFun', function($log) {
 		mode.stage = new createjs.Stage(parentScope.canvasID);
 		mode.trackedSkeletons = {};
 		
-		mode.createBackgroundAnimation();
+		//mode.createBackgroundAnimation();
 		
 		// init method
 		socket = io.connect('http://localhost:8008', {
