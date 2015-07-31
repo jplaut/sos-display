@@ -5,14 +5,17 @@ var mode = angular.module('sos.modes.sampleThree', []);
 mode.factory('modeSampleThree', function($log) {
 	
 	var mode = {};
+	
+	var parentScope = null;
 	mode.id = "modeSampleThree";
 	mode.title = "Sample Three.js engine";
 	mode.renderID = null;
 	
 	mode.init = function($scope) {
 
-		// remove stage if it exists
-		$scope.stage = null;
+		parentScope = $scope;
+		
+		parentScope.canvasElHidden = true;
 		
 		var scene = new THREE.Scene();
 		scene.fog = new THREE.Fog( 0xffffff, 1000, 4000 );
@@ -20,9 +23,9 @@ mode.factory('modeSampleThree', function($log) {
 		// lights
 		scene.add( new THREE.AmbientLight( 0x222222 ) );
 		
-		var camera = new THREE.PerspectiveCamera( 75, $scope.canvasEl.width / $scope.canvasEl.height, 0.1, 1000 );
+		var camera = new THREE.PerspectiveCamera( 75, parentScope.canvasWebGLEl.width / parentScope.canvasWebGLEl.height, 0.1, 1000 );
 
-		var renderer = new THREE.WebGLRenderer({canvas:$scope.canvasEl});
+		var renderer = new THREE.WebGLRenderer({canvas:parentScope.canvasWebGLEl});
 /*
 		renderer.setSize( canvas.width, canvas.height );
 		canvas.appendChild( renderer.domElement );
@@ -47,11 +50,11 @@ mode.factory('modeSampleThree', function($log) {
 		render();
 	}
 	
-	mode.update = function($scope) {
+	mode.update = function() {
 		// no updates needed for image
 	}
 	
-	mode.deinit = function($scope) {
+	mode.deinit = function() {
 		// do clean up
 		cancelAnimationFrame(mode.renderID);
 	}

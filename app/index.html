@@ -6,6 +6,7 @@
 		<title>Six Second Monks - Display</title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" href="favicon.png" />
 		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="app.css">
@@ -29,10 +30,11 @@
 		</div>
 
 		<div class="row" ng-controller="CanvasCtrl">
-			<div class="col-md-6">
-				<canvas id="sos-canvas" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }' ng-init="initCanvas()"></canvas>
+			<div class="col-md-5">
+				<canvas id="sos-canvas-webgl" ng-hide="canvasWebGLElHidden" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }'></canvas>
+				<canvas id="sos-canvas" ng-hide="canvasElHidden" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }'></canvas>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 
 				<!-- media panel -->
 				<div class="panel panel-default">
@@ -90,6 +92,18 @@
 				<!-- END: canvas control panel -->
 
 			</div>
+			<div class="col-md-3">
+
+				<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Mode Information</h3>
+				</div>
+				<div class="panel-body">
+					Put debug info about mode in here.
+				</div>
+				</div>
+
+			</div>
 		</div>
 
 	</div>
@@ -118,6 +132,9 @@
 	<script src="bower_components/midi/js/midi/plugin.webaudio.js" type="text/javascript"></script>
 	<script src="bower_components/midi/js/midi/plugin.webmidi.js" type="text/javascript"></script>
 	<script src="bower_components/midi/js/midi/synesthesia.js" type="text/javascript"></script>
+	
+	<!-- keyboard binding -->
+	<script src="bower_components/keyboardjs/dist/keyboard.js" type="text/javascript"></script>
 	
 	<!-- three.js (3D engine) -->
 	<script src="bower_components/three.js/three.js" type="text/javascript"></script>

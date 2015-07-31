@@ -5,16 +5,15 @@ angular.module('sos.canvas', [])
                  function($scope, $log, $injector, $document) {
 
 	$scope.wallDisplay = {
-		width: 192,
-		height: 320
+		width: 600,
+		height: 600
 	}
 
 	$scope.stage = null;
-	$scope.canvasID = "sos-canvas";
-	$scope.canvasEl = null;
+
 	$scope.canvasDim = {
-		width: 192,
-		height: 320
+		width: 600,
+		height: 600
 	};
 	$scope.offsetStyle = {
 		left: 15,
@@ -23,8 +22,20 @@ angular.module('sos.canvas', [])
 
 	// mode metadata
 	$scope.activeMode = null;
-	$scope.modeModuleList = [ 'modeSampleImage', 'modeSkeletalFun', 'modeSlowClap', 'modeMIDI', 'modeKinectWebcam', 'modeSampleThree', 'modeDanceWildly' ];
+	$scope.modeModuleList = [ 'modeSampleImage', 'modeSkeletalFun', 'modeSlowClap', 'modeMIDI', 'modeKinectWebcam', 'modeDanceWildly', 'modeSampleThree' ];
 	$scope.loadedModes = {};
+	
+	// canvas modes
+	
+	// 2d context canvas
+	$scope.canvasID = "sos-canvas";
+	$scope.canvasEl = null;
+	$scope.canvasElHidden = false;
+	
+	// webgl context canvas
+	$scope.canvasWebGLID = "sos-canvas-webgl";
+	$scope.canvasWebGLEl = null;
+	$scope.canvasWebGLElHidden = false;
 	
 	// display metadata
 	$scope.wallDisplayMode = "DEV";
@@ -58,32 +69,30 @@ angular.module('sos.canvas', [])
 	}, true);
 */
 
-	$document.bind("keypress", function(event) {
-		var charCode = event.charCode;
-		switch(charCode) {
-			case 97: // letter 'a' keypress
-				$scope.offsetStyle.left--;
-				break;
-			case 119: // letter 'w' keypress
-				$scope.offsetStyle.top--;
-				break;
-			case 115: // letter 's' keypress
-				$scope.offsetStyle.top++;
-				break;
-			case 100: // letter 'd' keypress
-				$scope.offsetStyle.left++;
-				break;
-			case 114: // letter 'r' keypress
-				$scope.toggleDisplayMode();
-				break;
-			case 32: // spacebar press
-				$scope.goToNextMode();
-				break;
-			default:
-				// no op
-		}
+	// keyboard bindings to move the canvas
+	// in 1px increments
+	keyboardJS.bind('up', function(e) {
+		$scope.offsetStyle.top--;
 		$scope.$digest();
 	});
+	keyboardJS.bind('down', function(e) {
+		$scope.offsetStyle.top++;
+		$scope.$digest();
+	});
+	keyboardJS.bind('left', function(e) {
+		$scope.offsetStyle.left--;
+		$scope.$digest();
+	});
+	keyboardJS.bind('right', function(e) {
+		$scope.offsetStyle.left++;
+		$scope.$digest();
+	});			
+	
+	// binding to rotate display between DEV/PROD
+	keyboardJS.bind('r', function(e) {
+		$scope.toggleDisplayMode();
+		$scope.$digest();
+	});	
 
 	$scope.$on("error", function(err) {
 		$log.warn("Registered error:", err);
@@ -122,26 +131,22 @@ angular.module('sos.canvas', [])
 		});
 	}
 
-	$scope.initCanvas = function() {
+	// initializers for two types of canvas
+	$scope.initializeCanvases = function() {
 
 		$log.info("Initializing <CANVAS> with id:", $scope.canvasID);
 		$scope.canvasEl = document.getElementById($scope.canvasID);
 		 //Create a stage by getting a reference to the canvas
-	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, false);
+	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, $scope.canvasEl);
+		
+		$log.info("Initializing <CANVAS> (WebGL) with id:", $scope.canvasWebGLID);
+		$scope.canvasWebGLEl = document.getElementById($scope.canvasWebGLID);
+		 //Create a stage by getting a reference to the canvas
+	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, $scope.canvasWebGLEl);
 
-		// load modules
-		$scope.loadModules();
 		// set up default module
-		$scope.showMode($scope.modeModuleList[0]);
-
-	    // set up the ticker
-	    createjs.Ticker.setFPS(30);
-	    createjs.Ticker.addEventListener('tick', function() {
-			$scope.activeMode.update();
-			if($scope.stage) {
-				$scope.stage.update();	
-			}
-	    });
+		$scope.loadModules();
+		$scope.showMode($scope.modeModuleList[0]);	
 	}
 
 	$scope.showMode = function(modeName) {
@@ -153,6 +158,10 @@ angular.module('sos.canvas', [])
 			oldMode.deinit();
 		}
 
+		// make both canvases visible
+		$scope.canvasElHidden = false;
+		$scope.canvasWebGLElHidden = false;
+
 		// init new module and make active
 		var mode = $scope.loadedModes[modeName];
 		$log.info("init:", mode.id);
@@ -160,15 +169,37 @@ angular.module('sos.canvas', [])
 		$scope.activeMode = mode;
 	}
 
-	$scope.setCanvasSize = function(width, height, doUpdate) {
+	$scope.setCanvasSize = function(width, height, canvas) {
 
-		console.log("canvasEl width:", $scope.canvasEl.width);
-		$scope.canvasEl.width = width;
-		$scope.canvasEl.height = height;
+		canvas.width = width;
+		canvas.height = height;
+/*
 
 		// update the stage
 		if($scope.stage && doUpdate) {
 			 $scope.stage.update();
 		}
+*/
 	}
+	
+	$scope.init = function() {
+
+		$scope.initializeCanvases();
+
+		$scope.loadModules();
+		// set up default module
+		$scope.showMode($scope.modeModuleList[0]);	
+		
+	    // set up the ticker
+	    createjs.Ticker.setFPS(30);
+	    createjs.Ticker.addEventListener('tick', function() {
+			$scope.activeMode.update();
+			if($scope.stage) {
+				$scope.stage.update();	
+			}
+	    });	
+	}
+	
+	// lastly, call init() to kick things off
+	$scope.init();
 }]);

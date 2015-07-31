@@ -7,13 +7,14 @@ function SkeletalBody() {
 	var _shapesData = {};
 	var _linesData = {};
 	var _color = null;
+	var _emitters = {};
 	
 	this.init = function(stage, color) {
 		// set up stage reference
 		_stage = stage;
 		_color = color;
 		
-		stage.x = stage.x - 60;
+// 		stage.x = stage.x - 60;
 		
 		// set up shapes
 		_shapesData.leftHand = new createjs.Shape();
@@ -26,6 +27,10 @@ function SkeletalBody() {
 		angular.forEach(_shapesData, function(value, key) {
 			_stage.addChild(value);
 		});		
+	}
+	
+	this.addEmitter = function(jointName, emitter) {
+		
 	}
 	
 	this.setBodyData = function(bodyData) {
@@ -114,6 +119,7 @@ mode.factory('modeSkeletalFun', function($log) {
 	mode.id = 'modeSkeletalFun';
 	mode.title = "Sample Skeletal Tracking";
 	mode.stage = null;
+	mode.trackedSkeletons = {};
 	
 	var proton;
 	var emitter;
@@ -122,6 +128,7 @@ mode.factory('modeSkeletalFun', function($log) {
 	var hcolor = 0;
 	var index = 0;
 	var colorBehaviour;
+	var parentScope;
 
 	mode.createProton1 = function(image) {
 
@@ -222,10 +229,38 @@ mode.factory('modeSkeletalFun', function($log) {
 		mode.createProton2(texture);
 	}
 
+	mode.createBackgroundAnimation = function() {
+		
+		var spriteWidth = 400;
+		var spriteHeight = 300;
+
+		var data = {
+		    images: ["media/spritesheet.png"],
+		    frames: {width: spriteWidth, height: spriteHeight},
+		    animations: {
+		        def: [0,6,"def"]
+		    }
+		};
+		var spriteSheet = new createjs.SpriteSheet(data);
+		var sprite = new createjs.Sprite(spriteSheet);
+
+		sprite.setTransform(0, 0, parentScope.getWidthScaleFactor(spriteWidth), parentScope.getHeightScaleFactor(spriteHeight));
+
+		sprite.gotoAndPlay("def");
+
+		
+		mode.stage.addChild(sprite);	
+	}
+
 	mode.init = function($scope) {
 		
+		parentScope = $scope;
+		
 		// create stage instance
-		mode.stage = new createjs.Stage($scope.canvasID);
+		mode.stage = new createjs.Stage(parentScope.canvasID);
+		mode.trackedSkeletons = {};
+		
+		mode.createBackgroundAnimation();
 		
 		// init method
 		socket = io.connect('http://localhost:8008', {
@@ -247,27 +282,38 @@ mode.factory('modeSkeletalFun', function($log) {
 		});
 
 		mode.stage.compositeOperation = "lighter";
-		
-		// first body instance
-		var skeleton1 = new SkeletalBody();
-		var skeleton2 = new SkeletalBody();
-		
-		skeleton1.init(mode.stage, "yellow");
-		skeleton2.init(mode.stage, "red");
-		
-		
+				
 		mode.createProton3($scope);		
 		socket.on('bodyFrame', function(bodies){
+
+			angular.forEach(bodies, function(body) {
+				
+				var skeleton;
+				var trackingId = body.trackingId;
+				if(mode.trackedSkeletons[trackingId]) {
+					skeleton = mode.trackedSkeletons[trackingId];
+				} else {
+					skeleton = new SkeletalBody();
+					skeleton.init(mode.stage, Color.random());
+					mode.trackedSkeletons[trackingId] = skeleton;
+				}
+				
+				skeleton.setBodyData(body);
+				skeleton.drawToStage();
+			});
+			
 
 // 			$log.info("Total bodies:", bodies.length);
 
 // 			$log.info("body2", bodies[1].joints);
 
+/*
 			skeleton1.setBodyData(bodies[0]);
 			skeleton1.drawToStage();
 			
 			skeleton2.setBodyData(bodies[1]);
 			skeleton2.drawToStage();
+*/
 /*
 			// if you wish to view all dots all joints
 			$scope.stage.removeAllChildren();
@@ -278,8 +324,10 @@ mode.factory('modeSkeletalFun', function($log) {
 			});
 */
 		    // reposition emitter
+/*
 		    emitter.p.x = bodies[0].joints["HandRight"].x;
 			emitter.p.y = bodies[0].joints["HandRight"].y;
+*/
 
 		    // we need to send a refresh because socket.io might not flush?
 		    // TODO: fix this, eliminate the need for this.
@@ -312,6 +360,9 @@ mode.factory('modeSkeletalFun', function($log) {
 		if(socket) {
 			socket.disconnect();
 		}
+		
+		// remove all bodies
+		
 	}
 
 	return mode;
