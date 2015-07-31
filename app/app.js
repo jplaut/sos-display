@@ -9,6 +9,7 @@ angular.module('sos', [
   'sos.modes.midi',
   'sos.modes.kinectWebcam',
 //   'sos.modes.plasma'
-	'sos.modes.sampleThree',
-	'sos.modes.danceWildly'
+  'sos.modes.sampleThree',
+  'sos.modes.danceWildly',
+  'sos.modes.truchet',
 ])
