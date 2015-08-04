@@ -1,26 +1,23 @@
 'use strict';
 
-var mode = angular.module('sos.modes.sampleThree', []);
-
+var mode = angular.module('sos.modes');
 mode.factory('modeSampleThree', function($log) {
 	
 	// threejs vars
-	var scene, camera, render;
+	var scene, camera, render, animate;
 	
 	var mode = {};
 	
 	/* TEXTURE WIDTH FOR SIMULATION */
-	var hash = document.location.hash.substr( 1 );
-	if (hash) hash = parseInt(hash, 0);	
-	var WIDTH = hash || 32;
 
-	var BIRDS = WIDTH * WIDTH;
 	
+/*
 	var windowHalfX = window.innerWidth / 2;
 	var windowHalfY = window.innerHeight / 2;
 
 	var PARTICLES = WIDTH * WIDTH;
-	var BOUNDS = 800, BOUNDS_HALF = BOUNDS / 2;
+	var BOUNDS = 32, BOUNDS_HALF = BOUNDS / 2;
+*/
 	
 	
 	var parentScope = null;
@@ -33,7 +30,8 @@ mode.factory('modeSampleThree', function($log) {
 		parentScope = $scope;
 		parentScope.canvasElHidden = true;
 		
-		mode.renderParticles();
+		mode.render3DCube();
+		//mode.animate();
 	}
 	
 	mode.update = function() {
@@ -45,7 +43,7 @@ mode.factory('modeSampleThree', function($log) {
 		cancelAnimationFrame(mode.renderID);
 	}
 	
-	// rendering modes 
+		// rendering modes 
 	mode.render3DCube = function() {
 		
 		var scene = new THREE.Scene();
@@ -79,60 +77,6 @@ mode.factory('modeSampleThree', function($log) {
 		};
 
 		render();
-	}
-	
-	mode.renderParticles = function() {
-		
-		var camera = new THREE.PerspectiveCamera( 75, parentScope.canvasWebGLEl.width / parentScope.canvasWebGLEl.height, 1, 3000 );
-		camera.position.z = 350;
-
-		var scene = new THREE.Scene();
-
-		scene.fog = new THREE.Fog( 0xffffff, 100, 1000 );
-
-		var renderer = new THREE.WebGLRenderer({canvas:parentScope.canvasWebGLEl});
-		renderer.setClearColor( scene.fog.color );
-		renderer.setPixelRatio( window.devicePixelRatio );
-		renderer.setSize( window.innerWidth, window.innerHeight );
-		//container.appendChild( renderer.domElement );
-
-		var simulator = new SimulationRenderer(WIDTH, renderer);
-		simulator.init();
-
-		document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-		document.addEventListener( 'touchstart', onDocumentTouchStart, false );
-		document.addEventListener( 'touchmove', onDocumentTouchMove, false );
-
-		window.addEventListener( 'resize', onWindowResize, false );
-
-		var gui = new dat.GUI();
-
-
-		var effectController = {
-			seperation: 20.0,
-			alignment: 20.0,
-			cohesion: 20.0,
-			freedom: 0.75
-		};
-
-		var valuesChanger = function() {
-
-			simulator.velocityUniforms.seperationDistance.value = effectController.seperation;
-			simulator.velocityUniforms.alignmentDistance.value = effectController.alignment;
-			simulator.velocityUniforms.cohesionDistance.value = effectController.cohesion;
-			simulator.velocityUniforms.freedomFactor.value = effectController.freedom;
-
-		};
-
-		valuesChanger();
-
-
-		gui.add( effectController, "seperation", 0.0, 100.0, 1.0 ).onChange( valuesChanger );
-		gui.add( effectController, "alignment", 0.0, 100, 0.001 ).onChange( valuesChanger );
-		gui.add( effectController, "cohesion", 0.0, 100, 0.025 ).onChange( valuesChanger );
-		gui.close();
-
-		initBirds();
 	}
 	
 	return mode;

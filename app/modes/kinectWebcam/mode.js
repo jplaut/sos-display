@@ -1,7 +1,6 @@
 'use strict';
 
-var mode = angular.module('sos.modes.kinectWebcam', []);
-
+var mode = angular.module('sos.modes');
 mode.factory('modeKinectWebcam', function($log) {
 
     var mode = {};

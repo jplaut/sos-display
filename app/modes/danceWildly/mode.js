@@ -1,7 +1,6 @@
 'use strict';
 
-var mode = angular.module('sos.modes.danceWildly', []);
-
+var mode = angular.module('sos.modes');
 mode.factory('modeDanceWildly', function($log) {
 
     var mode = {};

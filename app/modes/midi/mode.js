@@ -1,7 +1,6 @@
 'use strict';
 
-var mode = angular.module('sos.modes.midi', []);
-
+var mode = angular.module('sos.modes');
 mode.factory('modeMIDI', function($log) {
   
   var mode = {};

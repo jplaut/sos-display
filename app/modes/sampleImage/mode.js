@@ -1,7 +1,6 @@
 'use strict';
 
-var mode = angular.module('sos.modes.sampleImage', []);
-
+var mode = angular.module('sos.modes');
 mode.factory('modeSampleImage', function($log) {
 	
 	var mode = {};

@@ -1,7 +1,6 @@
 'use strict';
 
-var mode = angular.module('sos.modes.plasma', []);
-
+var mode = angular.module('sos.modes');
 mode.factory('modePlasma', function($log) {
 	
 	var mode = {};

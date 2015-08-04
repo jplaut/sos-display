@@ -1,7 +1,6 @@
 'use strict';
 
-var mode = angular.module('sos.modes.slowClap', []);
-
+var mode = angular.module('sos.modes');
 mode.factory('modeSlowClap', function($log) {
 	
 	var mode = {};
