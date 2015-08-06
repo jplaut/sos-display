@@ -72,19 +72,19 @@ angular.module('sos.canvas', [])
 
 	// keyboard bindings to move the canvas
 	// in 1px increments
-	keyboardJS.bind('up', function(e) {
+	keyboardJS.bind('w', function(e) {
 		$scope.offsetStyle.top--;
 		$scope.$digest();
 	});
-	keyboardJS.bind('down', function(e) {
+	keyboardJS.bind('s', function(e) {
 		$scope.offsetStyle.top++;
 		$scope.$digest();
 	});
-	keyboardJS.bind('left', function(e) {
+	keyboardJS.bind('a', function(e) {
 		$scope.offsetStyle.left--;
 		$scope.$digest();
 	});
-	keyboardJS.bind('right', function(e) {
+	keyboardJS.bind('d', function(e) {
 		$scope.offsetStyle.left++;
 		$scope.$digest();
 	});
