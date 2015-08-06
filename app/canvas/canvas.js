@@ -5,15 +5,15 @@ angular.module('sos.canvas', [])
                  function($scope, $log, $injector, $document) {
 
 	$scope.wallDisplay = {
-		width: 192*3,
-		height: 320*2
+		width: 192,
+		height: 320
 	}
 
 	$scope.stage = null;
 
 	$scope.canvasDim = {
-		width: 192*3,
-		height: 320*2
+		width: 192,
+		height: 320
 	};
 	$scope.offsetStyle = {
 		left: 15,

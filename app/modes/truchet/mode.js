@@ -67,6 +67,7 @@ mode.factory('modeTruchet', function($log) {
     renderer = new THREE.WebGLRenderer({ canvas: $scope.canvasWebGLEl });
 
     var render = function () {
+	  uniforms.input_globalTime.value += 0.05;
       mode.renderID = requestAnimationFrame(render);
       renderer.render(scene, camera);
     };
