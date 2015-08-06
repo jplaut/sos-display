@@ -99,7 +99,12 @@
 					<h3 class="panel-title">Mode Information</h3>
 				</div>
 				<div class="panel-body">
-					Put debug info about mode in here.
+					<table class="table table-striped">
+						<tr><th>Name</th><th>Value</th></tr>
+						<tr ng-repeat="(key,value) in activeMode.debug">
+							<td><samp>{{key}}</samp></td><td><samp>{{value}}</samp></td>
+						</tr>
+					</table>
 				</div>
 				</div>
 
@@ -145,6 +150,9 @@
 
 	<!-- socket.io -->
 	<script src="bower_components/socket.io-client/socket.io.js"></script>
+
+	<!-- pixi.js -->
+	<script src="bower_components/pixi.js/bin/pixi.js"></script>
 
 	<!-- APP SPECIFIC -->
 	<script src="app.js"></script>

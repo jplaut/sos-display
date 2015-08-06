@@ -97,3 +97,54 @@ services.service('protonEmitterService', function($log) {
 		mode.createProton2(texture);
 	}
 	*/
+	
+/*
+	$scope.createProton = function() {
+		proton = new Proton;
+		$scope.createImageEmitter();
+
+		renderer = new Proton.Renderer('easel', proton, $scope.canvas);
+		//renderer.blendFunc("SRC_ALPHA", "ONE");
+		renderer.start();
+	}
+
+	$scope.createImageEmitter = function() {
+		emitter = new Proton.Emitter();
+		emitter.rate = new Proton.Rate(new Proton.Span(5, 10), new Proton.Span(.01, .015));
+		emitter.addInitialize(new Proton.Mass(1));
+		emitter.addInitialize(new Proton.Life(1, 2));
+		emitter.addInitialize(new Proton.ImageTarget(['media/particle.png'], 32));
+		emitter.addInitialize(new Proton.Radius(40));
+		emitter.addInitialize(new Proton.V(new Proton.Span(1, 3), 65, 'polar'));
+		emitter.addBehaviour(new Proton.Alpha(1, 0));
+		emitter.addBehaviour(new Proton.Color('#4F1500', '#0029FF'));
+		emitter.addBehaviour(new Proton.Scale(3, 0.1));
+		emitter.addBehaviour(new Proton.CrossZone(new Proton.RectZone(0, 0, 1003, 610), 'dead'));
+		emitter.p.x = 1003 / 2;
+		emitter.p.y = 610 / 2;
+		emitter.emit();
+		proton.addEmitter(emitter);
+	}
+*/
+
+/*
+	$scope.createProton = function(image) {
+
+	}
+
+	$scope.loadImage = function() {
+		var image = new Image()
+		image.onload = function(e) {
+			console.log("e: ", e.target);
+			$scope.createProton(e.target);
+// 			tick();
+		}
+		image.onerror = function() {
+			console.log("error loading image");
+		}
+		image.src = 'media/particle.png';
+	}
+
+/*
+
+*/	

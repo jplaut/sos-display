@@ -5,15 +5,15 @@ angular.module('sos.canvas', [])
                  function($scope, $log, $injector, $document) {
 
 	$scope.wallDisplay = {
-		width: 192,
-		height: 320
+		width: 192*3,
+		height: 320*2
 	}
 
 	$scope.stage = null;
 
 	$scope.canvasDim = {
-		width: 192,
-		height: 320
+		width: 192*3,
+		height: 320*2
 	};
 	$scope.offsetStyle = {
 		left: 15,
@@ -69,13 +69,6 @@ angular.module('sos.canvas', [])
 		}
 
 	}, true);
-
-/*
-	$scope.$watch('canvasDim', function(newDim) {
-		console.log("canvasDim called");
-		$scope.setCanvasSize(newDim.width, newDim.height, true);
-	}, true);
-*/
 
 	// keyboard bindings to move the canvas
 	// in 1px increments
@@ -180,13 +173,6 @@ angular.module('sos.canvas', [])
 
 		canvas.width = width;
 		canvas.height = height;
-/*
-
-		// update the stage
-		if($scope.stage && doUpdate) {
-			 $scope.stage.update();
-		}
-*/
 	}
 
 	$scope.init = function() {
@@ -198,6 +184,7 @@ angular.module('sos.canvas', [])
 		$scope.showMode($scope.modeModuleList[1]);	
 		
 	    // set up the ticker
+/*
 	    createjs.Ticker.setFPS(30);
 	    createjs.Ticker.addEventListener('tick', function() {
 			$scope.activeMode.update();
@@ -205,6 +192,7 @@ angular.module('sos.canvas', [])
 				$scope.stage.update();
 			}
 	    });
+*/
 	}
 
 	// lastly, call init() to kick things off

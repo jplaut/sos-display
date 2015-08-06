@@ -10,4 +10,4 @@ angular.module('sos', [
   'sos.canvas',
   'sos.modes',
   'sos.services'
-])
+]);

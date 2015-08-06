@@ -19,7 +19,8 @@
     "tweenjs": "*",
     "proton": "*",
     "three.js": "~0.71.0",
-    "keyboardjs": "~2.1.1"
+    "keyboardjs": "~2.1.1",
+    "pixi.js": "~3.0.7"
   },
   "devDependencies": {
     "bootstrap": "~3.3.4"
