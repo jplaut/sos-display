@@ -3,83 +3,82 @@
 var mode = angular.module('sos.modes');
 mode.factory('modeTruchet', function($log) {
 
-  var mode = {};
-  mode.id = "modeTruchet";
-  mode.title = "Truchet";
+	var mode = new Mode("modeTruchet", "Truchet");
+	mode.rendererType = "THREE";
+                                               
+  mode.preloadShaders = function() {
 
-  var camera, scene, renderer, uniforms;
-  var vertexShader, fragmentShader = null;
+  	console.log("preloading shaders");
 
-  // pre-load shaders.
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-    if(xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200){
-      vertexShader = xmlhttp.responseText;
-    }
-  };
-  xmlhttp.open("GET", document.getElementById('truchetVert').src, true);
-  xmlhttp.send();
+  	// XHR loader
+  	var xhrLoader = new THREE.XHRLoader();
+  	xhrLoader.load(document.getElementById('truchetVert').src, function(resp) {
+	  	mode.vertexShader = resp;
+	  	xhrLoader.load(document.getElementById('truchetFrag').src, function(resp) {
+	  		mode.fragmentShader = resp;	
+	  		mode.startRender();
+  		});
+  	});
+  	
+	// pre-load images.
+	mode.cube = THREE.ImageUtils.loadTextureCube(['media/cube00.png',
+	                                               'media/cube01.png',
+	                                               'media/cube02.png',
+	                                               'media/cube03.png',
+	                                               'media/cube04.png',
+	                                               'media/cube05.png']);
+  }                                             
 
-  var xmlhttp2 = new XMLHttpRequest();
-  xmlhttp2.onreadystatechange = function() {
-    if(xmlhttp2.readyState == XMLHttpRequest.DONE && xmlhttp2.status == 200){
-      fragmentShader = xmlhttp2.responseText;
-    }
-  };
-  xmlhttp2.open("GET", document.getElementById('truchetFrag').src, true);
-  xmlhttp2.send();
-  // pre-load images.
-  var cube = THREE.ImageUtils.loadTextureCube(['media/cube00.png',
-                                               'media/cube01.png',
-                                               'media/cube02.png',
-                                               'media/cube03.png',
-                                               'media/cube04.png',
-                                               'media/cube05.png']);
+  mode.init = function(parentScope) {
 
-  mode.init = function($scope) {
+  	mode.setParentScope(parentScope);
 
-    $scope.canvasElHidden = true;
+  	// WebGL will throw a hissyfit if you reuse shaders/patterns from a previous canvas/context, 
+  	// so we need to explictly null out everything and re-init.
+	mode.vertexShader = null;
+	mode.fragmentShader = null;
+	mode.cube = null;
+	mode.uniforms = null;
 
-    camera = new THREE.Camera();
+	mode.preloadShaders();
+  }
+
+  mode.startRender = function() {
+	  
+    var camera = new THREE.PerspectiveCamera( 7, mode.parentScope.renderer.domElement.width / mode.parentScope.renderer.domElement.height, 0.1, 100000 );
     camera.position.z = 1;
 
-    scene = new THREE.Scene();
+    var scene = new THREE.Scene();
 
     var geometry = new THREE.PlaneBufferGeometry(2, 2);
 
-    uniforms = {
+    mode.uniforms = {
       // yes, the resolution given is not correct. this is because the
       // original shader code has a bug in it when y-res < x-res.
       input_resolution: { type: "v2", value: new THREE.Vector2(320.0, 480.0) },
       input_globalTime: { type: "f", value: 1.0 },
-      input_channel0: { type: "t", value: cube },
+      input_channel0: { type: "t", value: mode.cube },
     };
 
     var material = new THREE.ShaderMaterial({
-      uniforms: uniforms,
-      vertexShader: vertexShader,
-      fragmentShader: fragmentShader,
+      uniforms: mode.uniforms,
+      vertexShader: mode.vertexShader,
+      fragmentShader: mode.fragmentShader,
     });
 
     var mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    renderer = new THREE.WebGLRenderer({ canvas: $scope.canvasWebGLEl });
-
     var render = function () {
-	  uniforms.input_globalTime.value += 0.05;
+	  mode.uniforms.input_globalTime.value += 0.05;
       mode.renderID = requestAnimationFrame(render);
-      renderer.render(scene, camera);
+      mode.parentScope.renderer.render(scene, camera);
     };
 
-    render();
+    render();	  
   }
 
-  mode.update = function($scope) {
-    uniforms.input_globalTime.value += 0.05;
-  }
-
-  mode.deinit = function($scope) {
+  mode.deinit = function() {
     cancelAnimationFrame(mode.renderID);
   }
 

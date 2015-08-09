@@ -3,47 +3,17 @@
 var mode = angular.module('sos.modes');
 mode.factory('modeSampleThree', function($log) {
 	
-	// threejs vars
-	var scene, camera, render, animate;
-	
-	var mode = {};
-	
-	/* TEXTURE WIDTH FOR SIMULATION */
-
-	
-/*
-	var windowHalfX = window.innerWidth / 2;
-	var windowHalfY = window.innerHeight / 2;
-
-	var PARTICLES = WIDTH * WIDTH;
-	var BOUNDS = 32, BOUNDS_HALF = BOUNDS / 2;
-*/
-	
-	
-	var parentScope = null;
-	mode.id = "modeSampleThree";
-	mode.title = "Sample Three.js engine";
-	mode.renderID = null;
-	
-	mode.init = function($scope) {
-
-		parentScope = $scope;
-		parentScope.canvasElHidden = true;
 		
+	var mode = new Mode("modeSampleThree", "Sample Three.js Engine");
+	mode.rendererType = "THREE";
+
+	mode.init = function(parentScope) {
+
+		this.setParentScope(parentScope);		
 		mode.render3DCube();
-		//mode.animate();
 	}
 	
-	mode.update = function() {
-		// no updates needed for image
-	}
-	
-	mode.deinit = function() {
-		// do clean up
-		cancelAnimationFrame(mode.renderID);
-	}
-	
-		// rendering modes 
+	// rendering modes 
 	mode.render3DCube = function() {
 		
 		var scene = new THREE.Scene();
@@ -52,13 +22,7 @@ mode.factory('modeSampleThree', function($log) {
 		// lights
 		scene.add( new THREE.AmbientLight( 0x222222 ) );
 		
-		var camera = new THREE.PerspectiveCamera( 75, parentScope.canvasWebGLEl.width / parentScope.canvasWebGLEl.height, 0.1, 1000 );
-
-		var renderer = new THREE.WebGLRenderer({canvas:parentScope.canvasWebGLEl});
-/*
-		renderer.setSize( canvas.width, canvas.height );
-		canvas.appendChild( renderer.domElement );
-*/
+		var camera = new THREE.PerspectiveCamera( 75, mode.parentScope.renderer.domElement.width / mode.parentScope.renderer.domElement.height, 0.1, 1000 );
 
 		var geometry = new THREE.BoxGeometry( 2, 2, 2 );
 		var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
@@ -71,13 +35,18 @@ mode.factory('modeSampleThree', function($log) {
 			mode.renderID = requestAnimationFrame( render );
 
 			cube.rotation.x += 0.1;
-// 			cube.rotation.y += 0.1;
+			cube.rotation.y += 0.1;
 
-			renderer.render(scene, camera);
+			mode.parentScope.renderer.render(scene, camera);
 		};
 
 		render();
 	}
+	
+	mode.deinit = function() {
+		console.log("cancelling animation", mode.renderID);
+    	cancelAnimationFrame(mode.renderID);
+  	}	
 	
 	return mode;
 });

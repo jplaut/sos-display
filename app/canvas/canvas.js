@@ -24,10 +24,10 @@ angular.module('sos.canvas', [])
 	$scope.activeMode = null;
 	$scope.modeModuleList = [ 'modeSampleImage',
                                   'modeSkeletalFun',
-                                  'modeSlowClap',
-                                  'modeMIDI',
-                                  'modeKinectWebcam',
-                                  'modeDanceWildly',
+//                                   'modeSlowClap',
+//                                   'modeMIDI',
+//                                   'modeKinectWebcam',
+//                                   'modeDanceWildly',
                                   'modeSampleThree',
                                   'modeTruchet',
                                 ];
@@ -37,6 +37,7 @@ angular.module('sos.canvas', [])
 
 	// 2d context canvas
 	$scope.canvasID = "sos-canvas";
+	$scope.canvasDiv = null;
 	$scope.canvasEl = null;
 	$scope.canvasElHidden = false;
 
@@ -89,6 +90,11 @@ angular.module('sos.canvas', [])
 		$scope.$digest();
 	});
 
+	keyboardJS.bind('n', function(n) {
+		console.log("going to next mode");
+		// TODO: implement this
+	});
+
 	// binding to rotate display between DEV/PROD
 	keyboardJS.bind('r', function(e) {
 		$scope.toggleDisplayMode();
@@ -133,21 +139,25 @@ angular.module('sos.canvas', [])
 	}
 
 	// initializers for two types of canvas
-	$scope.initializeCanvases = function() {
+	$scope.createCanvas = function(rendererType) {
 
-		$log.info("Initializing <CANVAS> with id:", $scope.canvasID);
-		$scope.canvasEl = document.getElementById($scope.canvasID);
-		 //Create a stage by getting a reference to the canvas
-	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, $scope.canvasEl);
-
-		$log.info("Initializing <CANVAS> (WebGL) with id:", $scope.canvasWebGLID);
-		$scope.canvasWebGLEl = document.getElementById($scope.canvasWebGLID);
-		 //Create a stage by getting a reference to the canvas
-	    $scope.setCanvasSize($scope.canvasDim.width, $scope.canvasDim.height, $scope.canvasWebGLEl);
-
-		// set up default module
-		$scope.loadModules();	
+		$scope.canvasDiv = document.getElementById("canvas-stack");
+		console.log("Setting up rendererType:", rendererType);
+		if(rendererType == "THREE") {
+			$scope.renderer = new THREE.WebGLRenderer();
+			$scope.renderer.setSize($scope.canvasDim.width, $scope.canvasDim.height);
+			$scope.canvasDiv.appendChild($scope.renderer.domElement);
+		} else {
+			$scope.renderer = PIXI.autoDetectRenderer($scope.canvasDim.width, $scope.canvasDim.height, {backgroundColor : 0x1099bb, antialias: true});
+			$scope.canvasDiv.appendChild($scope.renderer.view);			
+		}
 	}
+
+	$scope.clearCanvases = function() {
+		console.log("emptying div", $scope.canvasDiv);
+		angular.element($scope.canvasDiv).empty();
+	}
+	
 
 	$scope.showMode = function(modeName) {
 
@@ -158,12 +168,11 @@ angular.module('sos.canvas', [])
 			oldMode.deinit();
 		}
 
-		// make both canvases visible
-		$scope.canvasElHidden = false;
-		$scope.canvasWebGLElHidden = false;
+		$scope.clearCanvases();
 
 		// init new module and make active
 		var mode = $scope.loadedModes[modeName];
+		$scope.createCanvas(mode.rendererType);
 		$log.info("init:", mode.id);
 		mode.init($scope);
 		$scope.activeMode = mode;
@@ -177,22 +186,10 @@ angular.module('sos.canvas', [])
 
 	$scope.init = function() {
 
-		$scope.initializeCanvases();
-
+		$scope.canvasDiv = document.getElementById("canvas-stack");
 		$scope.loadModules();
 		// set up default module
-		$scope.showMode($scope.modeModuleList[1]);	
-		
-	    // set up the ticker
-/*
-	    createjs.Ticker.setFPS(30);
-	    createjs.Ticker.addEventListener('tick', function() {
-			$scope.activeMode.update();
-			if($scope.stage) {
-				$scope.stage.update();
-			}
-	    });
-*/
+		$scope.showMode($scope.modeModuleList[1]);
 	}
 
 	// lastly, call init() to kick things off

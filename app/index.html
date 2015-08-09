@@ -31,8 +31,7 @@
 
 		<div class="row" ng-controller="CanvasCtrl">
 			<div class="col-md-5">
-				<canvas id="sos-canvas-webgl" ng-hide="canvasWebGLElHidden" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }'></canvas>
-				<canvas id="sos-canvas" ng-hide="canvasElHidden" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }'></canvas>
+				<div id="canvas-stack"></div>
 			</div>
 			<div class="col-md-4">
 
@@ -45,6 +44,7 @@
 					<div class="list-group">
 						<a href="#" class="list-group-item" ng-repeat="mode in loadedModes" ng-click="showMode(mode.id)" ng-class='{ "active":(activeMode.id == mode.id) }'>{{mode.title}}</a>
 					</div>
+					<button class="btn btn-default" type="submit" ng-click="clearCanvases()">Clear Canvas</button>
 				</div>
 				</div>
 				<!-- END: media panel -->
@@ -166,6 +166,10 @@
 	<!-- angular services -->
 	<script src="services/skeletal.js"></script>
 	<script src="services/protonEmitter.js"></script>
+
+	<!-- class js files -->
+	<script src="classes/SkeletalBody.js"></script>
+	<script src="classes/Mode.js"></script>
 
 	<!-- links to respective mode.js files -->
 	<script src="modes/slowClap/mode.js"></script>
