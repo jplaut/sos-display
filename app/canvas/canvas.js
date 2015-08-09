@@ -61,6 +61,7 @@ angular.module('sos.canvas', [])
 			$log.info("DEV MODE");
 			$scope.devModeInputGroupClass = "btn-primary active";
 			$scope.prodModeInputGroupClass = "btn-default";
+			angular.element($scope.canvasEl)
 			$scope.rotateForProduction = false;
 		} else {
 			$log.info("PROD (WALL) MODE");
@@ -142,7 +143,6 @@ angular.module('sos.canvas', [])
 	$scope.createCanvas = function(rendererType) {
 
 		$scope.canvasDiv = document.getElementById("canvas-stack");
-		console.log("Setting up rendererType:", rendererType);
 		if(rendererType == "THREE") {
 			$scope.renderer = new THREE.WebGLRenderer();
 			$scope.renderer.setSize($scope.canvasDim.width, $scope.canvasDim.height);
@@ -154,7 +154,6 @@ angular.module('sos.canvas', [])
 	}
 
 	$scope.clearCanvases = function() {
-		console.log("emptying div", $scope.canvasDiv);
 		angular.element($scope.canvasDiv).empty();
 	}
 	

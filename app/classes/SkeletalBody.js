@@ -49,6 +49,7 @@ var SkeletalBody = function() {
 	}
 	
 	this.removeSelfFromContainer = function() {
+		console.log("removing self from container");
 		_shapesData.removeChildren();
 		_shapesData.destroy();
 	}

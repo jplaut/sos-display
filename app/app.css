@@ -31,9 +31,11 @@
 
 /* DO NOT DEFINE WIDTH/HEIGHT IN CSS FOR CANVAS! 
 	MUCH BAD HOO-DOO-JOO WILL ENSUE  */
-#sos-canvas, #sos-canvas-webgl {
+#canvas-stack {
 	position: absolute;
 	box-shadow: 0px 0px 10px #bcbcbc;
+	margin: 0;
+	padding: 0;
 }
 
 #testvideo {
