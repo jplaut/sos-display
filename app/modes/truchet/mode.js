@@ -45,7 +45,7 @@ mode.factory('modeTruchet', function($log) {
 
   mode.startRender = function() {
 	  
-    var camera = new THREE.PerspectiveCamera( 7, mode.parentScope.renderer.domElement.width / mode.parentScope.renderer.domElement.height, 0.1, 100000 );
+    var camera = new THREE.PerspectiveCamera( 7, mode.parentScope.threejs.renderer.domElement.width / mode.parentScope.threejs.renderer.domElement.height, 0.1, 100000 );
     camera.position.z = 1;
 
     var scene = new THREE.Scene();
@@ -72,7 +72,7 @@ mode.factory('modeTruchet', function($log) {
     var render = function () {
 	  mode.uniforms.input_globalTime.value += 0.05;
       mode.renderID = requestAnimationFrame(render);
-      mode.parentScope.renderer.render(scene, camera);
+      mode.parentScope.threejs.renderer.render(scene, camera);
     };
 
     render();	  

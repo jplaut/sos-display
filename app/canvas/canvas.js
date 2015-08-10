@@ -144,12 +144,14 @@ angular.module('sos.canvas', [])
 
 		$scope.canvasDiv = document.getElementById("canvas-stack");
 		if(rendererType == "THREE") {
-			$scope.renderer = new THREE.WebGLRenderer();
-			$scope.renderer.setSize($scope.canvasDim.width, $scope.canvasDim.height);
-			$scope.canvasDiv.appendChild($scope.renderer.domElement);
+			$scope.threejs = {};
+			$scope.threejs.renderer = new THREE.WebGLRenderer();
+			$scope.threejs.renderer.setSize($scope.canvasDim.width, $scope.canvasDim.height);
+			$scope.canvasDiv.appendChild($scope.threejs.renderer.domElement);
 		} else {
-			$scope.renderer = PIXI.autoDetectRenderer($scope.canvasDim.width, $scope.canvasDim.height, {backgroundColor : 0x1099bb, antialias: true});
-			$scope.canvasDiv.appendChild($scope.renderer.view);			
+			$scope.pixijs = {};
+			$scope.pixijs.renderer = PIXI.autoDetectRenderer($scope.canvasDim.width, $scope.canvasDim.height, {backgroundColor : 0x1099bb, antialias: true});
+			$scope.canvasDiv.appendChild($scope.pixijs.renderer.view);			
 		}
 	}
 
@@ -158,6 +160,7 @@ angular.module('sos.canvas', [])
 	}
 	
 
+	/* passing in null will function as clear canvas */
 	$scope.showMode = function(modeName) {
 
 		// deinit old module if it exists
@@ -166,15 +169,17 @@ angular.module('sos.canvas', [])
 			$log.info("deinit:", oldMode.id);
 			oldMode.deinit();
 		}
-
+		
 		$scope.clearCanvases();
 
 		// init new module and make active
 		var mode = $scope.loadedModes[modeName];
-		$scope.createCanvas(mode.rendererType);
-		$log.info("init:", mode.id);
-		mode.init($scope);
-		$scope.activeMode = mode;
+		if(mode) {
+			$scope.createCanvas(mode.rendererType);
+			$log.info("init:", mode.id);
+			mode.init($scope);
+			$scope.activeMode = mode;			
+		}
 	}
 
 	$scope.setCanvasSize = function(width, height, canvas) {
@@ -188,7 +193,7 @@ angular.module('sos.canvas', [])
 		$scope.canvasDiv = document.getElementById("canvas-stack");
 		$scope.loadModules();
 		// set up default module
-		$scope.showMode($scope.modeModuleList[1]);
+		$scope.showMode('modeTruchet');
 	}
 
 	// lastly, call init() to kick things off

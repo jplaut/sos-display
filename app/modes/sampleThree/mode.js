@@ -22,7 +22,7 @@ mode.factory('modeSampleThree', function($log) {
 		// lights
 		scene.add( new THREE.AmbientLight( 0x222222 ) );
 		
-		var camera = new THREE.PerspectiveCamera( 75, mode.parentScope.renderer.domElement.width / mode.parentScope.renderer.domElement.height, 0.1, 1000 );
+		var camera = new THREE.PerspectiveCamera( 75, mode.parentScope.threejs.renderer.domElement.width / mode.parentScope.threejs.renderer.domElement.height, 0.1, 1000 );
 
 		var geometry = new THREE.BoxGeometry( 2, 2, 2 );
 		var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
@@ -37,7 +37,7 @@ mode.factory('modeSampleThree', function($log) {
 			cube.rotation.x += 0.1;
 			cube.rotation.y += 0.1;
 
-			mode.parentScope.renderer.render(scene, camera);
+			mode.parentScope.threejs.renderer.render(scene, camera);
 		};
 
 		render();

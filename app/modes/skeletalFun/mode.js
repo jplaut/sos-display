@@ -27,7 +27,7 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 		this.setParentScope(parentScope);
 		this.container = new PIXI.Container();
 		
-		protonEmitterService.createProton3(parentScope.renderer.view);
+		protonEmitterService.createProton3(parentScope.pixijs.renderer.view);
 		
 		mode.trackedSkeletons = {};
 		

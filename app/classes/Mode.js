@@ -14,10 +14,9 @@ var Mode = function(id, title) {
 	this.update = function() {
 		
 		if(self.rendererType == "PIXI") {
-			self.parentScope.renderer.render(self.container);
+			self.parentScope.pixijs.renderer.render(self.container);
 			requestAnimationFrame(self.update);			
 		}
-
 	}
 	
 	this.deinit = function() {
