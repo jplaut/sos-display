@@ -193,7 +193,7 @@ angular.module('sos.canvas', [])
 		$scope.canvasDiv = document.getElementById("canvas-stack");
 		$scope.loadModules();
 		// set up default module
-		$scope.showMode('modeTruchet');
+		$scope.showMode('modeSkeletalFun');
 	}
 
 	// lastly, call init() to kick things off

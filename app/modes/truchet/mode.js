@@ -8,8 +8,6 @@ mode.factory('modeTruchet', function($log) {
                                                
   mode.preloadShaders = function() {
 
-  	console.log("preloading shaders");
-
   	// XHR loader
   	var xhrLoader = new THREE.XHRLoader();
   	xhrLoader.load(document.getElementById('truchetVert').src, function(resp) {
