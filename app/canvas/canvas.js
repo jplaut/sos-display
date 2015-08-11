@@ -30,6 +30,7 @@ angular.module('sos.canvas', [])
 //                                   'modeDanceWildly',
                                   'modeSampleThree',
                                   'modeTruchet',
+                                  'modeSeascape'
                                 ];
 	$scope.loadedModes = {};
 

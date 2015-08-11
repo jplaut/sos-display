@@ -1,28 +1,20 @@
 'use strict';
 
 var mode = angular.module('sos.modes');
-mode.factory('modeTruchet', function($log) {
+mode.factory('modeSeascape', function($log) {
 
-    var mode = new Mode("modeTruchet", "Truchet");
+    var mode = new Mode("modeSeascape", "Seascape");
     mode.rendererType = "THREE";
 
     mode.preloadShaders = function() {
   	var xhrLoader = new THREE.XHRLoader();
   	xhrLoader.load(document.getElementById('genericVert').src, function(resp) {
 	    mode.vertexShader = resp;
-	    xhrLoader.load(document.getElementById('truchetFrag').src, function(resp) {
+	    xhrLoader.load(document.getElementById('seascapeFrag').src, function(resp) {
 	  	mode.fragmentShader = resp;
 	  	mode.startRender();
   	    });
   	});
-
-	// pre-load images.
-	mode.cube = THREE.ImageUtils.loadTextureCube(['media/cube00.png',
-	                                              'media/cube01.png',
-	                                              'media/cube02.png',
-	                                              'media/cube03.png',
-	                                              'media/cube04.png',
-	                                              'media/cube05.png']);
     };
 
     mode.init = function(parentScope) {
@@ -34,7 +26,6 @@ mode.factory('modeTruchet', function($log) {
   	// null out everything and re-init.
 	mode.vertexShader = null;
 	mode.fragmentShader = null;
-	mode.cube = null;
 	mode.uniforms = null;
 
 	mode.preloadShaders();
@@ -50,11 +41,8 @@ mode.factory('modeTruchet', function($log) {
         var geometry = new THREE.PlaneBufferGeometry(2, 2);
 
         mode.uniforms = {
-            // yes, the resolution given is not correct. this is because the
-            // original shader code has a bug in it when y-res < x-res.
-            input_resolution: { type: "v2", value: new THREE.Vector2(320.0, 480.0) },
-            input_globalTime: { type: "f", value: 1.0 },
-            input_channel0: { type: "t", value: mode.cube }
+            input_resolution: { type: "v2", value: new THREE.Vector2(320.0, 192.0) },
+            input_globalTime: { type: "f", value: 1.0 }
         };
 
         var material = new THREE.ShaderMaterial({
