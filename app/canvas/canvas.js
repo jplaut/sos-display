@@ -7,7 +7,7 @@ angular.module('sos.canvas', [])
 	$scope.wallDisplay = {
 		width: 192,
 		height: 320
-	}
+	};
 
 	$scope.stage = null;
 
@@ -17,19 +17,15 @@ angular.module('sos.canvas', [])
 	};
 	$scope.offsetStyle = {
 		left: 15,
-		top: 0,
+		top: 0
 	};
 
 	// mode metadata
 	$scope.activeMode = null;
-	$scope.modeModuleList = [ 'modeTruchet',
-                                  //'modeSkeletalFun',
-                                  'modeSlowClap',
-//                                   'modeMIDI',
-//                                   'modeKinectWebcam',
-//                                   'modeDanceWildly',
+	$scope.modeModuleList = [ 'modeSlowClap',
                                   'modeSampleThree',
-                                  'modeSampleImage',
+                                  'modeTruchet',
+                                  'modeSeascape'
                                 ];
 	$scope.loadedModes = {};
 	$scope.kinectOverlay = true;
@@ -38,7 +34,7 @@ angular.module('sos.canvas', [])
 	$scope.wallDisplayMode = "DEV";
 	$scope.rotateForProduction = false;
 	$scope.devModeInputGroupClass = "btn-primary active";
-	$scope.prodModeInputGroupClass = "btn-primary"
+	$scope.prodModeInputGroupClass = "btn-primary";
 
 	$scope.modeList = [];
 
@@ -49,7 +45,7 @@ angular.module('sos.canvas', [])
 			$log.info("DEV MODE");
 			$scope.devModeInputGroupClass = "btn-primary active";
 			$scope.prodModeInputGroupClass = "btn-default";
-			angular.element($scope.canvasEl)
+			angular.element($scope.canvasEl);
 			$scope.rotateForProduction = false;
 		} else {
 			$log.info("PROD (WALL) MODE");
@@ -96,11 +92,11 @@ angular.module('sos.canvas', [])
 
 	$scope.getWidthScaleFactor = function(origWidth) {
 		return $scope.wallDisplay.width / origWidth;
-	}
+	};
 
 	$scope.getHeightScaleFactor = function(origHeight) {
 		return $scope.wallDisplay.height / origHeight;
-	}
+	};
 
 	$scope.toggleDisplayMode = function() {
 		if($scope.wallDisplayMode == "DEV") {
@@ -108,24 +104,19 @@ angular.module('sos.canvas', [])
 		} else {
 			$scope.wallDisplayMode = "DEV";
 		}
-	}
+	};
 
   $scope.toggleKinectOverlay = function() {
     
-    var kinectMode = $injector.get('modeSkeletalFun');
-    if($scope.kinectOverlay) {
-      kinectMode.deinit();
-      $scope.kinectOverlay = false;
-    } else {
-      kinectMode.init($scope);
-      $scope.kinectOverlay = true;
-    }
+    var overlay = document.getElementById('kinect-overlay');
+    overlay.hidden = $scope.kinectOverlay;
+    $scope.kinectOverlay = !$scope.kinectOverlay;
   }
 
 	$scope.goToNextMode = function() {
 		console.log("Go to next mode");
 		// TODO: fill this out.
-	}
+	};
 
 	$scope.loadModules = function() {
 		angular.forEach($scope.modeModuleList, function(value) {
@@ -137,7 +128,7 @@ angular.module('sos.canvas', [])
 			}
 
 		});
-	}
+	};
 
 	// initializers for two types of canvas
 	$scope.createCanvas = function(rendererType) {
@@ -151,14 +142,14 @@ angular.module('sos.canvas', [])
 		} else {
 			$scope.pixijs = {};
 			$scope.pixijs.renderer = PIXI.autoDetectRenderer($scope.canvasDim.width, $scope.canvasDim.height, {backgroundColor : 0x1099bb, antialias: true});
-			$scope.canvasDiv.appendChild($scope.pixijs.renderer.view);			
+			$scope.canvasDiv.appendChild($scope.pixijs.renderer.view);
 		}
-	}
+	};
 
 	$scope.clearCanvases = function() {
 		angular.element($scope.canvasDiv).empty();
-	}
-	
+	};
+
 
 	/* passing in null will function as clear canvas */
 	$scope.showMode = function(modeName) {
@@ -169,7 +160,7 @@ angular.module('sos.canvas', [])
 			$log.info("deinit:", oldMode.id);
 			oldMode.deinit();
 		}
-		
+
 		$scope.clearCanvases();
 
 		// init new module and make active
@@ -178,12 +169,13 @@ angular.module('sos.canvas', [])
 			$scope.createCanvas(mode.rendererType);
 			$log.info("init:", mode.id);
 			mode.init($scope);
-			$scope.activeMode = mode;			
+			$scope.activeMode = mode;
 		}
-	}
+	};
 
 	$scope.showKinectOverlay = function() {
 		
+		console.log("showing kinect overlay");
 		var mode = $injector.get('modeSkeletalFun');
 		mode.init($scope);
 	}
@@ -192,16 +184,16 @@ angular.module('sos.canvas', [])
 
 		canvas.width = width;
 		canvas.height = height;
-	}
+	};
 
 	$scope.init = function() {
 
 		$scope.canvasDiv = document.getElementById("canvas-stack");
 		$scope.loadModules();
 		// set up default module
-		$scope.showMode('modeSlowClap');
+		$scope.showMode('modeSeascape');
 		$scope.showKinectOverlay();
-	}
+	};
 
 	// lastly, call init() to kick things off
 	$scope.init();
