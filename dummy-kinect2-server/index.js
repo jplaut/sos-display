@@ -7,6 +7,8 @@ var _ = require('lodash');
 var output = json.read('./skeletal-output-02.json');
 var array = output.get('bodiesData')
 
+console.log("Dummy Kinect Server started.  Listening for connections.");
+
 io.on('connection', function(socket){
 	console.log("Received connection.");
 	var counter = 0;
@@ -21,3 +23,8 @@ io.on('connection', function(socket){
 		}
 	}, 33);
 });
+
+
+io.on('disconnect', function(socket) {
+	console.log("Disconnected from client.");
+})
