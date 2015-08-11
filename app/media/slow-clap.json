@@ -1,0 +1,45 @@
+{
+"frames": {
+	"citizen-kane-clapping_000.png": {
+		"frame": {"x":401, "y":0, "w":400, "h":300},
+		"spriteSourceSize": {"x":0,"y":0,"w":400,"h":300},
+		"sourceSize": {"w":400,"h":300}
+	},
+	"citizen-kane-clapping_001.png": {
+		"frame": {"x":401, "y":602, "w":400, "h":300},
+		"spriteSourceSize": {"x":0,"y":0,"w":400,"h":300},
+		"sourceSize": {"w":400,"h":300}
+	},
+	"citizen-kane-clapping_002.png": {
+		"frame": {"x":401, "y":301, "w":400, "h":300},
+		"spriteSourceSize": {"x":0,"y":0,"w":400,"h":300},
+		"sourceSize": {"w":400,"h":300}
+	},
+	"citizen-kane-clapping_003.png": {
+		"frame": {"x":802, "y":0, "w":400, "h":300},
+		"spriteSourceSize": {"x":0,"y":0,"w":400,"h":300},
+		"sourceSize": {"w":400,"h":300}
+	},
+	"citizen-kane-clapping_004.png": {
+		"frame": {"x":0, "y":602, "w":400, "h":300},
+		"spriteSourceSize": {"x":0,"y":0,"w":400,"h":300},
+		"sourceSize": {"w":400,"h":300}
+	},
+	"citizen-kane-clapping_005.png": {
+		"frame": {"x":0, "y":301, "w":400, "h":300},
+		"spriteSourceSize": {"x":0,"y":0,"w":400,"h":300},
+		"sourceSize": {"w":400,"h":300}
+	},
+	"citizen-kane-clapping_006.png": {
+		"frame": {"x":0, "y":0, "w":400, "h":300},
+		"spriteSourceSize": {"x":0,"y":0,"w":400,"h":300},
+		"sourceSize": {"w":400,"h":300}
+	}
+
+},
+"meta": {
+	"image": "slow-clap.png",
+	"size": {"w": 1203, "h": 903},
+	"scale": "1"
+}
+}

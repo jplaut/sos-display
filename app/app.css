@@ -38,6 +38,14 @@
 	padding: 0;
 }
 
+#kinect-overlay {
+	position: absolute;
+	box-shadow: 0px 0px 10px #bcbcbc;
+	margin: 0;
+	padding: 0;
+	z-index: 500;	
+}
+
 #testvideo {
 	background-color: red;
 }

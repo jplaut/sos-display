@@ -94,13 +94,17 @@ var SkeletalBody = function() {
 		
 		if(handPointer.visible) {
 			var pointer = new PIXI.Graphics();
-			var pointerLoc = self.getCenterPoint(self.getJointAsPoint("HandLeft"), self.getJointAsPoint("HandRight"));
+			var pointerLoc = self.getHandPointerPoint();
 			pointer.lineStyle(2, 0xffffff);
 			pointer.beginFill(handPointer.color)
 			pointer.drawCircle(pointerLoc.x, pointerLoc.y, handPointer.getNextSize());
 			pointer.alpha = handPointer.getNextAlpha();
 			_shapesData.addChild(pointer);			
 		}
+	}
+	
+	this.getHandPointerPoint = function() {
+		return self.getCenterPoint(self.getJointAsPoint("HandLeft"), self.getJointAsPoint("HandRight"));
 	}
 	
 	this.drawToStage = function() {

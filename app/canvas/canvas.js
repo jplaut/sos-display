@@ -22,29 +22,17 @@ angular.module('sos.canvas', [])
 
 	// mode metadata
 	$scope.activeMode = null;
-	$scope.modeModuleList = [ 'modeSampleImage',
-                                  'modeSkeletalFun',
-//                                   'modeSlowClap',
+	$scope.modeModuleList = [ 'modeTruchet',
+                                  //'modeSkeletalFun',
+                                  'modeSlowClap',
 //                                   'modeMIDI',
 //                                   'modeKinectWebcam',
 //                                   'modeDanceWildly',
                                   'modeSampleThree',
-                                  'modeTruchet',
+                                  'modeSampleImage',
                                 ];
 	$scope.loadedModes = {};
-
-	// canvas modes
-
-	// 2d context canvas
-	$scope.canvasID = "sos-canvas";
-	$scope.canvasDiv = null;
-	$scope.canvasEl = null;
-	$scope.canvasElHidden = false;
-
-	// webgl context canvas
-	$scope.canvasWebGLID = "sos-canvas-webgl";
-	$scope.canvasWebGLEl = null;
-	$scope.canvasWebGLElHidden = false;
+	$scope.kinectOverlay = true;
 
 	// display metadata
 	$scope.wallDisplayMode = "DEV";
@@ -122,6 +110,18 @@ angular.module('sos.canvas', [])
 		}
 	}
 
+  $scope.toggleKinectOverlay = function() {
+    
+    var kinectMode = $injector.get('modeSkeletalFun');
+    if($scope.kinectOverlay) {
+      kinectMode.deinit();
+      $scope.kinectOverlay = false;
+    } else {
+      kinectMode.init($scope);
+      $scope.kinectOverlay = true;
+    }
+  }
+
 	$scope.goToNextMode = function() {
 		console.log("Go to next mode");
 		// TODO: fill this out.
@@ -182,6 +182,12 @@ angular.module('sos.canvas', [])
 		}
 	}
 
+	$scope.showKinectOverlay = function() {
+		
+		var mode = $injector.get('modeSkeletalFun');
+		mode.init($scope);
+	}
+
 	$scope.setCanvasSize = function(width, height, canvas) {
 
 		canvas.width = width;
@@ -193,7 +199,8 @@ angular.module('sos.canvas', [])
 		$scope.canvasDiv = document.getElementById("canvas-stack");
 		$scope.loadModules();
 		// set up default module
-		$scope.showMode('modeSkeletalFun');
+		$scope.showMode('modeSlowClap');
+		$scope.showKinectOverlay();
 	}
 
 	// lastly, call init() to kick things off

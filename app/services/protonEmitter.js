@@ -23,9 +23,9 @@ services.service('protonEmitterService', function($log) {
 		colorBehaviour = new Proton.Color(color1, color2);
 		emitter.addBehaviour(colorBehaviour);
 		
-		emitter.addBehaviour(new Proton.CrossZone(new Proton.RectZone(0, 0, canvas.width, canvas.height), 'collision'));
-		emitter.p.x = canvas.width / 2;
-		emitter.p.y = canvas.height / 2;
+		emitter.addBehaviour(new Proton.CrossZone(new Proton.RectZone(0, 0, 100, 100), 'collision'));
+		emitter.p.x = 10;
+		emitter.p.y = 10;
 		emitter.emit();
 		//add emitter
 		proton.addEmitter(emitter);

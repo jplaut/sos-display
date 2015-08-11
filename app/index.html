@@ -31,6 +31,7 @@
 
 		<div class="row" ng-controller="CanvasCtrl">
 			<div class="col-md-5">
+				<div id="kinect-overlay" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }'></div>
 				<div id="canvas-stack" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }'></div>
 			</div>
 			<div class="col-md-4">
@@ -45,6 +46,7 @@
 						<a href="#" class="list-group-item" ng-repeat="mode in loadedModes" ng-click="showMode(mode.id)" ng-class='{ "active":(activeMode.id == mode.id) }'>{{mode.title}}</a>
 					</div>
 					<button class="btn btn-default" type="submit" ng-click="showMode()">Clear Mode</button>
+					<button class="btn btn-default" type="submit" ng-click="toggleKinectOverlay()">Toggle Kinect Overlay</button>
 				</div>
 				</div>
 				<!-- END: media panel -->
