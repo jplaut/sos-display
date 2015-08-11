@@ -11,20 +11,6 @@ var Mode = function(id, title) {
 	this.renderID;
 	this.rendererType = "PIXI";
 	
-	this.update = function() {
-		
-		if(self.rendererType == "PIXI") {
-			self.parentScope.pixijs.renderer.render(self.container);
-			requestAnimationFrame(self.update);			
-		}
-	}
-	
-	this.deinit = function() {
-
-		// do clean up
-		cancelAnimationFrame(self.renderID);
-	}
-	
 	this.setParentScope = function(scope) {
 		self.parentScope = scope;
 	}	

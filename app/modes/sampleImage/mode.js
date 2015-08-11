@@ -19,5 +19,14 @@ mode.factory('modeSampleImage', function($log) {
 		this.renderID = requestAnimationFrame(this.update);
 	}
 
+	mode.update = function() {
+		mode.parentScope.pixijs.renderer.render(mode.container);
+		requestAnimationFrame(mode.update);			
+	}
+
+	mode.deinit = function() {
+		cancelAnimationFrame(self.renderID);
+	} 
+
 	return mode;
 });

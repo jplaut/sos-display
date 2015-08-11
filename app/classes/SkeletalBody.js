@@ -7,6 +7,7 @@ var SkeletalBody = function() {
 	var _shapesData;
 	var _color = null;
 	var _isActive = true;
+	var _shapesXOffset = -100;
 	
 	
 	var handPointer = new HandPointer();
@@ -20,7 +21,7 @@ var SkeletalBody = function() {
 		// set up shapes
 		_container = new PIXI.Container();
 		_shapesData = new PIXI.Container();
-		_shapesData.x = _shapesData.x - 100;
+		_shapesData.x = _shapesData.x + _shapesXOffset;
 	}
 	
 	this.setBodyData = function(bodyData) {
@@ -51,9 +52,8 @@ var SkeletalBody = function() {
 	}
 	
 	this.removeSelfFromContainer = function() {
-		console.log("removing self from container");
 		_shapesData.removeChildren();
-		_shapesData.destroy();
+		//_shapesData.destroy();
 	}
 	
 	this.getActiveStatus = function() {
@@ -61,7 +61,7 @@ var SkeletalBody = function() {
 	}
 	
 	this.setActiveStatus = function(isActive) {
-		_isAcitve = isActive;
+		_isActive = isActive;
 	}
 	
 	this.drawLineBetweenJoints = function(j1Name, j2Name, config) {
@@ -95,13 +95,12 @@ var SkeletalBody = function() {
 		if(handPointer.visible) {
 			var pointer = new PIXI.Graphics();
 			var pointerLoc = self.getCenterPoint(self.getJointAsPoint("HandLeft"), self.getJointAsPoint("HandRight"));
+			pointer.lineStyle(2, 0xffffff);
 			pointer.beginFill(handPointer.color)
 			pointer.drawCircle(pointerLoc.x, pointerLoc.y, handPointer.getNextSize());
 			pointer.alpha = handPointer.getNextAlpha();
 			_shapesData.addChild(pointer);			
 		}
-		
-
 	}
 	
 	this.drawToStage = function() {
@@ -179,13 +178,13 @@ var SkeletalBody = function() {
 		this.minSize = 5;
 		this.maxSize = 15;
 		this.size = this.minSize;
-		this.sizeIncrement = 1;
+		this.sizeIncrement = 0.1;
 		
 		// fading ball .. hee hee
 		this.minAlpha = 0.5;
 		this.maxAlpha = 1.0;
 		this.alpha = this.minAlpha;
-		this.alphaIncrement = 0.5;
+		this.alphaIncrement = 0.05;
 		
 		this.getNextSize = function() {
 			

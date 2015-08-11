@@ -6,6 +6,7 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 	var mode = new Mode("modeSkeletalFun", "Skeletal Fun!");
 	mode.rendererType = "PIXI";
 
+	mode.bodies = [];
 	mode.trackedSkeletons = {};
 	mode.trackedEmitters = {};
 	mode.spineBoy = {};
@@ -17,7 +18,7 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 	mode.debug = {
 		id: mode.id,
 		title: mode.title,
-		bodiesTracked: 0,
+		skeletonsTracked: 0,
 		bodiesOnScreen: 0,
 		bodiesOffScreen: 0
 	}
@@ -29,64 +30,85 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 		
 		protonEmitterService.createProton3(parentScope.pixijs.renderer.view);
 		
-		mode.trackedSkeletons = {};
+		// initialize socket w/ socket.io skeletal data
+		mode.initSocket();
 		
-		// init method
+		// assign renderid from animation frame (for future deinit call)
+		mode.renderID = requestAnimationFrame(mode.update);
+	}
+
+	mode.initSocket = function() {
 		mode.socket = skeletalService.createSocket();	
+				
+		mode.socket.on('disconnect', function(err) {
+			$log.warn('disconnect error', err);
+			// set bodies array to empty.
+			mode.bodies.length = 0;
+		});	
 				
 		mode.socket.on('bodyFrame', function(bodies){
 
-			// mark all bodies as untracked for possible elimination
-			angular.forEach(mode.trackedSkeletons, function(skel, key) {
-				skel.setActiveStatus(false);
-			});
-
-			// update tracking info, but avoid excessive calls to $digest
-			if(mode.debug.bodiesTracked != bodies.length) {
-				mode.debug.bodiesTracked = bodies.length;
-				mode.parentScope.$digest();	
-			}
-
-			angular.forEach(bodies, function(body) {
-				
-				var skeleton;
-				var trackingId = body.trackingId;
-				if(mode.trackedSkeletons[trackingId]) {
-					
-					skeleton = mode.trackedSkeletons[trackingId];
-					skeleton.setActiveStatus(true);
-					
-					
-				} else {
-					skeleton = new SkeletalBody();
-					skeleton.init(mode.container, Color.random());
-					mode.trackedSkeletons[trackingId] = skeleton;
-					
-					// create new emitter for left hand
-					//var emitter = protonEmitterService.createProton3(mode.parentScope.canvasEl);
-				}
-				
-				skeleton.setBodyData(body);
-				skeleton.drawToStage();
-			});
-			
-			// remove all no-longer tracked skeletons
-			angular.forEach(mode.trackedSkeletons, function(skel, key) {
-				if(!skel.getActiveStatus()) {
-					skel.removeSelfFromContainer();
-					delete mode.trackedSkeletons[key];
-				}
-			});
-			
+			mode.bodies = bodies;			
 		    // we need to send a refresh because socket.io might not flush?
 		    // TODO: fix this, eliminate the need for this.
 		    mode.socket.emit("refresh", "callback hell", function(data) {
 		        //console.log(data);
 		        // no-op.
 		    });
+		});		
+	}
+
+	mode.updateActiveSkeletons = function() {
+		
+		// sweep all tracked skeletons to mark as false (for eventual removal)
+		angular.forEach(mode.trackedSkeletons, function(skel, key) {
+			skel.setActiveStatus(false);
 		});
 		
-		mode.renderID = requestAnimationFrame(mode.update);
+		angular.forEach(mode.bodies, function(body) {
+			var trackingId = "skel-" + body.trackingId;
+			var skel = mode.trackedSkeletons[trackingId];
+			
+			// if skeleton exists, just set active status to true and 
+			// update the data payload
+			if(skel) {
+				mode.trackedSkeletons[trackingId].setActiveStatus(true);	
+				mode.trackedSkeletons[trackingId].setBodyData(body);
+			} else {
+				skel = new SkeletalBody();
+				skel.init(mode.container, Color.random());
+				mode.trackedSkeletons[trackingId] = skel;
+				skel.setBodyData(body);
+			}
+			
+		});
+	}
+
+	mode.drawActiveSkeletons = function() {
+		
+		angular.forEach(mode.trackedSkeletons, function(skel, key) {
+			
+			if(skel.getActiveStatus()) {
+				skel.drawToStage();	
+			} else {
+				//console.log("removing self from container");
+				skel.removeSelfFromContainer();
+				var result = delete mode.trackedSkeletons[key];
+			}
+		});
+	}
+
+	mode.update = function() {
+		
+		mode.updateActiveSkeletons();
+		mode.drawActiveSkeletons();
+		
+		mode.debug.bodiesLength = mode.bodies.length;
+		mode.debug.skeletonsTracked = Object.keys(mode.trackedSkeletons).length;
+		mode.parentScope.$digest();
+		
+		mode.parentScope.pixijs.renderer.render(mode.container);
+		requestAnimationFrame(mode.update);			
 	}
 
 	// override deinit because we need to do
