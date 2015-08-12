@@ -25,7 +25,8 @@ angular.module('sos.canvas', [])
 	$scope.modeModuleList = [ 'modeSlowClap',
                                   'modeSampleThree',
                                   'modeTruchet',
-                                  'modeSeascape'
+                                  'modeSeascape',
+                                  'modeEchoplex'
                                 ];
 	$scope.loadedModes = {};
 	$scope.kinectOverlay = true;
