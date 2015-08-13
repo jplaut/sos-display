@@ -7,7 +7,8 @@ var SkeletalBody = function() {
 	var _shapesData;
 	var _color = null;
 	var _isActive = true;
-	var _shapesXOffset = -100;
+	var _shapesXOffset = -150;
+	var _alpha = 0.1;
 	
 	
 	var handPointer = new HandPointer();
@@ -19,9 +20,10 @@ var SkeletalBody = function() {
 		_color = color;
 
 		// set up shapes
-		_container = new PIXI.Container();
+// 		_container = new PIXI.Container();
 		_shapesData = new PIXI.Container();
 		_shapesData.x = _shapesData.x + _shapesXOffset;
+		_shapesData.alpha = _alpha;
 	}
 	
 	this.setBodyData = function(bodyData) {
@@ -165,6 +167,13 @@ var SkeletalBody = function() {
 			_shapesData.addChild(head);
 		    
 		    self.drawHandPointer();
+		    
+		    // decrement alpha if not at 1.0 yet
+		    if(_alpha < 1.0) {
+  		    _alpha = _alpha + 0.075;
+  		    _shapesData.alpha = _alpha;
+		    }
+		    
 		    
 		    _parentContainer.addChild(_shapesData);
 	    }

@@ -192,7 +192,7 @@ angular.module('sos.canvas', [])
 		$scope.canvasDiv = document.getElementById("canvas-stack");
 		$scope.loadModules();
 		// set up default module
-		$scope.showMode('modeSeascape');
+		$scope.showMode('modeSlowClap');
 		$scope.showKinectOverlay();
 	};
 
