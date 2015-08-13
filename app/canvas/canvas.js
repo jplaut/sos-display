@@ -36,6 +36,11 @@ angular.module('sos.canvas', [])
 	$scope.rotateForProduction = false;
 	$scope.devModeInputGroupClass = "btn-primary active";
 	$scope.prodModeInputGroupClass = "btn-primary";
+	
+	// debug object
+	$scope.debugInfo = {
+  	
+	}
 
 	$scope.modeList = [];
 
@@ -90,6 +95,10 @@ angular.module('sos.canvas', [])
 	$scope.$on("error", function(err) {
 		$log.warn("Registered error:", err);
 	});
+
+  $scope.postDebugInfo = function(name, value) {
+    $scope.debugInfo[name] = value;
+  }
 
 	$scope.getWidthScaleFactor = function(origWidth) {
 		return $scope.wallDisplay.width / origWidth;

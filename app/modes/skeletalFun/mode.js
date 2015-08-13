@@ -69,6 +69,8 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 		        // no-op.
 		    });
 		});		
+		
+		mode.drawHitBoxes();
 	}
 
 	mode.updateActiveSkeletons = function() {
@@ -115,10 +117,23 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 		angular.forEach(mode.trackedSkeletons, function(skel, key) {
 			
 			if(skel.getActiveStatus()) {
+  			
 				skel.drawToStage();
+				
 				if(skel.proton) {
 					skel.proton.update();
 				}
+				
+				// get hand pointer
+				var hp = skel.getHandPointerPoint();
+				// apply offset to correct x 
+				hp = new PIXI.Point(hp.x - 150, hp.y);
+				if(mode.topHitBox.containsPoint(hp)) {
+  				mode.parentScope.postDebugInfo("topHitBox active", "true");
+				} else {
+  				mode.parentScope.postDebugInfo("topHitBox active", "false");
+				}
+				
 			} else {
 				//console.log("removing self from container");
 				skel.removeSelfFromContainer();
@@ -127,14 +142,30 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 		});
 	}
 
+
+  mode.drawHitBoxes = function() {
+    
+    // place hitbox at top center
+    var width = mode.parentScope.canvasDim.width * 0.5;
+    var height = 80;
+    
+    mode.topHitBox = new PIXI.Graphics();
+    mode.topHitBox.lineStyle(2, 0xFFFFFF);
+    mode.topHitBox.beginFill(0xFFFFFF);
+    mode.topHitBox.drawRect(width * 0.5,0,width,height);
+    mode.topHitBox.alpha = 0.25;
+    mode.container.addChild(mode.topHitBox);
+  }
+
 	mode.update = function() {
 		
 		mode.updateActiveSkeletons();
 		mode.drawActiveSkeletons();
 		
-		mode.debug.bodiesLength = mode.bodies.length;
-		mode.debug.skeletonsTracked = Object.keys(mode.trackedSkeletons).length;
-		mode.debug.containerChildren = mode.container.children.length;
+		mode.parentScope.postDebugInfo('bodiesLength', mode.bodies.length);
+		mode.parentScope.postDebugInfo('skeletonsTracked', Object.keys(mode.trackedSkeletons).length);
+		mode.parentScope.postDebugInfo('kinectChildren', mode.container.children.length);
+		
 		mode.parentScope.$digest();
 		
 		mode.kinect.renderer.render(mode.container);
