@@ -49,7 +49,7 @@ if (!port) {
 
 function listen(port) {
   var options = {
-    root: 'C:\\Users\\James\\Desktop\\sos-display',
+    root: 'C:\\Users\\kinectdev\\Desktop\\sos-display',
     cache: argv.c,
     showDir: argv.d,
     autoIndex: argv.i,
