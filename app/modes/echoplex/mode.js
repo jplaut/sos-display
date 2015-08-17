@@ -7,6 +7,10 @@ mode.factory('modeEchoplex', function($log) {
     mode.rendererType = "THREE";
 
     mode.preloadShaders = function() {
+        // pre-load images
+	mode.tex = THREE.ImageUtils.loadTexture('media/tex07.jpg');
+	mode.tex.wrapS = mode.tex.wrapT = THREE.RepeatWrapping;
+
   	var xhrLoader = new THREE.XHRLoader();
   	xhrLoader.load(document.getElementById('genericVert').src, function(resp) {
 	    mode.vertexShader = resp;
@@ -15,10 +19,6 @@ mode.factory('modeEchoplex', function($log) {
 	  	mode.startRender();
   	    });
   	});
-
-        // pre-load images
-	mode.tex = THREE.ImageUtils.loadTexture('media/tex07.jpg');
-	mode.tex.wrapS = mode.tex.wrapT = THREE.RepeatWrapping;
     };
 
     mode.init = function(parentScope) {
