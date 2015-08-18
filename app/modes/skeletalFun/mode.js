@@ -46,11 +46,16 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 		// initialize socket w/ socket.io skeletal data
 		mode.initSocket();
 		
+    mode.parentScope.$on('kinectBodiesUpdate', function(events, bodies) {
+  		mode.bodies = bodies;
+		});
+		
 		// assign renderid from animation frame (for future deinit call)
 		mode.renderID = requestAnimationFrame(mode.update);
 	}
 
 	mode.initSocket = function() {
+  	
 		mode.socket = skeletalService.createSocket();	
 				
 		mode.socket.on('disconnect', function(err) {
@@ -58,21 +63,39 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 			// set bodies array to empty.
 			mode.bodies.length = 0;
 		});	
-				
-		mode.socket.on('bodyFrame', function(bodies){
+			
+		mode.drawHitBoxes();	
 
-			mode.bodies = bodies;			
-		    // we need to send a refresh because socket.io might not flush?
-		    // TODO: fix this, eliminate the need for this.
-		    mode.socket.emit("refresh", "callback hell", function(data) {
-		        //console.log(data);
-		        // no-op.
-		    });
-		});		
-		
-		mode.drawHitBoxes();
+		//mode.drawTestAngledPolygon(new PIXI.Point(10,10), new PIXI.Point(50,50), -10);
 	}
 
+
+  mode.drawTestAngledPolygon = function(p1, p2, degrees) {
+
+    var ap = new PIXI.Graphics();
+    mode.ap = ap;
+    
+    ap.lineStyle(2, 0xFFFFFF);
+    ap.moveTo(p1.x, p1.y);
+    ap.lineTo(p2.x, p2.y);
+    mode.container.addChild(ap);
+  }
+  
+  mode.drawTestAngledPolygon2 = function(p1, p2, degrees) {
+    
+    var ap = new PIXI.Graphics();
+    ap.lineStyle(2, 0xFFFFFF);
+    ap.beginFill(0xDEDEDE);
+    ap.drawRect(10,10,10,50);
+    
+    ap.boundsPadding = 0;
+    var texture = ap.generateTexture();
+    
+    mode.container.addChild(texture);
+    
+    
+  }
+  
 	mode.updateActiveSkeletons = function() {
 		
 		// sweep all tracked skeletons to mark as false (for eventual removal)
