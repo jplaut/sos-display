@@ -27,7 +27,18 @@ angular.module('sos.canvas', [])
                                   'modeTruchet',
                                   'modeSeascape',
                                   'modeEchoplex',
-                                  'modeFlame'
+                                  'modeFlame',
+                                  'modeBubbles',
+                                  'modeCaustic',
+                                  'modeCloudTen',
+                                  'modeDisco',
+                                  'modeHell',
+                                  'modeRibbon',
+                                  'modeStardust',
+                                  'modeStorm',
+                                  'modeTunnel',
+                                  'modeVortex',
+                                  'modeWorms'
                                 ];
 	$scope.loadedModes = {};
 	$scope.kinectOverlay = true;
