@@ -110,7 +110,7 @@ var SkeletalBody = function() {
 	};
 
         this.getInputs = function() {
-          angular.map(mode.trackedSkeletons, function(skel, key) { return skel.getHandPointerPoint(); });
+                angular.map(mode.trackedSkeletons, function(skel, key) { return skel.getHandPointerPoint(); });
         };
 
 	this.drawToStage = function() {
