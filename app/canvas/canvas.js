@@ -38,7 +38,8 @@ angular.module('sos.canvas', [])
                                   'modeStorm',
                                   'modeTunnel',
                                   'modeVortex',
-                                  'modeWorms'
+                                  'modeWorms',
+                                  'modeNyan'
                                 ];
   $scope.activeModeCounter = 0;
                                 
