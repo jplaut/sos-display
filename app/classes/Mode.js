@@ -88,9 +88,6 @@ var ShaderMode = function(args) {
                 scene.add(mesh);
 
                 var render = function () {
-                        if(args.render) {
-                                args.render();
-                        }
 	                self.uniforms.input_globalTime.value += 0.05;
                         self.renderID = requestAnimationFrame(render);
                         self.parentScope.threejs.renderer.render(scene, camera);
