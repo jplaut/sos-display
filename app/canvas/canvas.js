@@ -40,6 +40,8 @@ angular.module('sos.canvas', [])
                                   'modeVortex',
                                   'modeWorms'
                                 ];
+  $scope.activeModeCounter = 0;
+                                
 	$scope.loadedModes = {};
 	$scope.kinectOverlay = true;
 
@@ -94,8 +96,13 @@ angular.module('sos.canvas', [])
 	});
 
 	keyboardJS.bind('n', function(n) {
-		console.log("going to next mode");
-		// TODO: implement this
+    
+    if($scope.activeModeCounter >= $scope.modeModuleList.length) {
+      $scope.activeModeCounter = 0;
+    } else {
+      $scope.activeModeCounter++;  
+    }
+    $scope.showMode($scope.modeModuleList[$scope.activeModeCounter]);
 	});
 
 	// binding to rotate display between DEV/PROD
@@ -192,6 +199,8 @@ angular.module('sos.canvas', [])
 			$log.info("init:", mode.id);
 			mode.init($scope);
 			$scope.activeMode = mode;
+		} else {
+  		$log.warn("Mode not found:", modeName);
 		}
 	};
 
