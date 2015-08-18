@@ -26,7 +26,8 @@ angular.module('sos.canvas', [])
                                   'modeSampleThree',
                                   'modeTruchet',
                                   'modeSeascape',
-                                  'modeEchoplex'
+                                  'modeEchoplex',
+                                  'modeFlame'
                                 ];
 	$scope.loadedModes = {};
 	$scope.kinectOverlay = true;
@@ -36,11 +37,11 @@ angular.module('sos.canvas', [])
 	$scope.rotateForProduction = false;
 	$scope.devModeInputGroupClass = "btn-primary active";
 	$scope.prodModeInputGroupClass = "btn-primary";
-	
+
 	// debug object
 	$scope.debugInfo = {
-  	
-	}
+
+	};
 
 	$scope.modeList = [];
 
@@ -98,7 +99,7 @@ angular.module('sos.canvas', [])
 
   $scope.postDebugInfo = function(name, value) {
     $scope.debugInfo[name] = value;
-  }
+  };
 
 	$scope.getWidthScaleFactor = function(origWidth) {
 		return $scope.wallDisplay.width / origWidth;
@@ -117,11 +118,11 @@ angular.module('sos.canvas', [])
 	};
 
   $scope.toggleKinectOverlay = function() {
-    
+
     var overlay = document.getElementById('kinect-overlay');
     overlay.hidden = $scope.kinectOverlay;
     $scope.kinectOverlay = !$scope.kinectOverlay;
-  }
+  };
 
 	$scope.goToNextMode = function() {
 		console.log("Go to next mode");
@@ -184,11 +185,11 @@ angular.module('sos.canvas', [])
 	};
 
 	$scope.showKinectOverlay = function() {
-		
+
 		console.log("showing kinect overlay");
 		var mode = $injector.get('modeSkeletalFun');
 		mode.init($scope);
-	}
+	};
 
 	$scope.setCanvasSize = function(width, height, canvas) {
 

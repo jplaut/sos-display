@@ -103,8 +103,8 @@ vec3 shade(vec3 o, vec3 r)
 
     vec4 ac = surf(r, w, sn, t);
 
-    vec3 from = vec3(0.2, 0.4, 0.1);
-    vec3 to = vec3(1.0, 0.0, 1.0);
+    vec3 from = vec3(0.7, 0.8, 0.6);
+    vec3 to = vec3(1.0, 1.0, 0.1);
 
     float fx = 1.0 - ac.w;
 

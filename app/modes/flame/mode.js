@@ -1,20 +1,16 @@
 'use strict';
 
 var mode = angular.module('sos.modes');
-mode.factory('modeEchoplex', function($log) {
+mode.factory('modeFlame', function($log) {
 
-    var mode = new Mode("modeEchoplex", "Echoplex");
+    var mode = new Mode("modeFlame", "Flame");
     mode.rendererType = "THREE";
 
     mode.preloadShaders = function() {
-        // pre-load images
-	mode.tex = THREE.ImageUtils.loadTexture('media/tex07.jpg');
-	mode.tex.wrapS = mode.tex.wrapT = THREE.RepeatWrapping;
-
   	var xhrLoader = new THREE.XHRLoader();
   	xhrLoader.load(document.getElementById('genericVert').src, function(resp) {
 	    mode.vertexShader = resp;
-	    xhrLoader.load(document.getElementById('echoplexFrag').src, function(resp) {
+	    xhrLoader.load(document.getElementById('flameFrag').src, function(resp) {
 	  	mode.fragmentShader = resp;
 	  	mode.startRender();
   	    });
@@ -45,9 +41,8 @@ mode.factory('modeEchoplex', function($log) {
         var geometry = new THREE.PlaneBufferGeometry(2, 2);
 
         mode.uniforms = {
-            input_resolution: { type: "v2", value: new THREE.Vector2(320.0, 192.0) },
-            input_globalTime: { type: "f", value: 1.0 },
-            input_channel0: { type: "t", value: mode.tex }
+            input_resolution: { type: "v2", value: new THREE.Vector2(192.0, 320.0) },
+            input_globalTime: { type: "f", value: 1.0 }
         };
 
         var material = new THREE.ShaderMaterial({
