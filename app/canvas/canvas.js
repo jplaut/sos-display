@@ -96,13 +96,7 @@ angular.module('sos.canvas', [])
 	});
 
 	keyboardJS.bind('n', function(n) {
-    
-    if($scope.activeModeCounter >= $scope.modeModuleList.length) {
-      $scope.activeModeCounter = 0;
-    } else {
-      $scope.activeModeCounter++;  
-    }
-    $scope.showMode($scope.modeModuleList[$scope.activeModeCounter]);
+    $scope.goToNextMode();
 	});
 
 	// binding to rotate display between DEV/PROD
@@ -143,8 +137,12 @@ angular.module('sos.canvas', [])
   };
 
 	$scope.goToNextMode = function() {
-		console.log("Go to next mode");
-		// TODO: fill this out.
+    if($scope.activeModeCounter >= $scope.modeModuleList.length) {
+      $scope.activeModeCounter = 0;
+    } else {
+      $scope.activeModeCounter++;  
+    }
+    $scope.showMode($scope.modeModuleList[$scope.activeModeCounter]);
 	};
 
 	$scope.loadModules = function() {
