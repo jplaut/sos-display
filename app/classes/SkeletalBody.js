@@ -109,10 +109,6 @@ var SkeletalBody = function() {
 		return self.getCenterPoint(self.getJointAsPoint("HandLeft"), self.getJointAsPoint("HandRight"));
 	};
 
-        this.getInputs = function() {
-          angular.map(mode.trackedSkeletons, function(skel, key) { return skel.getHandPointerPoint(); });
-        };
-
 	this.drawToStage = function() {
 
 		_shapesData.removeChildren();
