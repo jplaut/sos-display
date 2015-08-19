@@ -28,7 +28,7 @@ var ShaderMode = function(args) {
 	this.container = null;
 	this.renderID = null;
         this.rendererType = 'THREE';
-        this.inputs = [];
+        this.inputs = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 
         var uniformExtras = null;
 
@@ -59,7 +59,17 @@ var ShaderMode = function(args) {
 
                 // grab skeletal input
                 self.parentScope.$on('kinectInput', function(events, inputs) {
-                        self.inputs = inputs;
+                        // normalize.
+                        for(var i=0; i<inputs.length; i++) {
+                                if((i % 2) == 0) {
+                                        self.inputs[i] = inputs[i] / parentScope.wallDisplay.width;
+                                } else {
+                                        self.inputs[i] = inputs[i] / parentScope.wallDisplay.height;
+                                }
+                        }
+                        for(var j=inputs.length; j<16; j++) {
+                                self.inputs[j] = 0.0;
+                        }
                 });
         };
 
@@ -75,7 +85,7 @@ var ShaderMode = function(args) {
                 self.uniforms = {
                         input_resolution: { type: "v2", value: new THREE.Vector2(192.0, 320.0) },
                         input_globalTime: { type: "f", value: 0.0 },
-                        input_skeletons: { type: "t", value: [] }
+                        input_skeletons: { type: "fv1", value: self.inputs }
                 };
 
                 // merge, and optionally override.
@@ -96,7 +106,7 @@ var ShaderMode = function(args) {
 
                 var render = function () {
 	                self.uniforms.input_globalTime.value += 0.05;
-                        self.uniforms.input_skeletons = self.inputs;
+                        self.uniforms.input_skeletons.value = self.inputs;
                         self.renderID = requestAnimationFrame(render);
                         self.parentScope.threejs.renderer.render(scene, camera);
                 };

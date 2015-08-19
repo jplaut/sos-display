@@ -24,6 +24,7 @@ services.service('skeletalService', function($rootScope, $log) {
 
     var trackedSkeletons = {};
     var TRACKINGID_PREFIX = "skel-";
+		var XOFFSET = new SkeletalBody().SHAPESXOFFSET;
 
 		socket.on('bodyFrame', function(bodies){
 
@@ -48,16 +49,17 @@ services.service('skeletalService', function($rootScope, $log) {
           $rootScope.$broadcast('kinectNewSkeleton', skel);
         }
       });
-      
+
       $rootScope.$broadcast('kinectBodiesUpdate', trackedSkeletons);
 
-      // why for the love of $DEITY is there no `map`?
-      var inputs = [];
-      angular.forEach(trackedSkeletons, function(skel, key) {
-              var input = skel.getHandPointerPoint()
-              inputs += [input.x, input.y];
-      });
-      $rootScope.$broadcast('kinectInput', inputs);
+                        // why for the love of $DEITY is there no `map`?
+                        var inputs = [];
+                        angular.forEach(trackedSkeletons, function(skel, key) {
+                                var input = skel.getHandPointerPoint();
+                                inputs.push(input.x + XOFFSET);
+                                inputs.push(input.y);
+                        });
+                        $rootScope.$broadcast('kinectInput', inputs);
 
       // we need to send a refresh because socket.io might not flush?
       // TODO: fix this, eliminate the need for this.
