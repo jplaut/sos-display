@@ -28,6 +28,7 @@ var ShaderMode = function(args) {
 	this.container = null;
 	this.renderID = null;
         this.rendererType = 'THREE';
+        this.inputs = [];
 
         var uniformExtras = null;
 
@@ -55,6 +56,11 @@ var ShaderMode = function(args) {
 	  	                self.startRender();
   	                });
   	        });
+
+                // grab skeletal input
+                self.parentScope.$on('kinectInput', function(events, inputs) {
+                        self.inputs = inputs;
+                });
         };
 
         this.startRender = function() {
@@ -68,7 +74,8 @@ var ShaderMode = function(args) {
 
                 self.uniforms = {
                         input_resolution: { type: "v2", value: new THREE.Vector2(192.0, 320.0) },
-                        input_globalTime: { type: "f", value: 0.0 }
+                        input_globalTime: { type: "f", value: 0.0 },
+                        input_skeletons: { type: "t", value: [] }
                 };
 
                 // merge, and optionally override.
@@ -89,6 +96,7 @@ var ShaderMode = function(args) {
 
                 var render = function () {
 	                self.uniforms.input_globalTime.value += 0.05;
+                        self.uniforms.input_skeletons = self.inputs;
                         self.renderID = requestAnimationFrame(render);
                         self.parentScope.threejs.renderer.render(scene, camera);
                 };

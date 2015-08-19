@@ -38,10 +38,11 @@ angular.module('sos.canvas', [])
                                   'modeStorm',
                                   'modeTunnel',
                                   'modeVortex',
-                                  'modeWorms'
+                                  'modeWorms',
+                                  'modeNyan'
                                 ];
   $scope.activeModeCounter = 0;
-                                
+
 	$scope.loadedModes = {};
 	$scope.kinectOverlay = true;
 
@@ -157,18 +158,20 @@ angular.module('sos.canvas', [])
 		});
 	};
 
+        // don't recreate contexts needlessly.
+	$scope.threejs = {};
+        $scope.threejs.renderer = new THREE.WebGLRenderer();
+        $scope.threejs.renderer.setSize($scope.canvasDim.width, $scope.canvasDim.height);
+        $scope.pixijs = {};
+        $scope.pixijs.renderer = PIXI.autoDetectRenderer($scope.canvasDim.width, $scope.canvasDim.height, {backgroundColor : 0x1099bb, antialias: true});
+
 	// initializers for two types of canvas
 	$scope.createCanvas = function(rendererType) {
 
 		$scope.canvasDiv = document.getElementById("canvas-stack");
 		if(rendererType == "THREE") {
-			$scope.threejs = {};
-			$scope.threejs.renderer = new THREE.WebGLRenderer();
-			$scope.threejs.renderer.setSize($scope.canvasDim.width, $scope.canvasDim.height);
 			$scope.canvasDiv.appendChild($scope.threejs.renderer.domElement);
 		} else {
-			$scope.pixijs = {};
-			$scope.pixijs.renderer = PIXI.autoDetectRenderer($scope.canvasDim.width, $scope.canvasDim.height, {backgroundColor : 0x1099bb, antialias: true});
 			$scope.canvasDiv.appendChild($scope.pixijs.renderer.view);
 		}
 	};
