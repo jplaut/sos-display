@@ -158,12 +158,12 @@ angular.module('sos.canvas', [])
 		});
 	};
 
-        // don't recreate contexts needlessly.
+  // don't recreate contexts needlessly.
 	$scope.threejs = {};
-        $scope.threejs.renderer = new THREE.WebGLRenderer();
-        $scope.threejs.renderer.setSize($scope.canvasDim.width, $scope.canvasDim.height);
-        $scope.pixijs = {};
-        $scope.pixijs.renderer = PIXI.autoDetectRenderer($scope.canvasDim.width, $scope.canvasDim.height, {backgroundColor : 0x1099bb, antialias: true});
+  $scope.threejs.renderer = new THREE.WebGLRenderer();
+  $scope.threejs.renderer.setSize($scope.canvasDim.width, $scope.canvasDim.height);
+  $scope.pixijs = {};
+  $scope.pixijs.renderer = PIXI.autoDetectRenderer($scope.canvasDim.width, $scope.canvasDim.height, {backgroundColor : 0x1099bb, antialias: true});
 
 	// initializers for two types of canvas
 	$scope.createCanvas = function(rendererType) {
