@@ -35,7 +35,6 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 		console.log("initializing kinect overlay");
 		mode.setParentScope(parentScope);
 
-
 		mode.kinect.renderer = PIXI.autoDetectRenderer(mode.parentScope.canvasDim.width, mode.parentScope.canvasDim.height, {antialias: true, transparent: true});
 		var overlayDiv = document.getElementById("kinect-overlay");
 		overlayDiv.appendChild(mode.kinect.renderer.view);
@@ -44,26 +43,27 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 
 		// initialize socket w/ socket.io skeletal data
 		mode.initSocket();
-
-                mode.parentScope.$on('kinectBodiesUpdate', function(events, bodies) {
-  		        mode.trackedSkeletons = bodies;
+      mode.parentScope.$on('kinectBodiesUpdate', function(events, bodies) {
+  		mode.trackedSkeletons = bodies;
 		});
 
-                mode.parentScope.$on('kinectNewSkeleton', function(events, skel) {
-			skel.init(mode.container, Color.random());
-			// create emitter
-			var proton = protonEmitterService.createProton3(mode.kinect.renderer.view);
-			skel.proton = proton;
-			var renderer = new Proton.Renderer('other', proton, mode.kinect.renderer.view);
-			renderer.onProtonUpdate = function() {
-			};
-			renderer.onParticleCreated = function(particle) {
-				var particleSprite = new PIXI.Sprite(particle.target);
-				particle.sprite = particleSprite;
-				//mode.container.addChild(particle.sprite);
-			};
-			renderer.start();
-                });
+    mode.parentScope.$on('kinectNewSkeleton', function(events, skel) {
+      
+  		skel.init(mode.container, Color.random());
+  		// create emitter
+  		var proton = protonEmitterService.createProton3(mode.kinect.renderer.view);
+  		skel.proton = proton;
+  		var renderer = new Proton.Renderer('other', proton, mode.kinect.renderer.view);
+  		renderer.onProtonUpdate = function() {
+        // no-op
+  		};
+  		renderer.onParticleCreated = function(particle) {
+  			var particleSprite = new PIXI.Sprite(particle.target);
+  			particle.sprite = particleSprite;
+  			//mode.container.addChild(particle.sprite);
+  		};
+  		renderer.start();
+    });
 
 		// assign renderid from animation frame (for future deinit call)
 		mode.renderID = requestAnimationFrame(mode.update);
@@ -84,31 +84,29 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 		//mode.drawTestAngledPolygon(new PIXI.Point(10,10), new PIXI.Point(50,50), -10);
 	};
 
-        mode.drawTestAngledPolygon = function(p1, p2, degrees) {
+  mode.drawTestAngledPolygon = function(p1, p2, degrees) {
 
-                var ap = new PIXI.Graphics();
-                mode.ap = ap;
+          var ap = new PIXI.Graphics();
+          mode.ap = ap;
 
-                ap.lineStyle(2, 0xFFFFFF);
-                ap.moveTo(p1.x, p1.y);
-                ap.lineTo(p2.x, p2.y);
-                mode.container.addChild(ap);
-        };
+          ap.lineStyle(2, 0xFFFFFF);
+          ap.moveTo(p1.x, p1.y);
+          ap.lineTo(p2.x, p2.y);
+          mode.container.addChild(ap);
+  };
 
-        mode.drawTestAngledPolygon2 = function(p1, p2, degrees) {
+  mode.drawTestAngledPolygon2 = function(p1, p2, degrees) {
 
-                var ap = new PIXI.Graphics();
-                ap.lineStyle(2, 0xFFFFFF);
-                ap.beginFill(0xDEDEDE);
-                ap.drawRect(10,10,10,50);
+          var ap = new PIXI.Graphics();
+          ap.lineStyle(2, 0xFFFFFF);
+          ap.beginFill(0xDEDEDE);
+          ap.drawRect(10,10,10,50);
 
-                ap.boundsPadding = 0;
-                var texture = ap.generateTexture();
+          ap.boundsPadding = 0;
+          var texture = ap.generateTexture();
 
-                mode.container.addChild(texture);
-
-
-        };
+          mode.container.addChild(texture);
+  };
 
 	mode.drawSkeletons = function() {
 
@@ -127,9 +125,9 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 				// apply offset to correct x
 				hp = new PIXI.Point(hp.x - 150, hp.y);
 				if(mode.topHitBox.containsPoint(hp)) {
-  				        mode.parentScope.postDebugInfo("topHitBox active", "true");
+	        mode.parentScope.postDebugInfo("topHitBox active", "true");
 				} else {
-  				        mode.parentScope.postDebugInfo("topHitBox active", "false");
+	        mode.parentScope.postDebugInfo("topHitBox active", "false");
 				}
 
 			} else {
@@ -140,19 +138,19 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 		});
 	};
 
-        mode.drawHitBoxes = function() {
+  mode.drawHitBoxes = function() {
 
-                // place hitbox at top center
-                var width = mode.parentScope.canvasDim.width * 0.5;
-                var height = 80;
+    // place hitbox at top center
+    var width = mode.parentScope.canvasDim.width * 0.5;
+    var height = 80;
 
-                mode.topHitBox = new PIXI.Graphics();
-                mode.topHitBox.lineStyle(2, 0xFFFFFF);
-                mode.topHitBox.beginFill(0xFFFFFF);
-                mode.topHitBox.drawRect(width * 0.5,0,width,height);
-                mode.topHitBox.alpha = 0.25;
-                mode.container.addChild(mode.topHitBox);
-        };
+    mode.topHitBox = new PIXI.Graphics();
+    mode.topHitBox.lineStyle(2, 0xFFFFFF);
+    mode.topHitBox.beginFill(0xFFFFFF);
+    mode.topHitBox.drawRect(width * 0.5,0,width,height);
+    mode.topHitBox.alpha = 0.25;
+    mode.container.addChild(mode.topHitBox);
+  };
 
 	mode.update = function() {
 
