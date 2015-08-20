@@ -7,11 +7,11 @@ var SkeletalBody = function() {
 	var _shapesData;
 	var _color = null;
 	var _isActive = true;
-	var _shapesXOffset = -150;
 	var _alpha = 0.1;
 
-
 	var handPointer = new HandPointer();
+
+	this.SHAPESXOFFSET = -150;
 
 	this.init = function(parentContainer, color) {
 
@@ -22,7 +22,7 @@ var SkeletalBody = function() {
 		// set up shapes
 // 		_container = new PIXI.Container();
 		_shapesData = new PIXI.Container();
-		_shapesData.x = _shapesData.x + _shapesXOffset;
+		_shapesData.x = _shapesData.x + self.SHAPESXOFFSET;
 		_shapesData.alpha = _alpha;
 	};
 
@@ -106,7 +106,8 @@ var SkeletalBody = function() {
 	};
 
 	this.getHandPointerPoint = function() {
-		return self.getCenterPoint(self.getJointAsPoint("HandLeft"), self.getJointAsPoint("HandRight"));
+		return self.getCenterPoint(self.getJointAsPoint("HandLeft"),
+                                           self.getJointAsPoint("HandRight"));
 	};
 
 	this.drawToStage = function() {

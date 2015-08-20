@@ -138,11 +138,8 @@ angular.module('sos.canvas', [])
   };
 
 	$scope.goToNextMode = function() {
-    if($scope.activeModeCounter >= $scope.modeModuleList.length) {
-      $scope.activeModeCounter = 0;
-    } else {
-      $scope.activeModeCounter++;  
-    }
+      $scope.activeModeCounter++;
+      $scope.activeModeCounter %= $scope.modeModuleList.length;
     $scope.showMode($scope.modeModuleList[$scope.activeModeCounter]);
 	};
 
