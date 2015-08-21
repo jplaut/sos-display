@@ -30,7 +30,6 @@ angular.module('sos.canvas', [])
 	// mode metadata
 	$scope.activeMode = null;
 	$scope.modeModuleList = [ 'modeSlowClap',
-                                  'modeSampleThree',
                                   'modeTruchet',
                                   'modeSeascape',
                                   'modeEchoplex',
@@ -152,12 +151,14 @@ angular.module('sos.canvas', [])
 		} else {
 			$scope.wallDisplayMode = "DEV";
 		}
+		
+		// update config and url
 	};
 
   $scope.updateLocationURLParam = function(paramName, paramValue) {
     $timeout(function() {
       $scope.urlParamConfig[paramName] = paramValue;
-      $location.search(paramName, paramValue);
+      $location.search($scope.urlParamConfig);
     });
   }
 
@@ -169,8 +170,8 @@ angular.module('sos.canvas', [])
   };
 
 	$scope.goToNextMode = function() {
-      $scope.activeModeCounter++;
-      $scope.activeModeCounter %= $scope.modeModuleList.length;
+    $scope.activeModeCounter++;
+    $scope.activeModeCounter %= $scope.modeModuleList.length;
     $scope.showMode($scope.modeModuleList[$scope.activeModeCounter]);
 	};
 
@@ -233,8 +234,6 @@ angular.module('sos.canvas', [])
 	};
 
 	$scope.showKinectOverlay = function() {
-
-		console.log("showing kinect overlay");
 		var mode = $injector.get('modeSkeletalFun');
 		mode.init($scope);
 	};
@@ -249,9 +248,7 @@ angular.module('sos.canvas', [])
 
     // get active mode param if it exists
     var urlParams = $location.search();
-    console.log("urlParams:", $scope.urlParamConfig, urlParams);
     $scope.urlParamConfig = angular.extend($scope.urlParamConfig, urlParams);
-    console.log("post urlParams", $scope.urlParamConfig);
 
     // update all necessary parameters
     $scope.wallDisplayMode = $scope.urlParamConfig.wallDisplayMode;
