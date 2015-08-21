@@ -1,221 +1,235 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="sos" class="no-js"> <!--<![endif]-->
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>Six Second Monks - Display</title>
-		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="shortcut icon" href="favicon.png" />
-		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
-		<link rel="stylesheet" href="app.css">
-	</head>
-	<body>
+<html lang="en" ng-app="sos" class="no-js">
+<!--<![endif]-->
 
-	<div class="container-fluid">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Six Second Monks - Display</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="favicon.png" />
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="app.css">
+</head>
 
-		<div class="row">
-			<nav class="navbar navbar-default navbar-static-top">
-			  <div class="container">
-				  <div class="navbar-header">
-					  <a class="navbar-brand">Six Second Monks</a>
-				  </div>
-			  	<ul class="nav navbar-nav">
-<!-- 				  	<li><a href="#">Canvas Display</a></li> -->
-<!-- 				  	<li><a href="#settings">Setting</a></li> -->
-			  	</ul>
-			  </div>
-			</nav>
-		</div>
+<body>
 
-		<div class="row" ng-controller="CanvasCtrl">
-			<div class="col-md-5">
-				<div id="kinect-overlay" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }'></div>
-				<div id="canvas-stack" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }'></div>
-			</div>
-			<div class="col-md-4">
+  <div class="container-fluid">
 
-				<!-- media panel -->
-				<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Select Mode</h3>
-				</div>
-				<div class="panel-body">
-					<div class="list-group">
-						<a href="#" class="list-group-item" ng-repeat="mode in loadedModes" ng-click="showMode(mode.id)" ng-class='{ "active":(activeMode.id == mode.id) }'>{{mode.title}}</a>
-					</div>
-					<button class="btn btn-default" type="submit" ng-click="showMode()">Clear Mode</button>
-					<button class="btn btn-default" type="submit" ng-click="toggleKinectOverlay()">Toggle Kinect Overlay</button>
-				</div>
-				</div>
-				<!-- END: media panel -->
+    <div class="row">
+      <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand">Six Second Monks</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <!-- 				  	<li><a href="#">Canvas Display</a></li> -->
+            <!-- 				  	<li><a href="#settings">Setting</a></li> -->
+          </ul>
+        </div>
+      </nav>
+    </div>
 
-				<!-- canvas controls panel -->
-				<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Canvas Controls</h3>
-				</div>
-				<div class="panel-body">
+    <div class="row" ng-controller="CanvasCtrl">
+      <div class="col-md-5">
+        <div id="kinect-overlay" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }'></div>
+        <div id="canvas-stack" ng-class="{rotate: rotateForProduction}" ng-style='{ left: offsetStyle.left + "px", top: offsetStyle.top + "px" }'></div>
+      </div>
+      <div class="col-md-4">
 
-					<div class="btn-group" data-toggle="buttons">
-					  <label class="btn" ng-class="devModeInputGroupClass">
-					    <input type="radio" name="display-rotate" id="dev-mode" ng-model="wallDisplayMode" value="DEV" autocomplete="off">Development Mode
-					  </label>
-					  <label class="btn" ng-class="prodModeInputGroupClass">
-					    <input type="radio" name="display-rotate" id="prod-mode" ng-model="wallDisplayMode" value="PROD" autocomplete="off" checked="checked">LED Display Mode (rotated)</label>
-					  </label>
-					</div>
+        <!-- media panel -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Select Mode</h3>
+          </div>
+          <div class="panel-body">
+            <div class="list-group">
+              <a href="#" class="list-group-item" ng-repeat="mode in loadedModes" ng-click="showMode(mode.id)" ng-class='{ "active":(activeMode.id == mode.id) }'>{{mode.title}}</a>
+            </div>
+            <button class="btn btn-default" type="submit" ng-click="showMode()">Clear Mode</button>
+            <button class="btn btn-default" type="submit" ng-click="toggleKinectOverlay()">Toggle Kinect Overlay</button>
+          </div>
+        </div>
+        <!-- END: media panel -->
 
-					<div ng-if="wallDisplayMode == 'DEV'">
-						<h4>Currently in DEV mode.</h4>
-						<p>The canvas element on your left is displaying in the same manner that it would appear on the LED wall.</p>
-					</div>
-					<div ng-if="wallDisplayMode == 'PROD'">
-						<h4>Currently in Wall Display (PROD) mode.</h4>
-						<p>The canvas element on your left is rotated -90 degrees, so it will appear correctly on the LED wall.</p>
-					</div>
+        <!-- canvas controls panel -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Canvas Controls</h3>
+          </div>
+          <div class="panel-body">
 
-					<h4>Add offset to CANVAS position</h4>
-					<form class="form-inline">
-					  <div class="form-group">
-					    <label for="xOffset">X Offset</label>
-					    <input type="text" class="form-control" id="xOffset" ng-model="offsetStyle.left">
-					  </div>
-					  <div class="form-group">
-					    <label for="yOffset">Y Offset</label>
-					    <input type="text" class="form-control" id="yOffset" ng-model="offsetStyle.top">
-					  </div>
-					</form>
+            <div class="btn-group" data-toggle="buttons">
+              <label class="btn" ng-class="devModeInputGroupClass">
+                <input type="radio" name="display-rotate" id="dev-mode" ng-model="wallDisplayMode" value="DEV" autocomplete="off">Development Mode
+              </label>
+              <label class="btn" ng-class="prodModeInputGroupClass">
+                <input type="radio" name="display-rotate" id="prod-mode" ng-model="wallDisplayMode" value="PROD" autocomplete="off" checked="checked">LED Display Mode (rotated)</label>
+              </label>
+            </div>
+
+            <div ng-if="wallDisplayMode == 'DEV'">
+              <h4>Currently in DEV mode.</h4>
+              <p>The canvas element on your left is displaying in the same manner that it would appear on the LED wall.</p>
+            </div>
+            <div ng-if="wallDisplayMode == 'PROD'">
+              <h4>Currently in Wall Display (PROD) mode.</h4>
+              <p>The canvas element on your left is rotated -90 degrees, so it will appear correctly on the LED wall.</p>
+            </div>
+
+            <h4>Add offset to CANVAS position</h4>
+            <form class="form-inline">
+              <div class="form-group">
+                <label for="xOffset">X Offset</label>
+                <input type="text" class="form-control" id="xOffset" ng-model="offsetStyle.left">
+              </div>
+              <div class="form-group">
+                <label for="yOffset">Y Offset</label>
+                <input type="text" class="form-control" id="yOffset" ng-model="offsetStyle.top">
+              </div>
+            </form>
 
 
-				</div>
-				</div>
-				<!-- END: canvas control panel -->
+          </div>
+        </div>
+        <!-- END: canvas control panel -->
 
-			</div>
-			<div class="col-md-3">
+      </div>
+      <div class="col-md-3">
 
-				<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Mode Information</h3>
-				</div>
-				<div class="panel-body">
-					<table class="table table-striped">
-						<tr><th>Name</th><th>Value</th></tr>
-						<tr ng-repeat="(key,value) in debugInfo">
-							<td><samp>{{key}}</samp></td><td><samp>{{value}}</samp></td>
-						</tr>
-					</table>
-				</div>
-				</div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Mode Information</h3>
+          </div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <tr>
+                <th>Name</th>
+                <th>Value</th>
+              </tr>
+              <tr ng-repeat="(key,value) in debugInfo">
+                <td>
+                  <samp>{{key}}</samp>
+                </td>
+                <td>
+                  <samp>{{value}}</samp>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
 
-			</div>
-		</div>
+      </div>
+    </div>
 
-	</div>
+  </div>
 
-	<script src="bower_components/angular/angular.js"></script>
-	<script src="bower_components/angular-route/angular-route.js"></script>
-	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
-	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-	<script src="bower_components/preloadjs/dist/preload.min.js"></script>
-	<script src="bower_components/easeljs/lib/easeljs-0.8.1.combined.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="bower_components/preloadjs/dist/preload.min.js"></script>
+  <script src="bower_components/easeljs/lib/easeljs-0.8.1.combined.js"></script>
 
-	<!-- proton -->
-	<script src="bower_components/proton/build/proton-1.0.0.js" type="text/javascript"></script>
+  <!-- proton -->
+  <script src="bower_components/proton/build/proton-1.0.0.js" type="text/javascript"></script>
 
-	<!-- polyfill -->
-	<script src="bower_components/midi/inc/shim/Base64.js" type="text/javascript"></script>
-	<script src="bower_components/midi/inc/shim/Base64binary.js" type="text/javascript"></script>
-	<script src="bower_components/midi/inc/shim/WebAudioAPI.js" type="text/javascript"></script>
-	<script src="bower_components/midi/examples/inc/colorspace.js" type="text/javascript"></script>
+  <!-- polyfill -->
+  <script src="bower_components/midi/inc/shim/Base64.js" type="text/javascript"></script>
+  <script src="bower_components/midi/inc/shim/Base64binary.js" type="text/javascript"></script>
+  <script src="bower_components/midi/inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+  <script src="bower_components/midi/examples/inc/colorspace.js" type="text/javascript"></script>
 
-	<!-- midi.js package -->
-	<script src="bower_components/midi/js/midi/audioDetect.js" type="text/javascript"></script>
-	<script src="bower_components/midi/js/midi/gm.js" type="text/javascript"></script>
-	<script src="bower_components/midi/js/midi/loader.js" type="text/javascript"></script>
-	<script src="bower_components/midi/js/midi/plugin.audiotag.js" type="text/javascript"></script>
-	<script src="bower_components/midi/js/midi/plugin.webaudio.js" type="text/javascript"></script>
-	<script src="bower_components/midi/js/midi/plugin.webmidi.js" type="text/javascript"></script>
-	<script src="bower_components/midi/js/midi/synesthesia.js" type="text/javascript"></script>
+  <!-- midi.js package -->
+  <script src="bower_components/midi/js/midi/audioDetect.js" type="text/javascript"></script>
+  <script src="bower_components/midi/js/midi/gm.js" type="text/javascript"></script>
+  <script src="bower_components/midi/js/midi/loader.js" type="text/javascript"></script>
+  <script src="bower_components/midi/js/midi/plugin.audiotag.js" type="text/javascript"></script>
+  <script src="bower_components/midi/js/midi/plugin.webaudio.js" type="text/javascript"></script>
+  <script src="bower_components/midi/js/midi/plugin.webmidi.js" type="text/javascript"></script>
+  <script src="bower_components/midi/js/midi/synesthesia.js" type="text/javascript"></script>
 
-	<!-- keyboard binding -->
-	<script src="bower_components/keyboardjs/dist/keyboard.js" type="text/javascript"></script>
+  <!-- keyboard binding -->
+  <script src="bower_components/keyboardjs/dist/keyboard.js" type="text/javascript"></script>
 
-	<!-- three.js (3D engine) -->
-	<script src="bower_components/three.js/three.js" type="text/javascript"></script>
+  <!-- three.js (3D engine) -->
+  <script src="bower_components/three.js/three.js" type="text/javascript"></script>
 
-	<!-- utils -->
-	<script src="bower_components/midi/js/util/dom_request_xhr.js" type="text/javascript"></script>
-	<script src="bower_components/midi/js/util/dom_request_script.js" type="text/javascript"></script>
+  <!-- utils -->
+  <script src="bower_components/midi/js/util/dom_request_xhr.js" type="text/javascript"></script>
+  <script src="bower_components/midi/js/util/dom_request_script.js" type="text/javascript"></script>
 
-	<!-- socket.io -->
-	<script src="bower_components/socket.io-client/socket.io.js"></script>
+  <!-- socket.io -->
+  <script src="bower_components/socket.io-client/socket.io.js"></script>
 
-	<!-- pixi.js -->
-	<script src="bower_components/pixi.js/bin/pixi.js"></script>
+  <!-- pixi.js -->
+  <script src="bower_components/pixi.js/bin/pixi.js"></script>
 
-	<!-- APP SPECIFIC -->
-	<script src="app.js"></script>
-	<script src="color.js"></script>
-	<script src="canvas/canvas.js"></script>
-	<script src="canvas/pako.inflate.min.js"></script>
-	<script src="canvas/p2.js"></script>
-	<script src="dat.gui.min.js"></script>
-	<script src="SimulationRenderer.js"></script>
+  <!-- APP SPECIFIC -->
+  <script src="app.js"></script>
+  <script src="color.js"></script>
+  <script src="canvas/canvas.js"></script>
+  <script src="canvas/pako.inflate.min.js"></script>
+  <script src="canvas/p2.js"></script>
+  <script src="dat.gui.min.js"></script>
+  <script src="SimulationRenderer.js"></script>
 
-	<!-- angular services -->
-	<script src="services/skeletal.js"></script>
-	<script src="services/protonEmitter.js"></script>
+  <!-- angular services -->
+  <script src="services/skeletal.js"></script>
+  <script src="services/protonEmitter.js"></script>
+  <script src="services/audioService.js"></script>
 
-	<!-- class js files -->
-	<script src="classes/SkeletalBody.js"></script>
-	<script src="classes/Mode.js"></script>
+  <!-- class js files -->
+  <script src="classes/SkeletalBody.js"></script>
+  <script src="classes/Mode.js"></script>
 
-	<!-- links to respective mode.js files -->
-	<script src="modes/slowClap/mode.js"></script>
-	<script src="modes/sampleImage/mode.js"></script>
-	<script src="modes/skeletalFun/mode.js"></script>
-	<script src="modes/midi/mode.js"></script>
-	<script src="modes/kinectWebcam/mode.js"></script>
-	<script src="modes/plasma/mode.js"></script>
-	<script src="modes/sampleThree/mode.js"></script>
-	<script src="modes/danceWildly/mode.js"></script>
-	<script src="modes/truchet/mode.js"></script>
-	<script src="modes/seascape/mode.js"></script>
-	<script src="modes/echoplex/mode.js"></script>
-	<script src="modes/flame/mode.js"></script>
-	<script src="modes/bubbles/mode.js"></script>
-	<script src="modes/caustic/mode.js"></script>
-	<script src="modes/cloudten/mode.js"></script>
-	<script src="modes/disco/mode.js"></script>
-	<script src="modes/hell/mode.js"></script>
-	<script src="modes/ribbon/mode.js"></script>
-	<script src="modes/stardust/mode.js"></script>
-	<script src="modes/storm/mode.js"></script>
-	<script src="modes/tunnel/mode.js"></script>
-	<script src="modes/vortex/mode.js"></script>
-	<script src="modes/worms/mode.js"></script>
-	<script src="modes/nyan/mode.js"></script>
+  <!-- links to respective mode.js files -->
+  <script src="modes/slowClap/mode.js"></script>
+  <script src="modes/sampleImage/mode.js"></script>
+  <script src="modes/skeletalFun/mode.js"></script>
+  <script src="modes/midi/mode.js"></script>
+  <script src="modes/kinectWebcam/mode.js"></script>
+  <script src="modes/plasma/mode.js"></script>
+  <script src="modes/sampleThree/mode.js"></script>
+  <script src="modes/danceWildly/mode.js"></script>
+  <script src="modes/truchet/mode.js"></script>
+  <script src="modes/seascape/mode.js"></script>
+  <script src="modes/echoplex/mode.js"></script>
+  <script src="modes/flame/mode.js"></script>
+  <script src="modes/bubbles/mode.js"></script>
+  <script src="modes/caustic/mode.js"></script>
+  <script src="modes/cloudten/mode.js"></script>
+  <script src="modes/disco/audio.js"></script>
+  <script src="modes/disco/mode.js"></script>
+  <script src="modes/hell/mode.js"></script>
+  <script src="modes/ribbon/mode.js"></script>
+  <script src="modes/stardust/mode.js"></script>
+  <script src="modes/storm/mode.js"></script>
+  <script src="modes/tunnel/mode.js"></script>
+  <script src="modes/vortex/mode.js"></script>
+  <script src="modes/worms/mode.js"></script>
+  <script src="modes/nyan/mode.js"></script>
 
-        <!-- shaders -->
-	<script id="genericVert" type="x-shader/x-vertex" src="shaders/generic.vert"></script>
-	<script id="truchetFrag" type="x-shader/x-fragment" src="shaders/truchet.frag"></script>
-	<script id="seascapeFrag" type="x-shader/x-fragment" src="shaders/seascape.frag"></script>
-	<script id="echoplexFrag" type="x-shader/x-fragment" src="shaders/echoplex.frag"></script>
-	<script id="flameFrag" type="x-shader/x-fragment" src="shaders/flame.frag"></script>
-	<script id="bubblesFrag" type="x-shader/x-fragment" src="shaders/bubbles.frag"></script>
-	<script id="causticFrag" type="x-shader/x-fragment" src="shaders/caustic.frag"></script>
-	<script id="cloudTenFrag" type="x-shader/x-fragment" src="shaders/cloudten.frag"></script>
-	<script id="discoFrag" type="x-shader/x-fragment" src="shaders/disco.frag"></script>
-	<script id="hellFrag" type="x-shader/x-fragment" src="shaders/hell.frag"></script>
-	<script id="ribbonFrag" type="x-shader/x-fragment" src="shaders/ribbon.frag"></script>
-	<script id="stardustFrag" type="x-shader/x-fragment" src="shaders/stardust.frag"></script>
-	<script id="stormFrag" type="x-shader/x-fragment" src="shaders/storm.frag"></script>
-	<script id="tunnelFrag" type="x-shader/x-fragment" src="shaders/tunnel.frag"></script>
-	<script id="vortexFrag" type="x-shader/x-fragment" src="shaders/vortex.frag"></script>
-	<script id="wormsFrag" type="x-shader/x-fragment" src="shaders/worms.frag"></script>
-	<script id="nyanFrag" type="x-shader/x-fragment" src="shaders/nyan.frag"></script>
+  <!-- shaders -->
+  <script id="genericVert" type="x-shader/x-vertex" src="shaders/generic.vert"></script>
+  <script id="truchetFrag" type="x-shader/x-fragment" src="shaders/truchet.frag"></script>
+  <script id="seascapeFrag" type="x-shader/x-fragment" src="shaders/seascape.frag"></script>
+  <script id="echoplexFrag" type="x-shader/x-fragment" src="shaders/echoplex.frag"></script>
+  <script id="flameFrag" type="x-shader/x-fragment" src="shaders/flame.frag"></script>
+  <script id="bubblesFrag" type="x-shader/x-fragment" src="shaders/bubbles.frag"></script>
+  <script id="causticFrag" type="x-shader/x-fragment" src="shaders/caustic.frag"></script>
+  <script id="cloudTenFrag" type="x-shader/x-fragment" src="shaders/cloudten.frag"></script>
+  <script id="discoFrag" type="x-shader/x-fragment" src="shaders/disco.frag"></script>
+  <script id="hellFrag" type="x-shader/x-fragment" src="shaders/hell.frag"></script>
+  <script id="ribbonFrag" type="x-shader/x-fragment" src="shaders/ribbon.frag"></script>
+  <script id="stardustFrag" type="x-shader/x-fragment" src="shaders/stardust.frag"></script>
+  <script id="stormFrag" type="x-shader/x-fragment" src="shaders/storm.frag"></script>
+  <script id="tunnelFrag" type="x-shader/x-fragment" src="shaders/tunnel.frag"></script>
+  <script id="vortexFrag" type="x-shader/x-fragment" src="shaders/vortex.frag"></script>
+  <script id="wormsFrag" type="x-shader/x-fragment" src="shaders/worms.frag"></script>
+  <script id="nyanFrag" type="x-shader/x-fragment" src="shaders/nyan.frag"></script>
 </body>
+
 </html>

@@ -26,6 +26,7 @@ var ShaderMode = function(args) {
   this.title = args.title;
   this.parentScope = null;
   this.container = null;
+  this.audio = args.audio;
   this.renderID = null;
   this.rendererType = 'THREE';
   this.inputs = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
@@ -44,7 +45,7 @@ var ShaderMode = function(args) {
     self.uniforms = null;
 
     // optionally load extra stuff that the shader needs.
-    if(args.loadUniforms) {
+    if (args.loadUniforms) {
       uniformExtras = args.loadUniforms();
     }
 
@@ -52,22 +53,23 @@ var ShaderMode = function(args) {
     xhrLoader.load(document.getElementById('genericVert').src, function(resp) {
       self.vertexShader = resp;
       xhrLoader.load(document.getElementById(args.pixelShaderName).src, function(resp) {
-	self.fragmentShader = resp;
-	self.startRender();
+        self.fragmentShader = resp;
+        if (self.audio) self.audio.start();
+        self.startRender();
       });
     });
 
     // grab skeletal input
     self.parentScope.$on('kinectInput', function(events, inputs) {
       // normalize.
-      for(var i=0; i<inputs.length; i++) {
-        if((i % 2) == 0) {
+      for (var i = 0; i < inputs.length; i++) {
+        if ((i % 2) == 0) {
           self.inputs[i] = inputs[i] / parentScope.wallDisplay.width;
         } else {
           self.inputs[i] = inputs[i] / parentScope.wallDisplay.height;
         }
       }
-      for(var j=inputs.length; j<16; j++) {
+      for (var j = inputs.length; j < 16; j++) {
         self.inputs[j] = 0.0;
       }
     });
@@ -83,14 +85,23 @@ var ShaderMode = function(args) {
     var geometry = new THREE.PlaneBufferGeometry(2, 2);
 
     self.uniforms = {
-      input_resolution: { type: "v2", value: new THREE.Vector2(192.0, 320.0) },
-      input_globalTime: { type: "f", value: 0.0 },
-      input_skeletons: { type: "fv1", value: self.inputs }
+      input_resolution: {
+        type: "v2",
+        value: new THREE.Vector2(192.0, 320.0)
+      },
+      input_globalTime: {
+        type: "f",
+        value: 0.0
+      },
+      input_skeletons: {
+        type: "fv1",
+        value: self.inputs
+      }
     };
 
     // merge, and optionally override.
-    if(uniformExtras) {
-      for(var attr in uniformExtras) {
+    if (uniformExtras) {
+      for (var attr in uniformExtras) {
         self.uniforms[attr] = uniformExtras[attr];
       }
     }
@@ -104,7 +115,7 @@ var ShaderMode = function(args) {
     var mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    var render = function () {
+    var render = function() {
       self.uniforms.input_globalTime.value += 0.05;
       self.uniforms.input_skeletons.value = self.inputs;
       self.renderID = requestAnimationFrame(render);
@@ -116,5 +127,6 @@ var ShaderMode = function(args) {
 
   this.deinit = function() {
     cancelAnimationFrame(self.renderID);
+    self.audio.stop();
   };
 };
