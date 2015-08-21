@@ -255,13 +255,6 @@ angular.module('sos.canvas', [])
     $scope.offsetStyle.top = $scope.urlParamConfig.y;
     $scope.offsetStyle.left = $scope.urlParamConfig.x;
 
-/*
-    
-    if(urlParams.mode) {
-      $scope.urlParamConfig.mode = urlParams.mode;  
-    }
-*/
-
 		$scope.canvasDiv = document.getElementById("canvas-stack");
 		$scope.loadModules();
 		// set up default module
