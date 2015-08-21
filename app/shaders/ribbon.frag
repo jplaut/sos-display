@@ -3,20 +3,17 @@
 // By David Hoskins.
 uniform vec2 input_resolution;
 uniform float input_globalTime;
+uniform float input_skeletons[32];
 
 void main()
 {
     float f = 3., g = 3.;
     vec2 res = input_resolution.xy;
-    vec2 mou = vec2(0.0);
-    // TODO
-    //vec2 mou = iMouse.xy;
-    // if (iMouse.z < 0.5)
-    {
-        mou.x = sin(input_globalTime * .3)*sin(input_globalTime * .17) * 1. + sin(input_globalTime * .3);
-        mou.y = (1.0-cos(input_globalTime * .632))*sin(input_globalTime * .131)*1.0+cos(input_globalTime * .3);
-        mou = (mou+1.0) * res;
-    }
+
+    vec2 mou = vec2(input_skeletons[0], input_skeletons[1]);
+    mou.x = sin(input_globalTime * .3)*sin(input_globalTime * .17) * 1. + sin(input_globalTime * .3);
+    mou.y = (1.0-cos(input_globalTime * .632))*sin(input_globalTime * .131)*1.0+cos(input_globalTime * .3);
+    mou = (mou+1.0) * res;
     vec2 z = ((-res+2.0 * gl_FragCoord.xy) / res.y);
     vec2 p = ((-res+2.0+mou) / res.y);
     for( int i = 0; i < 20; i++)
