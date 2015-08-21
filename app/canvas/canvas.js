@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sos.canvas', [])
-    .controller('CanvasCtrl', ['$scope', '$log', '$injector', '$document',
-                 function($scope, $log, $injector, $document) {
+    .controller('CanvasCtrl', ['$scope', '$log', '$injector', '$document', '$location', '$timeout',
+                 function($scope, $log, $injector, $document, $location, $timeout) {
 
 	$scope.wallDisplay = {
 		width: 192,
@@ -19,6 +19,13 @@ angular.module('sos.canvas', [])
 		left: 15,
 		top: 0
 	};
+
+  $scope.urlParamConfig = {
+    mode: 'modeSlowClap',
+    wallDisplayMode: 'DEV',
+    x: 15,
+    y: 10
+  };
 
 	// mode metadata
 	$scope.activeMode = null;
@@ -74,8 +81,22 @@ angular.module('sos.canvas', [])
 			$scope.prodModeInputGroupClass = "btn-primary active";
 			$scope.rotateForProduction = true;
 		}
+		
+		$scope.updateLocationURLParam('wallDisplayMode', newMode);
 
 	}, true);
+
+  $scope.$watch('activeMode', function(activeMode) {
+    $scope.updateLocationURLParam('mode', activeMode.id);
+  });
+  
+  $scope.$watch('offsetStyle.left', function(newValue) {
+    $scope.updateLocationURLParam('x', newValue);
+  });
+
+  $scope.$watch('offsetStyle.top', function(newValue) {
+    $scope.updateLocationURLParam('y', newValue);
+  });
 
 	// keyboard bindings to move the canvas
 	// in 1px increments
@@ -102,8 +123,11 @@ angular.module('sos.canvas', [])
 
 	// binding to rotate display between DEV/PROD
 	keyboardJS.bind('r', function(e) {
-		$scope.toggleDisplayMode();
-		$scope.$digest();
+    // check if metaKey is active (to ignore CMD-R)
+    if(!e.metaKey) {
+		  $scope.toggleDisplayMode();
+		  $scope.$digest();
+		}
 	});
 
 	$scope.$on("error", function(err) {
@@ -128,7 +152,16 @@ angular.module('sos.canvas', [])
 		} else {
 			$scope.wallDisplayMode = "DEV";
 		}
+		
+		// update config and url
 	};
+
+  $scope.updateLocationURLParam = function(paramName, paramValue) {
+    $timeout(function() {
+      $scope.urlParamConfig[paramName] = paramValue;
+      $location.search(paramName, paramValue);
+    });
+  }
 
   $scope.toggleKinectOverlay = function() {
 
@@ -138,11 +171,8 @@ angular.module('sos.canvas', [])
   };
 
 	$scope.goToNextMode = function() {
-    if($scope.activeModeCounter >= $scope.modeModuleList.length) {
-      $scope.activeModeCounter = 0;
-    } else {
-      $scope.activeModeCounter++;  
-    }
+      $scope.activeModeCounter++;
+      $scope.activeModeCounter %= $scope.modeModuleList.length;
     $scope.showMode($scope.modeModuleList[$scope.activeModeCounter]);
 	};
 
@@ -179,7 +209,6 @@ angular.module('sos.canvas', [])
 	$scope.clearCanvases = function() {
 		angular.element($scope.canvasDiv).empty();
 	};
-
 
 	/* passing in null will function as clear canvas */
 	$scope.showMode = function(modeName) {
@@ -220,10 +249,28 @@ angular.module('sos.canvas', [])
 
 	$scope.init = function() {
 
+    // get active mode param if it exists
+    var urlParams = $location.search();
+    console.log("urlParams:", $scope.urlParamConfig, urlParams);
+    $scope.urlParamConfig = angular.extend($scope.urlParamConfig, urlParams);
+    console.log("post urlParams", $scope.urlParamConfig);
+
+    // update all necessary parameters
+    $scope.wallDisplayMode = $scope.urlParamConfig.wallDisplayMode;
+    $scope.offsetStyle.top = $scope.urlParamConfig.y;
+    $scope.offsetStyle.left = $scope.urlParamConfig.x;
+
+/*
+    
+    if(urlParams.mode) {
+      $scope.urlParamConfig.mode = urlParams.mode;  
+    }
+*/
+
 		$scope.canvasDiv = document.getElementById("canvas-stack");
 		$scope.loadModules();
 		// set up default module
-		$scope.showMode('modeSlowClap');
+		$scope.showMode($scope.urlParamConfig.mode);
 		$scope.showKinectOverlay();
 	};
 
