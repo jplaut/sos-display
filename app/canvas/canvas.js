@@ -152,8 +152,6 @@ angular.module('sos.canvas', [])
 		} else {
 			$scope.wallDisplayMode = "DEV";
 		}
-		
-		// update config and url
 	};
 
   $scope.updateLocationURLParam = function(paramName, paramValue) {
