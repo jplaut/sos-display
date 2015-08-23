@@ -11,3 +11,4 @@ kinect2-server/daemon/
 /GPATH
 /GRTAGS
 /GTAGS
+*.log
