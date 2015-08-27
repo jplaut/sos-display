@@ -22,7 +22,7 @@ angular.module('sos.canvas', [])
 
   $scope.urlParamConfig = {
     mode: 'modeSlowClap',
-    audio: 'gainMod',
+    audio: 'gainModNumSkel',
     wallDisplayMode: 'DEV',
     x: 15,
     y: 10
@@ -51,8 +51,9 @@ angular.module('sos.canvas', [])
 
   $scope.activeAudioMode = null;
   $scope.audioModeList = [
-    'gainMod',
-    'synthFreqMod'
+    'gainModNumSkel',
+    'synthFreqModHandPos',
+    'filterFreqModHandPos'
   ];
 
   $scope.activeModeCounter = 0;

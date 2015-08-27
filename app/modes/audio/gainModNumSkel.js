@@ -1,7 +1,7 @@
 'use strict';
 
 var mode = angular.module('sos.modes');
-mode.factory('gainMod', function($rootScope, audioService, $log) {
+mode.factory('gainModNumSkel', function($rootScope, audioService, $log) {
   var mode = {};
   var _cancelListener;
   var _maxBodies = 16;
@@ -12,9 +12,8 @@ mode.factory('gainMod', function($rootScope, audioService, $log) {
 
   _gainNode.gain.value = _baseVolume;
 
-
-  mode.title = "Gain Modulation";
-  mode.id = "gainMod";
+  mode.title = "Gain Modulation Num Skels";
+  mode.id = "gainModNumSkel";
   mode.start = function() {
     if (_bufferSource.buffer) {
       _bufferSource.start(0);

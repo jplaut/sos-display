@@ -1,27 +1,25 @@
 'use strict';
 
 var mode = angular.module('sos.modes');
-mode.factory('synthFreqMod', function($rootScope, audioService, $log) {
+mode.factory('synthFreqModHandPos', function($rootScope, audioService, $log) {
   var mode = {};
   var _osc, _cancelListener;
-  var _maxFrequency = 1000;
-  var _minFrequency = 400;
+  var _maxFrequency = 3000;
+  var _minFrequency = 100;
 
-  mode.title = "Synth Frequency Mod"
-  mode.id = 'synthFreqMod';
+  mode.title = "Synth Frequency Mod Hand Pos"
+  mode.id = 'synthFreqModHandPos';
 
   function maxHandHeight(bodies) {
-    var max = 0;
+    var mins = [];
 
     angular.forEach(bodies, function(body) {
       var rightHandHeight = body.getJointAsPoint("HandRight").y;
       var leftHandHeight = body.getJointAsPoint("HandLeft").y;
-      max = Math.max(rightHandHeight, leftHandHeight, max);
+      mins.push(Math.min(rightHandHeight, leftHandHeight));
     });
 
-    console.log("max is", max);
-
-    return max;
+    return Math.min.apply(null, mins);
   }
 
   mode.start = function(scope) {
