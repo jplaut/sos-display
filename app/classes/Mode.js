@@ -1,3 +1,13 @@
+var mouse = {};
+
+document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+function onDocumentMouseMove(event) {
+  event.preventDefault();
+  mouse.X = event.clientX;
+  mouse.Y = event.clientY;
+}
+
 var Mode = function(id, title) {
 
   // get reference to self
@@ -61,6 +71,12 @@ var ShaderMode = function(args) {
 
     // grab skeletal input
     self.parentScope.$on('kinectInput', function(events, inputs) {
+      // override input if we are in dev mode (for easier testing).
+      if(self.parentScope.wallDisplayMode === 'DEV') {
+        self.inputs[0] = (mouse.X - self.parentScope.urlParamConfig.x) / self.parentScope.canvasDim.width;
+        self.inputs[1] = (mouse.Y - self.parentScope.urlParamConfig.y) / self.parentScope.canvasDim.height;
+        return;
+      }
       // normalize.
       for (var i = 0; i < inputs.length; i++) {
         if ((i % 2) == 0) {
