@@ -54,6 +54,20 @@
         </div>
         <!-- END: media panel -->
 
+        <!-- audio panel -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Select Audio Mode</h3>
+          </div>
+          <div class="panel-body">
+            <div class="list-group">
+              <a href="#" class="list-group-item" ng-repeat="mode in loadedAudioModes" ng-click="showAudioMode(mode.id)" ng-class='{ "active":(activeAudioMode.id == mode.id) }'>{{mode.title}}</a>
+            </div>
+            <button class="btn btn-default" type="submit" ng-click="showAudioMode()">Clear Mode</button>
+          </div>
+        </div>
+        <!-- END: audio panel -->
+
         <!-- canvas controls panel -->
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -185,6 +199,10 @@
   <script src="classes/SkeletalBody.js"></script>
   <script src="classes/Mode.js"></script>
 
+  <!-- links to respective audio mode files -->
+  <script src="modes/audio/gainMod.js"></script>
+  <script src="modes/audio/synthFreqMod.js"></script>
+
   <!-- links to respective mode.js files -->
   <script src="modes/slowClap/mode.js"></script>
   <script src="modes/sampleImage/mode.js"></script>
@@ -201,7 +219,6 @@
   <script src="modes/bubbles/mode.js"></script>
   <script src="modes/caustic/mode.js"></script>
   <script src="modes/cloudten/mode.js"></script>
-  <script src="modes/disco/audio.js"></script>
   <script src="modes/disco/mode.js"></script>
   <script src="modes/hell/mode.js"></script>
   <script src="modes/ribbon/mode.js"></script>

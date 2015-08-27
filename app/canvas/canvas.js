@@ -4,32 +4,33 @@ angular.module('sos.canvas', [])
     .controller('CanvasCtrl', ['$scope', '$log', '$injector', '$document', '$location', '$timeout',
                  function($scope, $log, $injector, $document, $location, $timeout) {
 
-	$scope.wallDisplay = {
-		width: 192,
-		height: 320
-	};
+  $scope.wallDisplay = {
+    width: 192,
+    height: 320
+  };
 
-	$scope.stage = null;
+  $scope.stage = null;
 
-	$scope.canvasDim = {
-		width: 192,
-		height: 320
-	};
-	$scope.offsetStyle = {
-		left: 15,
-		top: 0
-	};
+  $scope.canvasDim = {
+    width: 192,
+    height: 320
+  };
+  $scope.offsetStyle = {
+    left: 15,
+    top: 0
+  };
 
   $scope.urlParamConfig = {
     mode: 'modeSlowClap',
+    audio: 'gainMod',
     wallDisplayMode: 'DEV',
     x: 15,
     y: 10
   };
 
-	// mode metadata
-	$scope.activeMode = null;
-	$scope.modeModuleList = [ 'modeSlowClap',
+  // mode metadata
+  $scope.activeMode = null;
+  $scope.modeModuleList = [ 'modeSlowClap',
                                   'modeTruchet',
                                   'modeSeascape',
                                   'modeEchoplex',
@@ -47,48 +48,60 @@ angular.module('sos.canvas', [])
                                   'modeWorms',
                                   'modeNyan'
                                 ];
+
+  $scope.activeAudioMode = null;
+  $scope.audioModeList = [
+    'gainMod',
+    'synthFreqMod'
+  ];
+
   $scope.activeModeCounter = 0;
 
-	$scope.loadedModes = {};
-	$scope.kinectOverlay = true;
+  $scope.loadedModes = {};
+  $scope.loadedAudioModes = {};
+  $scope.kinectOverlay = true;
 
-	// display metadata
-	$scope.wallDisplayMode = "DEV";
-	$scope.rotateForProduction = false;
-	$scope.devModeInputGroupClass = "btn-primary active";
-	$scope.prodModeInputGroupClass = "btn-primary";
+  // display metadata
+  $scope.wallDisplayMode = "DEV";
+  $scope.rotateForProduction = false;
+  $scope.devModeInputGroupClass = "btn-primary active";
+  $scope.prodModeInputGroupClass = "btn-primary";
 
-	// debug object
-	$scope.debugInfo = {
+  // debug object
+  $scope.debugInfo = {
 
-	};
+  };
 
-	$scope.modeList = [];
+  $scope.modeList = [];
 
-	$scope.$watch('wallDisplayMode', function(newMode) {
+  $scope.$watch('wallDisplayMode', function(newMode) {
 
-		if(newMode == "DEV") {
-			// if newMode is true, dev mode is enabled
-			$log.info("DEV MODE");
-			$scope.devModeInputGroupClass = "btn-primary active";
-			$scope.prodModeInputGroupClass = "btn-default";
-			angular.element($scope.canvasEl);
-			$scope.rotateForProduction = false;
-		} else {
-			$log.info("PROD (WALL) MODE");
-			$scope.devModeInputGroupClass = "btn-default";
-			$scope.prodModeInputGroupClass = "btn-primary active";
-			$scope.rotateForProduction = true;
-		}
-		
-		$scope.updateLocationURLParam('wallDisplayMode', newMode);
+    if(newMode == "DEV") {
+      // if newMode is true, dev mode is enabled
+      $log.info("DEV MODE");
+      $scope.devModeInputGroupClass = "btn-primary active";
+      $scope.prodModeInputGroupClass = "btn-default";
+      angular.element($scope.canvasEl);
+      $scope.rotateForProduction = false;
+    } else {
+      $log.info("PROD (WALL) MODE");
+      $scope.devModeInputGroupClass = "btn-default";
+      $scope.prodModeInputGroupClass = "btn-primary active";
+      $scope.rotateForProduction = true;
+    }
 
-	}, true);
+    $scope.updateLocationURLParam('wallDisplayMode', newMode);
+
+  }, true);
+
+  $scope.$watch('activeAudioMode', function(activeMode) {
+    $scope.updateLocationURLParam('audio', activeMode.id);
+  });
 
   $scope.$watch('activeMode', function(activeMode) {
     $scope.updateLocationURLParam('mode', activeMode.id);
   });
-  
+
   $scope.$watch('offsetStyle.left', function(newValue) {
     $scope.updateLocationURLParam('x', newValue);
   });
@@ -97,63 +110,63 @@ angular.module('sos.canvas', [])
     $scope.updateLocationURLParam('y', newValue);
   });
 
-	// keyboard bindings to move the canvas
-	// in 1px increments
-	keyboardJS.bind('w', function(e) {
-		$scope.offsetStyle.top--;
-		$scope.$digest();
-	});
-	keyboardJS.bind('s', function(e) {
-		$scope.offsetStyle.top++;
-		$scope.$digest();
-	});
-	keyboardJS.bind('a', function(e) {
-		$scope.offsetStyle.left--;
-		$scope.$digest();
-	});
-	keyboardJS.bind('d', function(e) {
-		$scope.offsetStyle.left++;
-		$scope.$digest();
-	});
+  // keyboard bindings to move the canvas
+  // in 1px increments
+  keyboardJS.bind('w', function(e) {
+    $scope.offsetStyle.top--;
+    $scope.$digest();
+  });
+  keyboardJS.bind('s', function(e) {
+    $scope.offsetStyle.top++;
+    $scope.$digest();
+  });
+  keyboardJS.bind('a', function(e) {
+    $scope.offsetStyle.left--;
+    $scope.$digest();
+  });
+  keyboardJS.bind('d', function(e) {
+    $scope.offsetStyle.left++;
+    $scope.$digest();
+  });
 
-	keyboardJS.bind('n', function(n) {
+  keyboardJS.bind('n', function(n) {
     $scope.goToNextMode();
-	});
+  });
 
-	// binding to rotate display between DEV/PROD
-	keyboardJS.bind('r', function(e) {
+  // binding to rotate display between DEV/PROD
+  keyboardJS.bind('r', function(e) {
     // check if metaKey is active (to ignore CMD-R)
     if(!e.metaKey) {
-		  $scope.toggleDisplayMode();
-		  $scope.$digest();
-		}
-	});
+      $scope.toggleDisplayMode();
+      $scope.$digest();
+    }
+  });
 
-	$scope.$on("error", function(err) {
-		$log.warn("Registered error:", err);
-	});
+  $scope.$on("error", function(err) {
+    $log.warn("Registered error:", err);
+  });
 
   $scope.postDebugInfo = function(name, value) {
     $scope.debugInfo[name] = value;
   };
 
-	$scope.getWidthScaleFactor = function(origWidth) {
-		return $scope.wallDisplay.width / origWidth;
-	};
+  $scope.getWidthScaleFactor = function(origWidth) {
+    return $scope.wallDisplay.width / origWidth;
+  };
 
-	$scope.getHeightScaleFactor = function(origHeight) {
-		return $scope.wallDisplay.height / origHeight;
-	};
+  $scope.getHeightScaleFactor = function(origHeight) {
+    return $scope.wallDisplay.height / origHeight;
+  };
 
-	$scope.toggleDisplayMode = function() {
-		if($scope.wallDisplayMode == "DEV") {
-			$scope.wallDisplayMode = "PROD";
-		} else {
-			$scope.wallDisplayMode = "DEV";
-		}
-		
-		// update config and url
-	};
+  $scope.toggleDisplayMode = function() {
+    if($scope.wallDisplayMode == "DEV") {
+      $scope.wallDisplayMode = "PROD";
+    } else {
+      $scope.wallDisplayMode = "DEV";
+    }
+
+    // update config and url
+  };
 
   $scope.updateLocationURLParam = function(paramName, paramValue) {
     $timeout(function() {
@@ -169,82 +182,107 @@ angular.module('sos.canvas', [])
     $scope.kinectOverlay = !$scope.kinectOverlay;
   };
 
-	$scope.goToNextMode = function() {
+  $scope.goToNextMode = function() {
     $scope.activeModeCounter++;
     $scope.activeModeCounter %= $scope.modeModuleList.length;
     $scope.showMode($scope.modeModuleList[$scope.activeModeCounter]);
-	};
+  };
 
-	$scope.loadModules = function() {
-		angular.forEach($scope.modeModuleList, function(value) {
-			var mode = $injector.get(value);
-			if(mode) {
-				$scope.loadedModes[value] = mode;
-			} else {
-				$log.warn("Failed to load mode module: ", value);
-			}
+  $scope.loadModules = function() {
+    angular.forEach($scope.modeModuleList, function(value) {
+      var mode = $injector.get(value);
+      if(mode) {
+        $scope.loadedModes[value] = mode;
+      } else {
+        $log.warn("Failed to load mode module: ", value);
+      }
+    });
 
-		});
-	};
+    angular.forEach($scope.audioModeList, function(value) {
+      var mode = $injector.get(value);
+      if (mode) {
+        $scope.loadedAudioModes[value] = mode;
+      } else {
+        $log.warn("Failed to load audio mode module: ", value);
+      }
+    });
+  };
 
   // don't recreate contexts needlessly.
-	$scope.threejs = {};
+  $scope.threejs = {};
   $scope.threejs.renderer = new THREE.WebGLRenderer();
   $scope.threejs.renderer.setSize($scope.canvasDim.width, $scope.canvasDim.height);
   $scope.pixijs = {};
   $scope.pixijs.renderer = PIXI.autoDetectRenderer($scope.canvasDim.width, $scope.canvasDim.height, {backgroundColor : 0x1099bb, antialias: true});
 
-	// initializers for two types of canvas
-	$scope.createCanvas = function(rendererType) {
+  // initializers for two types of canvas
+  $scope.createCanvas = function(rendererType) {
 
-		$scope.canvasDiv = document.getElementById("canvas-stack");
-		if(rendererType == "THREE") {
-			$scope.canvasDiv.appendChild($scope.threejs.renderer.domElement);
-		} else {
-			$scope.canvasDiv.appendChild($scope.pixijs.renderer.view);
-		}
-	};
+    $scope.canvasDiv = document.getElementById("canvas-stack");
+    if(rendererType == "THREE") {
+      $scope.canvasDiv.appendChild($scope.threejs.renderer.domElement);
+    } else {
+      $scope.canvasDiv.appendChild($scope.pixijs.renderer.view);
+    }
+  };
 
-	$scope.clearCanvases = function() {
-		angular.element($scope.canvasDiv).empty();
-	};
+  $scope.clearCanvases = function() {
+    angular.element($scope.canvasDiv).empty();
+  };
 
-	/* passing in null will function as clear canvas */
-	$scope.showMode = function(modeName) {
+  /* passing in null will function as clear canvas */
+  $scope.showAudioMode = function(modeName) {
+    if ($scope.activeAudioMode) {
+      $log.info("deinit:", $scope.activeAudioMode);
+      $scope.activeAudioMode.stop();
+    }
 
-		// deinit old module if it exists
-		var oldMode = $scope.activeMode;
-		if(oldMode) {
-			$log.info("deinit:", oldMode.id);
-			oldMode.deinit();
-		}
+    var mode = $scope.loadedAudioModes[modeName];
+    $log.info("init audio:", modeName);
+    if (mode) {
+      mode.start($scope);
+      $scope.activeAudioMode = mode;
+    } else {
+      $log.warn("Audio mode not found:", modeName);
+    }
 
-		$scope.clearCanvases();
+  }
+  /* passing in null will function as clear canvas */
+  $scope.showMode = function(modeName) {
 
-		// init new module and make active
-		var mode = $scope.loadedModes[modeName];
-		if(mode) {
-			$scope.createCanvas(mode.rendererType);
-			$log.info("init:", mode.id);
-			mode.init($scope);
-			$scope.activeMode = mode;
-		} else {
-  		$log.warn("Mode not found:", modeName);
-		}
-	};
+    // deinit old module if it exists
+    var oldMode = $scope.activeMode;
+    if(oldMode) {
+      $log.info("deinit:", oldMode.id);
+      oldMode.deinit();
+    }
 
-	$scope.showKinectOverlay = function() {
-		var mode = $injector.get('modeSkeletalFun');
-		mode.init($scope);
-	};
+    $scope.clearCanvases();
 
-	$scope.setCanvasSize = function(width, height, canvas) {
+    // init new module and make active
+    var mode = $scope.loadedModes[modeName];
+    if(mode) {
+      $scope.createCanvas(mode.rendererType);
+      $log.info("init:", mode.id);
+      mode.init($scope);
+      $scope.activeMode = mode;
+    } else {
+      $log.warn("Mode not found:", modeName);
+    }
+  };
 
-		canvas.width = width;
-		canvas.height = height;
-	};
+  $scope.showKinectOverlay = function() {
+    var mode = $injector.get('modeSkeletalFun');
+    mode.init($scope);
+  };
 
-	$scope.init = function() {
+  $scope.setCanvasSize = function(width, height, canvas) {
+
+    canvas.width = width;
+    canvas.height = height;
+  };
+
+  $scope.init = function() {
 
     // get active mode param if it exists
     var urlParams = $location.search();
@@ -255,13 +293,14 @@ angular.module('sos.canvas', [])
     $scope.offsetStyle.top = $scope.urlParamConfig.y;
     $scope.offsetStyle.left = $scope.urlParamConfig.x;
 
-		$scope.canvasDiv = document.getElementById("canvas-stack");
-		$scope.loadModules();
-		// set up default module
-		$scope.showMode($scope.urlParamConfig.mode);
-		$scope.showKinectOverlay();
-	};
+    $scope.canvasDiv = document.getElementById("canvas-stack");
+    $scope.loadModules();
+    // set up default module
+    $scope.showMode($scope.urlParamConfig.mode);
+    $scope.showAudioMode($scope.urlParamConfig.audio);
+    $scope.showKinectOverlay();
+  };
 
-	// lastly, call init() to kick things off
-	$scope.init();
+  // lastly, call init() to kick things off
+  $scope.init();
 }]);

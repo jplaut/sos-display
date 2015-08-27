@@ -26,7 +26,6 @@ var ShaderMode = function(args) {
   this.title = args.title;
   this.parentScope = null;
   this.container = null;
-  this.audio = args.audio;
   this.renderID = null;
   this.rendererType = 'THREE';
   this.inputs = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
@@ -54,7 +53,6 @@ var ShaderMode = function(args) {
       self.vertexShader = resp;
       xhrLoader.load(document.getElementById(args.pixelShaderName).src, function(resp) {
         self.fragmentShader = resp;
-        if (self.audio) self.audio.start();
         self.startRender();
       });
     });
@@ -127,6 +125,5 @@ var ShaderMode = function(args) {
 
   this.deinit = function() {
     cancelAnimationFrame(self.renderID);
-    self.audio.stop();
   };
 };
