@@ -1,61 +1,72 @@
 var SkeletalBody = function() {
 
   var self = this;
-  var _parentContainer = null;
-  var _container = null;
-  var _bodyData = {};
-  var _shapesData;
-  var _color = null;
-  var _isActive = true;
-  var _alpha = 0.1;
-  var _lineConfig = null;
+  self._parentContainer = null;
+  self._container = null;
+  self._bodyData = {};
+  self._shapesData = null;
+  self._color = null;
+  self._isActive = true;
+  self._alpha = 0.1;
+  self._lineConfig = null;
 
-  var handPointer = new HandPointer();
+  self.handPointer = new HandPointer();
 
-  var pointer = new PIXI.Graphics();
-  var torso = new PIXI.Graphics();
-  var leftHand = new PIXI.Graphics();
-  var rightHand = new PIXI.Graphics();
-  var head = new PIXI.Graphics();
+  self.pointer = new PIXI.Graphics();
+  self.torso = new PIXI.Graphics();
+  self.leftHand = new PIXI.Graphics();
+  self.rightHand = new PIXI.Graphics();
+  self.head = new PIXI.Graphics();
+
+  self.leftShoulderToElbow = new PIXI.Graphics();
+  self.leftElbowToWrist = new PIXI.Graphics();
+  self.leftWristToHand = new PIXI.Graphics();
+  self.rightShoulderToElbow = new PIXI.Graphics();
+  self.rightElbowToWrist = new PIXI.Graphics();
+  self.rightWristToHand = new PIXI.Graphics();
+  self.leftHipToKnee = new PIXI.Graphics();
+  self.leftKneeToAnkle = new PIXI.Graphics();
+  self.rightHipToKnee = new PIXI.Graphics();
+  self.rightKneeToAnkle = new PIXI.Graphics();
 
   this.SHAPESXOFFSET = -150;
 
   this.init = function(parentContainer, color) {
 
     // set up stage reference
-    _parentContainer = parentContainer;
-    _color = color;
-    _lineConfig = { color: _color };
+    self._parentContainer = parentContainer;
+    self._color = color;
+    self._lineConfig = { color: self._color };
 
     // set up shapes
     // 		_container = new PIXI.Container();
-    _shapesData = new PIXI.Container();
-    _shapesData.x = _shapesData.x + self.SHAPESXOFFSET;
-    _shapesData.alpha = _alpha;
+    self._shapesData = new PIXI.Container();
+    self._shapesData.x = self._shapesData.x + self.SHAPESXOFFSET;
+    self._shapesData.alpha = self._alpha;
   };
 
   this.setBodyData = function(bodyData) {
-    _bodyData = bodyData;
+    self._bodyData = bodyData;
   };
 
   this.removeSelfFromContainer = function() {
-    _shapesData.removeChildren();
+    self._shapesData.removeChildren();
     //_shapesData.destroy();
   };
 
   this.getActiveStatus = function() {
-    return _isActive;
+    return self._isActive;
   };
 
   this.setActiveStatus = function(isActive) {
-    _isActive = isActive;
+    self._isActive = isActive;
   };
 
-  this.drawLineBetweenJoints = function(j1Name, j2Name, config) {
-    var j1 = _bodyData.joints[j1Name];
-    var j2 = _bodyData.joints[j2Name];
-    var point1 = new PIXI.Point(j1.x, j1.y);
-    var point2 = new PIXI.Point(j2.x, j2.y);
+  this.drawLineBetweenJoints = function(j1Name, j2Name, config, polygon) {
+    var j1 = self._bodyData.joints[j1Name];
+    var j2 = self._bodyData.joints[j2Name];
+    var point1 = { x: j1.x, y: j1.y };
+    var point2 = { x: j2.x, y: j2.y };
     var width = 8;
     var color = config.color;
 
@@ -65,8 +76,9 @@ var SkeletalBody = function() {
     var deg = Math.atan2(deltaY, deltaX)*180.0/Math.PI;
     var newDeg = deg+90;
 
-    var polygon = new PIXI.Graphics();
     polygon.clear();
+    polygon.position.x = point1.x;
+    polygon.position.y = point1.y;
     polygon.lineStyle(1, 0xDEDEDE);
     polygon.beginFill(color);
     polygon.moveTo(-halfThickness, 0);
@@ -75,15 +87,14 @@ var SkeletalBody = function() {
     polygon.lineTo((point2.x - point1.x) - halfThickness, point2.y - point1.y);
     polygon.lineTo(-halfThickness,0);
     polygon.endFill();
-    polygon.position = new PIXI.Point(point1.x, point1.y);
 
-    _shapesData.addChild(polygon);
+    self._shapesData.addChild(polygon);
   };
 
   this.getJointAsPoint = function(jointName) {
-    var joint = _bodyData.joints[jointName];
+    var joint = self._bodyData.joints[jointName];
     if(joint) {
-      return new PIXI.Point(joint.x, joint.y);
+      return { x : joint.x, y : joint.y };
     } else {
       return null;
     }
@@ -92,20 +103,20 @@ var SkeletalBody = function() {
   this.getCenterPoint = function(topLeftRect, bottomRightRect) {
     var centerX = (topLeftRect.x + bottomRightRect.x) / 2;
     var centerY = (topLeftRect.y + bottomRightRect.y) / 2;
-    return new PIXI.Point(centerX, centerY);
+    return { x : centerX, y :  centerY };
   };
 
   this.drawHandPointer = function() {
 
-    if(handPointer.visible) {
+    if(self.handPointer.visible) {
       var pointerLoc = self.getHandPointerPoint();
-      pointer.clear();
-      pointer.lineStyle(2, 0xffffff);
-      pointer.beginFill(handPointer.color);
-      pointer.drawCircle(pointerLoc.x, pointerLoc.y, handPointer.getNextSize());
-      pointer.alpha = handPointer.getNextAlpha();
-      pointer.endFill();
-      _shapesData.addChild(pointer);
+      self.pointer.clear();
+      self.pointer.lineStyle(2, 0xffffff);
+      self.pointer.beginFill(self.handPointer.color);
+      self.pointer.drawCircle(pointerLoc.x, pointerLoc.y, self.handPointer.getNextSize());
+      self.pointer.alpha = self.handPointer.getNextAlpha();
+      self.pointer.endFill();
+      self._shapesData.addChild(self.pointer);
     }
   };
 
@@ -116,70 +127,70 @@ var SkeletalBody = function() {
 
   this.drawToStage = function() {
 
-    _shapesData.removeChildren();
+    self._shapesData.removeChildren();
 
-    if(_bodyData && _bodyData.joints) {
+    if(self._bodyData && self._bodyData.joints) {
 
       // polygon graphic for the torso
-      torso.clear();
-      torso.lineStyle(4, 0xFFFFFF);
-      torso.beginFill(_color);
-      torso.moveTo(_bodyData.joints["ShoulderLeft"].x, _bodyData.joints["ShoulderLeft"].y);
-      torso.lineTo(_bodyData.joints["ShoulderRight"].x, _bodyData.joints["ShoulderRight"].y);
-      torso.lineTo(_bodyData.joints["HipRight"].x, _bodyData.joints["HipRight"].y);
-      torso.lineTo(_bodyData.joints["HipLeft"].x, _bodyData.joints["HipLeft"].y);
-      torso.lineTo(_bodyData.joints["ShoulderLeft"].x, _bodyData.joints["ShoulderLeft"].y);
-      torso.endFill();
-      _shapesData.addChild(torso);
+      self.torso.clear();
+      self.torso.lineStyle(4, 0xFFFFFF);
+      self.torso.beginFill(self._color);
+      self.torso.moveTo(self._bodyData.joints["ShoulderLeft"].x, self._bodyData.joints["ShoulderLeft"].y);
+      self.torso.lineTo(self._bodyData.joints["ShoulderRight"].x, self._bodyData.joints["ShoulderRight"].y);
+      self.torso.lineTo(self._bodyData.joints["HipRight"].x, self._bodyData.joints["HipRight"].y);
+      self.torso.lineTo(self._bodyData.joints["HipLeft"].x, self._bodyData.joints["HipLeft"].y);
+      self.torso.lineTo(self._bodyData.joints["ShoulderLeft"].x, self._bodyData.joints["ShoulderLeft"].y);
+      self.torso.endFill();
+      self._shapesData.addChild(self.torso);
 
       // neck line
-      // this.drawLineBetweenJoints("Head", "Neck", _lineConfig);
+      // this.drawLineBetweenJoints("Head", "Neck", self._lineConfig);
 
       // left arm
-      this.drawLineBetweenJoints("ShoulderLeft", "ElbowLeft", _lineConfig);
-      this.drawLineBetweenJoints("ElbowLeft", "WristLeft", _lineConfig);
-      this.drawLineBetweenJoints("WristLeft", "HandLeft", _lineConfig);
+      this.drawLineBetweenJoints("ShoulderLeft", "ElbowLeft", self._lineConfig, self.leftShoulderToElbow);
+      this.drawLineBetweenJoints("ElbowLeft", "WristLeft", self._lineConfig, self.leftElbowToWrist);
+      this.drawLineBetweenJoints("WristLeft", "HandLeft", self._lineConfig, self.leftWristToHand);
 
       // right arm
-      this.drawLineBetweenJoints("ShoulderRight", "ElbowRight", _lineConfig);
-      this.drawLineBetweenJoints("ElbowRight", "WristRight", _lineConfig);
-      this.drawLineBetweenJoints("WristRight", "HandRight", _lineConfig);
+      this.drawLineBetweenJoints("ShoulderRight", "ElbowRight", self._lineConfig, self.rightShoulderToElbow);
+      this.drawLineBetweenJoints("ElbowRight", "WristRight", self._lineConfig, self.rightElbowToWrist);
+      this.drawLineBetweenJoints("WristRight", "HandRight", self._lineConfig, self.rightWristToHand);
 
       // left leg
-      this.drawLineBetweenJoints("HipLeft", "KneeLeft", _lineConfig);
-      this.drawLineBetweenJoints("KneeLeft", "AnkleLeft", _lineConfig);
+      this.drawLineBetweenJoints("HipLeft", "KneeLeft", self._lineConfig, self.leftHipToKnee);
+      this.drawLineBetweenJoints("KneeLeft", "AnkleLeft", self._lineConfig, self.leftKneeToAnkle);
 
       // right leg
-      this.drawLineBetweenJoints("HipRight", "KneeRight", _lineConfig);
-      this.drawLineBetweenJoints("KneeRight", "AnkleRight", _lineConfig);
+      this.drawLineBetweenJoints("HipRight", "KneeRight", self._lineConfig, self.rightHipToKnee);
+      this.drawLineBetweenJoints("KneeRight", "AnkleRight", self._lineConfig, self.rightKneeToAnkle);
 
-      leftHand.clear();
-      leftHand.lineStyle(1, 0xFFFFFF);
-      leftHand.beginFill(_color).drawCircle(_bodyData.joints["HandLeft"].x ,_bodyData.joints["HandLeft"].y, 5);
-      leftHand.endFill();
-      _shapesData.addChild(leftHand);
+      self.leftHand.clear();
+      self.leftHand.lineStyle(1, 0xFFFFFF);
+      self.leftHand.beginFill(self._color).drawCircle(self._bodyData.joints["HandLeft"].x, self._bodyData.joints["HandLeft"].y, 5);
+      self.leftHand.endFill();
+      self._shapesData.addChild(self.leftHand);
 
-      rightHand.clear();
-      rightHand.lineStyle(1, 0xFFFFFF);
-      rightHand.beginFill(_color).drawCircle(_bodyData.joints["HandRight"].x ,_bodyData.joints["HandRight"].y, 5);
-      rightHand.endFill();
-      _shapesData.addChild(rightHand);
+      self.rightHand.clear();
+      self.rightHand.lineStyle(1, 0xFFFFFF);
+      self.rightHand.beginFill(self._color).drawCircle(self._bodyData.joints["HandRight"].x, self._bodyData.joints["HandRight"].y, 5);
+      self.rightHand.endFill();
+      self._shapesData.addChild(self.rightHand);
 
-      head.clear();
-      head.lineStyle(2, 0xFFFFFF);
-      head.beginFill(_color).drawCircle(_bodyData.joints["Head"].x ,_bodyData.joints["Head"].y, 25);
-      head.endFill();
-      _shapesData.addChild(head);
+      self.head.clear();
+      self.head.lineStyle(2, 0xFFFFFF);
+      self.head.beginFill(self._color).drawCircle(self._bodyData.joints["Head"].x, self._bodyData.joints["Head"].y, 25);
+      self.head.endFill();
+      self._shapesData.addChild(self.head);
 
       self.drawHandPointer();
 
       // decrement alpha if not at 1.0 yet
-      if(_alpha < 1.0) {
-  	_alpha = _alpha + 0.075;
-  	_shapesData.alpha = _alpha;
+      if(self._alpha < 1.0) {
+  	self._alpha = self._alpha + 0.075;
+  	self._shapesData.alpha = self._alpha;
       }
 
-      _parentContainer.addChild(_shapesData);
+      self._parentContainer.addChild(self._shapesData);
     }
   };
 };
