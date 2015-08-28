@@ -56,6 +56,22 @@ angular.module('sos.canvas', []).controller('CanvasCtrl', ['$scope', '$log', '$i
   $scope.devModeInputGroupClass = "btn-primary active";
   $scope.prodModeInputGroupClass = "btn-primary";
 
+  // automatically toggle after inactivity
+  $scope.switchTimeout = 5 * 60 * 1000; // in milliseconds
+  $scope.hasSwitched = false;
+  let switchRandomly = function() {
+    if(!($scope.hasSwitched)) {
+      $scope.randomMode();
+    }
+    $scope.hasSwitched = false;
+    setTimeout(function(){
+      switchRandomly();
+    }, $scope.switchTimeout);
+  };
+  setTimeout(function(){
+    switchRandomly();
+  }, $scope.switchTimeout);
+
   // debug object
   $scope.debugInfo = {
 
@@ -166,6 +182,12 @@ angular.module('sos.canvas', []).controller('CanvasCtrl', ['$scope', '$log', '$i
     $scope.kinectOverlay = !$scope.kinectOverlay;
   };
 
+  $scope.randomMode = function() {
+    var index = Math.floor(Math.random() * $scope.modeModuleList.length);
+    $scope.activeModeCounter = index;
+    $scope.showMode($scope.modeModuleList[$scope.activeModeCounter]);
+  };
+
   $scope.goToNextMode = function() {
     $scope.activeModeCounter++;
     $scope.activeModeCounter %= $scope.modeModuleList.length;
@@ -225,6 +247,7 @@ angular.module('sos.canvas', []).controller('CanvasCtrl', ['$scope', '$log', '$i
       $log.info("init:", mode.id);
       mode.init($scope);
       $scope.activeMode = mode;
+      $scope.hasSwitched = true;
       if(mode.kinectEnabled && !($scope.kinectOverlay)) {
         $scope.toggleKinectOverlay();
       }
