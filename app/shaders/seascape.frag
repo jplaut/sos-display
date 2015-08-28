@@ -2,11 +2,11 @@
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 uniform vec2 input_resolution;
 uniform float input_globalTime;
+uniform float input_skeletons[32];
 
 const int NUM_STEPS = 8;
 const float PI	 	= 3.1415;
 const float EPSILON	= 1e-3;
-float EPSILON_NRM	= 0.1 / input_resolution.x;
 
 // sea
 const int ITER_GEOMETRY = 3;
@@ -17,8 +17,7 @@ const float SEA_SPEED = 0.8;
 const float SEA_FREQ = 0.16;
 const vec3 SEA_BASE = vec3(0.1,0.19,0.22);
 const vec3 SEA_WATER_COLOR = vec3(0.8,0.9,0.6);
-float SEA_TIME = input_globalTime * SEA_SPEED;
-mat2 octave_m = mat2(1.6,1.2,-1.2,1.6);
+const mat2 octave_m = mat2(1.6,1.2,-1.2,1.6);
 
 // math
 mat3 fromEuler(vec3 ang) {
@@ -78,6 +77,7 @@ float map(vec3 p) {
     float amp = SEA_HEIGHT;
     float choppy = SEA_CHOPPY;
     vec2 uv = p.xz; uv.x *= 0.75;
+    float SEA_TIME = input_globalTime * SEA_SPEED;
 
     float d, h = 0.0;
     for(int i = 0; i < ITER_GEOMETRY; i++) {
@@ -95,6 +95,7 @@ float map_detailed(vec3 p) {
     float amp = SEA_HEIGHT;
     float choppy = SEA_CHOPPY;
     vec2 uv = p.xz; uv.x *= 0.75;
+    float SEA_TIME = input_globalTime * SEA_SPEED;
 
     float d, h = 0.0;
     for(int i = 0; i < ITER_FRAGMENT; i++) {
@@ -118,6 +119,10 @@ vec3 getSeaColor(vec3 p, vec3 n, vec3 l, vec3 eye, vec3 dist) {
 
     float atten = max(1.0 - dot(dist,dist) * 0.001, 0.0);
     color += SEA_WATER_COLOR * (p.y - SEA_HEIGHT) * 0.18 * atten;
+
+    color.r += input_skeletons[0]*0.1;
+    color.g += input_skeletons[2]*0.1;
+    color.b += input_skeletons[4]*0.1;
 
     color += vec3(specular(n,l,eye,60.0));
 
@@ -160,7 +165,7 @@ void main() {
     vec2 uv = gl_FragCoord.xy / input_resolution.xy;
     uv = uv * 2.0 - 1.0;
     uv.x *= input_resolution.x / input_resolution.y;
-    float time = input_globalTime * 0.3; // + iMouse.x*0.01;
+    float time = input_globalTime * 0.3;
 
     // ray
     vec3 ang = vec3(sin(time*3.0)*0.1,sin(time)*0.2+0.3,time);
@@ -169,6 +174,7 @@ void main() {
     dir = normalize(dir) * fromEuler(ang);
 
     // tracing
+    float EPSILON_NRM = 0.1 / input_resolution.x;
     vec3 p;
     heightMapTracing(ori,dir,p);
     vec3 dist = p - ori;

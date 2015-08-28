@@ -85,6 +85,9 @@ var ShaderMode = function(args) {
       for (var i = 0; i < inputs.length; i++) {
         if ((i % 2) == 0) {
           self.inputs[i] = inputs[i] / parentScope.wallDisplay.width;
+          // clamp
+          self.inputs[i] = Math.max(self.inputs[i], 0.0);
+          self.inputs[i] = Math.min(self.inputs[i], 1.0);
         } else {
           self.inputs[i] = inputs[i] / parentScope.wallDisplay.height;
         }

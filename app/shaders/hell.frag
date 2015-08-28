@@ -4,6 +4,7 @@ uniform vec2 input_resolution;
 uniform float input_globalTime;
 uniform sampler2D input_channel0;
 uniform vec2 input_channel0_resolution;
+uniform float input_skeletons[32];
 
 float noise( in vec3 x )
 {
@@ -79,10 +80,7 @@ void main()
     vec2 p = -1.0 + 2.0*q;
     p.x *= 1.7; // input_resolution.x / input_resolution.y;
 
-    // TODO
-    // vec2 mo = iMouse.xy / input_resolution.xy;
-    // if( iMouse.w<=0.00001 ) mo=vec2(0.0);
-    vec2 mo = vec2(0.0, 0.0);
+    vec2 mo = vec2(input_skeletons[1], 0.0);
 
     // camera
     vec3 ro = 4.0*normalize(vec3(cos(3.0*mo.x), 1.4 - 1.0*(mo.y-.1), sin(3.0*mo.x)));

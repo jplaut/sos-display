@@ -10,10 +10,16 @@ void main()
     float f = 3., g = 3.;
     vec2 res = input_resolution.xy;
 
-    vec2 mou = vec2(input_skeletons[0], input_skeletons[1]);
+    vec2 mou = vec2(0.0);
     mou.x = sin(input_globalTime * .3)*sin(input_globalTime * .17) * 1. + sin(input_globalTime * .3);
     mou.y = (1.0-cos(input_globalTime * .632))*sin(input_globalTime * .131)*1.0+cos(input_globalTime * .3);
     mou = (mou+1.0) * res;
+
+    // override if we have a third person
+    if(input_skeletons[4] > 0.0 && input_skeletons[5] > 0.0) {
+        mou = vec2(input_skeletons[0]*input_resolution[0], input_skeletons[1]*input_resolution[1]);
+    }
+
     vec2 z = ((-res+2.0 * gl_FragCoord.xy) / res.y);
     vec2 p = ((-res+2.0+mou) / res.y);
     for( int i = 0; i < 20; i++)
