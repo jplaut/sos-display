@@ -6,7 +6,6 @@ uniform float input_globalTime;
 const int NUM_STEPS = 8;
 const float PI	 	= 3.1415;
 const float EPSILON	= 1e-3;
-float EPSILON_NRM	= 0.1 / input_resolution.x;
 
 // sea
 const int ITER_GEOMETRY = 3;
@@ -17,8 +16,7 @@ const float SEA_SPEED = 0.8;
 const float SEA_FREQ = 0.16;
 const vec3 SEA_BASE = vec3(0.1,0.19,0.22);
 const vec3 SEA_WATER_COLOR = vec3(0.8,0.9,0.6);
-float SEA_TIME = input_globalTime * SEA_SPEED;
-mat2 octave_m = mat2(1.6,1.2,-1.2,1.6);
+const mat2 octave_m = mat2(1.6,1.2,-1.2,1.6);
 
 // math
 mat3 fromEuler(vec3 ang) {
@@ -78,6 +76,7 @@ float map(vec3 p) {
     float amp = SEA_HEIGHT;
     float choppy = SEA_CHOPPY;
     vec2 uv = p.xz; uv.x *= 0.75;
+    float SEA_TIME = input_globalTime * SEA_SPEED;
 
     float d, h = 0.0;
     for(int i = 0; i < ITER_GEOMETRY; i++) {
@@ -95,6 +94,7 @@ float map_detailed(vec3 p) {
     float amp = SEA_HEIGHT;
     float choppy = SEA_CHOPPY;
     vec2 uv = p.xz; uv.x *= 0.75;
+    float SEA_TIME = input_globalTime * SEA_SPEED;
 
     float d, h = 0.0;
     for(int i = 0; i < ITER_FRAGMENT; i++) {
@@ -169,6 +169,7 @@ void main() {
     dir = normalize(dir) * fromEuler(ang);
 
     // tracing
+    float EPSILON_NRM = 0.1 / input_resolution.x;
     vec3 p;
     heightMapTracing(ori,dir,p);
     vec3 dist = p - ori;
