@@ -79,7 +79,7 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
       mode.trackedSkeletons.length = 0;
     });
 
-    mode.drawHitBoxes();
+    //mode.drawHitBoxes();
 
     //mode.drawTestAngledPolygon(new PIXI.Point(10,10), new PIXI.Point(50,50), -10);
   };
@@ -121,14 +121,14 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 	// }
 
 	// get hand pointer
-	var hp = skel.getHandPointerPoint();
+	// var hp = skel.getHandPointerPoint();
 	// apply offset to correct x
-	hp = new PIXI.Point(hp.x - 150, hp.y);
-	if(mode.topHitBox.containsPoint(hp)) {
-	  mode.parentScope.postDebugInfo("topHitBox active", "true");
-	} else {
-	  mode.parentScope.postDebugInfo("topHitBox active", "false");
-	}
+	// hp = new PIXI.Point(hp.x - 150, hp.y);
+	// if(mode.topHitBox.containsPoint(hp)) {
+	//   mode.parentScope.postDebugInfo("topHitBox active", "true");
+	// } else {
+	//   mode.parentScope.postDebugInfo("topHitBox active", "false");
+	// }
 
       } else {
 	//console.log("removing self from container");
