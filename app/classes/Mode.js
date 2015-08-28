@@ -135,14 +135,22 @@ var ShaderMode = function(args) {
     var mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
+    // poor man's mutex
+    self.blocking = false;
+
     var render = function() {
+      if(self.blocking) {
+        return; // wait!
+      }
+      self.blocking = true;
       self.uniforms.input_globalTime.value += 0.05;
       self.uniforms.input_skeletons.value = self.inputs;
       self.parentScope.threejs.renderer.render(scene, camera);
       self.renderID = requestAnimationFrame(render);
+      self.blocking = false;
     };
 
-    render();
+    self.renderID = requestAnimationFrame(render);
   };
 
   this.deinit = function() {

@@ -38,30 +38,6 @@ var SkeletalBody = function() {
     _bodyData = bodyData;
   };
 
-  this.polygonFromLine = function(point1, point2, width, color) {
-
-    var halfThickness = width * 0.5;
-    var deltaX = point1.x - point2.x;
-    var deltaY = point2.x - point2.y;
-    var deg = Math.atan2(deltaY, deltaX)*180.0/Math.PI;
-    var newDeg = deg+90;
-
-    var polygon = new PIXI.Graphics();
-
-    polygon.clear();
-    polygon.lineStyle(1, 0xDEDEDE);
-    polygon.beginFill(color);
-    polygon.moveTo(-halfThickness, 0);
-    polygon.lineTo(halfThickness, 0);
-    polygon.lineTo((point2.x - point1.x) + halfThickness, point2.y - point1.y);
-    polygon.lineTo((point2.x - point1.x) - halfThickness, point2.y - point1.y);
-    polygon.lineTo(-halfThickness,0);
-    polygon.endFill();
-
-    polygon.position = new PIXI.Point(point1.x, point1.y);
-    return polygon;
-  };
-
   this.removeSelfFromContainer = function() {
     _shapesData.removeChildren();
     //_shapesData.destroy();
@@ -78,8 +54,30 @@ var SkeletalBody = function() {
   this.drawLineBetweenJoints = function(j1Name, j2Name, config) {
     var j1 = _bodyData.joints[j1Name];
     var j2 = _bodyData.joints[j2Name];
-    var jointPoly = this.polygonFromLine(new PIXI.Point(j1.x, j1.y), new PIXI.Point(j2.x, j2.y), 8, config.color);
-    _shapesData.addChild(jointPoly);
+    var point1 = new PIXI.Point(j1.x, j1.y);
+    var point2 = new PIXI.Point(j2.x, j2.y);
+    var width = 8;
+    var color = config.color;
+
+    var halfThickness = width * 0.5;
+    var deltaX = point1.x - point2.x;
+    var deltaY = point2.x - point2.y;
+    var deg = Math.atan2(deltaY, deltaX)*180.0/Math.PI;
+    var newDeg = deg+90;
+
+    var polygon = new PIXI.Graphics();
+    polygon.clear();
+    polygon.lineStyle(1, 0xDEDEDE);
+    polygon.beginFill(color);
+    polygon.moveTo(-halfThickness, 0);
+    polygon.lineTo(halfThickness, 0);
+    polygon.lineTo((point2.x - point1.x) + halfThickness, point2.y - point1.y);
+    polygon.lineTo((point2.x - point1.x) - halfThickness, point2.y - point1.y);
+    polygon.lineTo(-halfThickness,0);
+    polygon.endFill();
+    polygon.position = new PIXI.Point(point1.x, point1.y);
+
+    _shapesData.addChild(polygon);
   };
 
   this.getJointAsPoint = function(jointName) {

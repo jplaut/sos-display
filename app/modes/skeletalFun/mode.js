@@ -152,7 +152,14 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
     mode.container.addChild(mode.topHitBox);
   };
 
+  // poor man's mutex
+  self.blocking = false;
+
   mode.update = function() {
+    if(self.blocking) {
+      return; // wait!
+    }
+    self.blocking = true;
 
     mode.drawSkeletons();
 
@@ -162,6 +169,7 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 
     mode.kinect.renderer.render(mode.container);
     requestAnimationFrame(mode.update);
+    self.blocking = false;
   };
 
   // override deinit because we need to do
