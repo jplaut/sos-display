@@ -66,6 +66,7 @@ services.service('skeletalService', function($rootScope, $log) {
       socket.emit("refresh", "callback hell", function(data) {
         //console.log(data);
         // no-op.
+        data = null;
       });
     });
 

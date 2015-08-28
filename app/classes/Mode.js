@@ -1,3 +1,13 @@
+var mouse = {};
+
+document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+function onDocumentMouseMove(event) {
+  event.preventDefault();
+  mouse.X = event.clientX;
+  mouse.Y = event.clientY;
+}
+
 var Mode = function(id, title) {
 
   // get reference to self
@@ -10,6 +20,7 @@ var Mode = function(id, title) {
   this.container = null;
   this.renderID = null;
   this.rendererType = "PIXI";
+  this.kinectEnabled = true;
 
   this.setParentScope = function(scope) {
     self.parentScope = scope;
@@ -30,6 +41,7 @@ var ShaderMode = function(args) {
   this.renderID = null;
   this.rendererType = 'THREE';
   this.inputs = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+  this.kinectEnabled = args.disableKinect ? false : true; // default to true
 
   var uniformExtras = null;
 
@@ -54,13 +66,21 @@ var ShaderMode = function(args) {
       self.vertexShader = resp;
       xhrLoader.load(document.getElementById(args.pixelShaderName).src, function(resp) {
         self.fragmentShader = resp;
-        if (self.audio) self.audio.start();
+        if (self.audio) {
+          self.audio.start();
+        }
         self.startRender();
       });
     });
 
     // grab skeletal input
     self.parentScope.$on('kinectInput', function(events, inputs) {
+      // override input if we are in dev mode (for easier testing).
+      if(self.parentScope.wallDisplayMode === 'DEV') {
+        self.inputs[0] = (mouse.X - self.parentScope.urlParamConfig.x) / self.parentScope.canvasDim.width;
+        self.inputs[1] = (mouse.Y - self.parentScope.urlParamConfig.y) / self.parentScope.canvasDim.height;
+        return;
+      }
       // normalize.
       for (var i = 0; i < inputs.length; i++) {
         if ((i % 2) == 0) {
@@ -115,18 +135,28 @@ var ShaderMode = function(args) {
     var mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
+    // poor man's mutex
+    self.blocking = false;
+
     var render = function() {
+      if(self.blocking) {
+        return; // wait!
+      }
+      self.blocking = true;
       self.uniforms.input_globalTime.value += 0.05;
       self.uniforms.input_skeletons.value = self.inputs;
-      self.renderID = requestAnimationFrame(render);
       self.parentScope.threejs.renderer.render(scene, camera);
+      self.renderID = requestAnimationFrame(render);
+      self.blocking = false;
     };
 
-    render();
+    self.renderID = requestAnimationFrame(render);
   };
 
   this.deinit = function() {
     cancelAnimationFrame(self.renderID);
-    self.audio.stop();
+    if(self.audio) {
+      self.audio.stop();
+    }
   };
 };
