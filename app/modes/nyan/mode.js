@@ -5,6 +5,7 @@ mode.factory('modeNyan', function($log) {
   return new ShaderMode({ id: 'modeNyan',
                           title: 'Nyan',
                           pixelShaderName: 'nyanFrag',
+                          disableKinect: true,
                           loadUniforms: function() {
 	                    var anim = THREE.ImageUtils.loadTexture('media/tex14.png');
                             var stars = THREE.ImageUtils.loadTexture('media/tex03.jpg');

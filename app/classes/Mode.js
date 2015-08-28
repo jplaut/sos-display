@@ -20,6 +20,7 @@ var Mode = function(id, title) {
   this.container = null;
   this.renderID = null;
   this.rendererType = "PIXI";
+  this.kinectEnabled = true;
 
   this.setParentScope = function(scope) {
     self.parentScope = scope;
@@ -40,6 +41,7 @@ var ShaderMode = function(args) {
   this.renderID = null;
   this.rendererType = 'THREE';
   this.inputs = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+  this.kinectEnabled = args.disableKinect ? false : true; // default to true
 
   var uniformExtras = null;
 

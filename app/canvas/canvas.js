@@ -225,6 +225,12 @@ angular.module('sos.canvas', []).controller('CanvasCtrl', ['$scope', '$log', '$i
       $log.info("init:", mode.id);
       mode.init($scope);
       $scope.activeMode = mode;
+      if(mode.kinectEnabled && !($scope.kinectOverlay)) {
+        $scope.toggleKinectOverlay();
+      }
+      if(!mode.kinectEnabled && ($scope.kinectOverlay)) {
+        $scope.toggleKinectOverlay();
+      }
     } else {
       $log.warn("Mode not found:", modeName);
     }
