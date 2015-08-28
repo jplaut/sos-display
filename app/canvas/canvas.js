@@ -161,7 +161,6 @@ angular.module('sos.canvas', []).controller('CanvasCtrl', ['$scope', '$log', '$i
   };
 
   $scope.toggleKinectOverlay = function() {
-
     var overlay = document.getElementById('kinect-overlay');
     overlay.hidden = $scope.kinectOverlay;
     $scope.kinectOverlay = !$scope.kinectOverlay;
@@ -234,11 +233,6 @@ angular.module('sos.canvas', []).controller('CanvasCtrl', ['$scope', '$log', '$i
   $scope.showKinectOverlay = function() {
     var mode = $injector.get('modeSkeletalFun');
     mode.init($scope);
-  };
-
-  $scope.disableKinectOverlay = function() {
-    var mode = $injector.get('modeSkeletalFun');
-    mode.deinit($scope);
   };
 
   $scope.setCanvasSize = function(width, height, canvas) {

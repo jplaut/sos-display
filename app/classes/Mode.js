@@ -64,7 +64,9 @@ var ShaderMode = function(args) {
       self.vertexShader = resp;
       xhrLoader.load(document.getElementById(args.pixelShaderName).src, function(resp) {
         self.fragmentShader = resp;
-        if (self.audio) self.audio.start();
+        if (self.audio) {
+          self.audio.start();
+        }
         self.startRender();
       });
     });
@@ -143,6 +145,8 @@ var ShaderMode = function(args) {
 
   this.deinit = function() {
     cancelAnimationFrame(self.renderID);
-    self.audio.stop();
+    if(self.audio) {
+      self.audio.stop();
+    }
   };
 };

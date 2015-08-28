@@ -9,7 +9,7 @@ mode.factory('audioDisco', function($rootScope, audioService, $log) {
   var _step = (1 - _baseVolume) / _maxBodies;
   var _gainNode = audioService.context.createGain();
   var _bufferSource = audioService.context.createBufferSource();
-  
+
   var mode = {};
 
   mode.start = function() {
@@ -26,12 +26,14 @@ mode.factory('audioDisco', function($rootScope, audioService, $log) {
         _gainNode.gain.value = newValue;
       });
     });
-  }
+  };
 
   mode.stop = function() {
-    _cancelListener();
-    _bufferSource.stop();
-  }
+    if(_cancelListener) {
+      _cancelListener();
+      _bufferSource.stop();
+    }
+  };
 
   return mode;
 });
