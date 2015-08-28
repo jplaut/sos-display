@@ -3,6 +3,7 @@ uniform vec2 input_resolution;
 uniform float input_globalTime;
 uniform sampler2D input_channel0;
 uniform vec2 input_channel0_resolution;
+uniform float input_skeletons[32];
 
 #define time input_globalTime
 mat2 mm2(in float a){float c = cos(a), s = sin(a);return mat2(c,s,-s,c);}
@@ -118,9 +119,7 @@ void main()
     vec2 p = q - 0.5;
     float asp =input_resolution.x/input_resolution.y;
     p.x *= asp;
-    // TODO
-    vec2 iMouse = vec2(0.0, 0.0);
-    vec2 mo = iMouse.xy / input_resolution.xy;
+    vec2 mo = vec2(input_skeletons[0], input_skeletons[1]);
     moy = mo.y;
     float st = sin(time*0.3-1.3)*0.2;
     vec3 ro = vec3(0.,-2.+sin(time*.3-1.)*2.,time*30.);
