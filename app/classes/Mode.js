@@ -138,8 +138,8 @@ var ShaderMode = function(args) {
     var render = function() {
       self.uniforms.input_globalTime.value += 0.05;
       self.uniforms.input_skeletons.value = self.inputs;
-      self.renderID = requestAnimationFrame(render);
       self.parentScope.threejs.renderer.render(scene, camera);
+      self.renderID = requestAnimationFrame(render);
     };
 
     render();
