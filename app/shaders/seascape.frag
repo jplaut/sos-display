@@ -2,6 +2,7 @@
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 uniform vec2 input_resolution;
 uniform float input_globalTime;
+uniform float input_skeletons[32];
 
 const int NUM_STEPS = 8;
 const float PI	 	= 3.1415;
@@ -119,6 +120,10 @@ vec3 getSeaColor(vec3 p, vec3 n, vec3 l, vec3 eye, vec3 dist) {
     float atten = max(1.0 - dot(dist,dist) * 0.001, 0.0);
     color += SEA_WATER_COLOR * (p.y - SEA_HEIGHT) * 0.18 * atten;
 
+    color.r += input_skeletons[0]*0.1;
+    color.g += input_skeletons[2]*0.1;
+    color.b += input_skeletons[4]*0.1;
+
     color += vec3(specular(n,l,eye,60.0));
 
     return color;
@@ -160,7 +165,7 @@ void main() {
     vec2 uv = gl_FragCoord.xy / input_resolution.xy;
     uv = uv * 2.0 - 1.0;
     uv.x *= input_resolution.x / input_resolution.y;
-    float time = input_globalTime * 0.3; // + iMouse.x*0.01;
+    float time = input_globalTime * 0.3;
 
     // ray
     vec3 ang = vec3(sin(time*3.0)*0.1,sin(time)*0.2+0.3,time);
