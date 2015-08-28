@@ -11,6 +11,7 @@ var SkeletalBody = function() {
   self._lineConfig = null;
 
   self.handPointer = new HandPointer();
+  self.getHandPointerFn = null;
 
   self.pointer = new PIXI.Graphics();
   self.torso = new PIXI.Graphics();
@@ -43,6 +44,9 @@ var SkeletalBody = function() {
     self._shapesData = new PIXI.Container();
     self._shapesData.x = self._shapesData.x + self.SHAPESXOFFSET;
     self._shapesData.alpha = self._alpha;
+
+    // toggle pointer
+    this.randomizeHandPointer();
   };
 
   this.setBodyData = function(bodyData) {
@@ -109,7 +113,7 @@ var SkeletalBody = function() {
   this.drawHandPointer = function() {
 
     if(self.handPointer.visible) {
-      var pointerLoc = self.getHandPointerPoint();
+      var pointerLoc = self.getHandPointerFn();
       self.pointer.clear();
       self.pointer.lineStyle(2, 0xffffff);
       self.pointer.beginFill(self.handPointer.color);
@@ -120,9 +124,23 @@ var SkeletalBody = function() {
     }
   };
 
+  this.randomizeHandPointer = function() {
+    var fns = [this.getHandPointerPoint, this.getLeftHandPointerPoint, this.getRightHandPointerPoint];
+    var index = Math.floor(Math.random() * fns.length);
+    self.getHandPointerFn = fns[index];
+  };
+
   this.getHandPointerPoint = function() {
     return self.getCenterPoint(self.getJointAsPoint("HandLeft"),
                                self.getJointAsPoint("HandRight"));
+  };
+
+  this.getLeftHandPointerPoint = function() {
+    return self.getJointAsPoint("HandLeft");
+  };
+
+  this.getRightHandPointerPoint = function() {
+    return self.getJointAsPoint("HandRight");
   };
 
   this.drawToStage = function() {
