@@ -59,7 +59,7 @@ angular.module('sos.canvas', []).controller('CanvasCtrl', ['$scope', '$log', '$i
   // automatically toggle after inactivity
   $scope.switchTimeout = 5 * 60 * 1000; // in milliseconds
   $scope.hasSwitched = false;
-  let switchRandomly = function() {
+  var switchRandomly = function() {
     if(!($scope.hasSwitched)) {
       $scope.randomMode();
     }
