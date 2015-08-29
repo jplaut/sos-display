@@ -48,6 +48,7 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
     });
 
     var texture = PIXI.Texture.fromImage("media/particle.png");
+    var sprite = new PIXI.Sprite(texture);
 
     mode.parentScope.$on('kinectNewSkeleton', function(events, skel) {
 
@@ -69,7 +70,7 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
       };
       renderer.onParticleCreated = function(particle) {
         particle.sprite = new PIXI.Sprite(texture); // PIXI.CanvasTinter.getTintedTexture(sprite, color);
-        particle.sprite.tint = color;
+        particle.sprite.tint = Color.random();
         particle.sprite.x = particle.p.x;
         particle.sprite.y = particle.p.y;
         mode.container.addChild(particle.sprite);
@@ -77,8 +78,10 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
       renderer.onParticleDead = function(particle) {
         if(particle.sprite) {
           mode.container.removeChild(particle.sprite);
+          particle.emitters = [];
           particle.sprite = null;
         }
+        particle = null;
       };
       renderer.start();
 
