@@ -22,7 +22,7 @@ void main()
 
         // buble size, position and color
         float rad = 0.1 + 0.3*siz;
-        vec2  pos = vec2( pox, -1.0-rad + (2.0+2.0*rad)*mod(pha+input_skeletons[1]*0.1*input_globalTime*(0.2+0.8*siz),1.0));
+        vec2  pos = vec2( pox, -1.0-rad + (2.0+2.0*rad)*mod(pha+0.1*input_globalTime*(0.2+0.8*siz),1.0));
         float dis = length( uv - pos );
         vec3  col = mix( vec3(0.94,0.3,0.0), vec3(0.1,0.4,0.8), 0.5+0.5*sin(float(i)*1.2+1.9));
 

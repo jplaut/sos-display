@@ -47,22 +47,45 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
       mode.trackedSkeletons = bodies;
     });
 
+    var texture = PIXI.Texture.fromImage("media/particle.png");
+    var sprite = new PIXI.Sprite(texture);
+
     mode.parentScope.$on('kinectNewSkeleton', function(events, skel) {
 
-      skel.init(mode.container, Color.random());
+      var color = Color.random();
+      skel.init(mode.container, color);
+
       // create emitter
-      // var proton = protonEmitterService.createProton3(mode.kinect.renderer.view);
-      // skel.proton = proton;
-      // var renderer = new Proton.Renderer('other', proton, mode.kinect.renderer.view);
-      // renderer.onProtonUpdate = function() {
-      //   // no-op
-      // };
-      // renderer.onParticleCreated = function(particle) {
-      //   var particleSprite = new PIXI.Sprite(particle.target);
-      //   particle.sprite = particleSprite;
-      //   //mode.container.addChild(particle.sprite);
-      // };
-      // renderer.start();
+      var proton = protonEmitterService.createProton3(skel);
+      var renderer = new Proton.Renderer('other', proton, mode.kinect.renderer.view);
+      renderer.onParticleUpdate = function(particle) {
+        if(particle.sprite) {
+          particle.sprite.x = particle.p.x;
+          particle.sprite.y = particle.p.y;
+          particle.sprite.alpha = particle.alpha;
+	  particle.sprite.scale.x = particle.scale;
+	  particle.sprite.scale.y = particle.scale;
+	  particle.sprite.rotation = particle.rotation * Math.PI / 180;
+        }
+      };
+      renderer.onParticleCreated = function(particle) {
+        particle.sprite = new PIXI.Sprite(texture); // PIXI.CanvasTinter.getTintedTexture(sprite, color);
+        particle.sprite.tint = Color.random();
+        particle.sprite.x = particle.p.x;
+        particle.sprite.y = particle.p.y;
+        mode.container.addChild(particle.sprite);
+      };
+      renderer.onParticleDead = function(particle) {
+        if(particle.sprite) {
+          mode.container.removeChild(particle.sprite);
+          particle.emitters = [];
+          particle.sprite = null;
+        }
+        particle = null;
+      };
+      renderer.start();
+
+      skel.proton = proton;
     });
 
     // assign renderid from animation frame (for future deinit call)
@@ -114,11 +137,14 @@ mode.factory('modeSkeletalFun', function($log, skeletalService, protonEmitterSer
 
       if(skel.getActiveStatus()) {
 
-	skel.drawToStage();
+	if(skel.proton) {
+          var pointer = skel.getHandPointerFn();
+          skel.proton.emitters[0].p.x = pointer.x - 150;
+          skel.proton.emitters[0].p.y = pointer.y;
+	  skel.proton.update();
+	}
 
-	// if(skel.proton) {
-	//   skel.proton.update();
-	// }
+	skel.drawToStage();
 
 	// get hand pointer
 	// var hp = skel.getHandPointerPoint();

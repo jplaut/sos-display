@@ -1,5 +1,6 @@
 uniform vec2 input_resolution;
 uniform float input_globalTime;
+uniform float input_skeletons[32];
 
 float noise(vec3 p) //Thx to Las^Mercury
 {
@@ -61,6 +62,9 @@ void main()
 
     vec4 col = mix(vec4(1.,.5,.1,1.), vec4(0.1,.5,1.,1.), p.y*.02+.4);
 
-    gl_FragColor = mix(vec4(0.), col, pow(glow*2.,4.));
-    //gl_FragColor = mix(vec4(1.), mix(vec4(1.,.5,.1,1.),vec4(0.1,.5,1.,1.),p.y*.02+.4), pow(glow*2.,4.));
+    if(input_skeletons[5] > 0.0) {
+        gl_FragColor = mix(vec4(0.2, 0.1, 0.2, 1.0), mix(vec4(1.,.5,.8,1.),vec4(0.1,.1,1.,1.),p.y*.02+.4), pow(glow*2.,4.));
+    } else {
+        gl_FragColor = mix(vec4(0.), col, pow(glow*2.,4.));
+    }
 }
