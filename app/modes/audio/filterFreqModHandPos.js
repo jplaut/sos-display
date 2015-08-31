@@ -9,7 +9,7 @@ mode.factory('filterFreqModHandPos', function($rootScope, audioService, $log) {
   var _bufferSource = audioService.context.createBufferSource();
   var _filter = audioService.context.createBiquadFilter();
   _filter.type = 'lowpass';
-  _filter.Q.value = 20;
+  // _filter.Q.value = 20;
 
   mode.title = "Filter Frequency Mod Hand Pos"
   mode.id = 'filterFreqModHandPos';
@@ -27,17 +27,10 @@ mode.factory('filterFreqModHandPos', function($rootScope, audioService, $log) {
   }
 
   mode.start = function(scope) {
-    if (_bufferSource.buffer) {
-      _bufferSource.start(0);
-    } else {
-      audioService.loadBuffer('disco.wav').then(function(buffer) {
-        _bufferSource.buffer = buffer;
-        _bufferSource.loop = true;
-        _bufferSource.connect(_filter);
-        _filter.connect(audioService.context.destination);
-        _bufferSource.start(0);
-      });
-    }
+    audioService.getMicInputSource().then(function(source) {
+      source.connect(_filter);
+      _filter.connect(audioService.context.destination);
+    });
 
     _cancelListener = $rootScope.$on('kinectBodiesUpdate', function(e, bodies) {
       // we want to treat the bottom of the canvas as the lowest value
