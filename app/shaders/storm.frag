@@ -5,6 +5,7 @@ uniform vec2 input_resolution;
 uniform float input_globalTime;
 uniform sampler2D input_channel0;
 uniform vec2 input_channel0_resolution;
+uniform float input_skeletons[32];
 
 float noise( in vec2 x )
 {
@@ -112,11 +113,6 @@ void main()
     vec2 q = gl_FragCoord.xy / input_resolution.xy;
     vec2 p = -1.0 + 2.0*q;
     p.x *= input_resolution.x/ input_resolution.y;
-
-    // TODO
-    // vec2 mo = iMouse.xy / input_resolution.xy;
-    // if( iMouse.w<=0.00001 ) mo=vec2(0.0);
-    vec2 mo = vec2(0.0);
 
     float time = input_globalTime;
 

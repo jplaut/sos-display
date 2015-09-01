@@ -6,7 +6,6 @@ uniform float input_globalTime;
 float time;
 
 float wlen=15.0;
-float bob;
 float wc_scale=0.5;
 float scroll;
 float scene_scale=15.0;
@@ -85,44 +84,6 @@ mat3 transpose(mat3 m)
     return mat3(vec3(m[0].x,m[1].x,m[2].x),
                 vec3(m[0].y,m[1].y,m[2].y),
                 vec3(m[0].z,m[1].z,m[2].z));
-}
-
-float capsuleDist(vec3 p,vec3 o,vec3 d,float h0,float h1,float r0,float r1)
-{
-    vec3 u=cross(d,vec3(1.0,0.0,0.0));
-    vec3 v=cross(u,d);
-    u=cross(v,d);
-    mat3 m=transpose(mat3(normalize(u),normalize(v),normalize(d)));
-    d=normalize(d);
-    float t=clamp(dot(p-o,d),h0,h1);
-    vec3 np=o+t*d;
-    return distance(np,p)-mix(r0,r1,t)+mosaic(m*(p-o));
-}
-
-float boxDist(vec3 p,vec3 s,float r)
-{
-    return length(max(vec3(0.0),abs(p)-s))-r+mosaic(p);
-}
-
-float sphereDist(vec3 p,vec3 o,float r)
-{
-    return distance(p,o)-r+mosaic(p-o);
-}
-
-float sceneDist(vec3 p)
-{
-    float d=1e3;
-    return d;
-}
-
-vec3 sceneNorm(vec3 p)
-{
-    p*=scene_scale;
-    float c=sceneDist(p);
-    float e=1e-3;
-    return normalize(vec3(sceneDist(p+vec3(e,0,0))-c,
-                          sceneDist(p+vec3(0,e,0))-c,
-                          sceneDist(p+vec3(0,0,e))-c));
 }
 
 vec2 unitSquareInterval(vec2 ro, vec2 rd)
@@ -257,7 +218,6 @@ vec3 scene(vec2 p)
 void main()
 {
     time=input_globalTime+1.0;
-    bob=cos(time*12.0)*0.05;
     scroll=-15.0+mod(time*wc_scale,wlen)*2.0;
     vec2 uv = gl_FragCoord.xy / input_resolution.xy;
     vec2 q=uv;

@@ -2,6 +2,7 @@
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 uniform vec2 input_resolution;
 uniform float input_globalTime;
+uniform float input_skeletons[32];
 
 void main()
 {
@@ -20,11 +21,14 @@ void main()
         float pox =      sin(float(i)*321.55+4.1) * input_resolution.x / input_resolution.y;
 
         // buble size, position and color
-        float rad = 0.1 + 0.5*siz;
+        float rad = 0.1 + 0.3*siz;
         vec2  pos = vec2( pox, -1.0-rad + (2.0+2.0*rad)*mod(pha+0.1*input_globalTime*(0.2+0.8*siz),1.0));
         float dis = length( uv - pos );
         vec3  col = mix( vec3(0.94,0.3,0.0), vec3(0.1,0.4,0.8), 0.5+0.5*sin(float(i)*1.2+1.9));
-        //    col+= 8.0*smoothstep( rad*0.95, rad, dis );
+
+        if(input_skeletons[3] > 0.0 && input_skeletons[4] > 0.0) {
+            col+= 8.0*smoothstep( rad*0.95, rad, dis );
+        }
 
         // render
         float f = length(uv-pos)/rad;

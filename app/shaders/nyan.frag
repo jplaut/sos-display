@@ -2,12 +2,16 @@ uniform vec2 input_resolution;
 uniform float input_globalTime;
 uniform sampler2D input_channel0;
 uniform sampler2D input_channel1;
+uniform float input_skeletons[32];
 
 void main()
 {
     vec2 p = gl_FragCoord.xy / input_resolution.xy;
-    p.x += 0.18;
-    p.y -= 0.9;
+    p.x += 0.9;
+    p.y -= 1.9;
+
+    p.x -= input_skeletons[0];
+    p.y += input_skeletons[1] * 2.0;
 
     vec2 uv = vec2( p.x+mod(input_globalTime, 2.0), p.y );
     float f = texture2D( input_channel1, uv ).x;

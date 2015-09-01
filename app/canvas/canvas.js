@@ -1,8 +1,6 @@
 'use strict';
 
-angular.module('sos.canvas', [])
-    .controller('CanvasCtrl', ['$scope', '$log', '$injector', '$document', '$location', '$timeout',
-                 function($scope, $log, $injector, $document, $location, $timeout) {
+angular.module('sos.canvas', []).controller('CanvasCtrl', ['$scope', '$log', '$injector', '$document', '$location', '$timeout', function($scope, $log, $injector, $document, $location, $timeout) {
 
   $scope.wallDisplay = {
     width: 192,
@@ -67,6 +65,22 @@ angular.module('sos.canvas', [])
   $scope.rotateForProduction = false;
   $scope.devModeInputGroupClass = "btn-primary active";
   $scope.prodModeInputGroupClass = "btn-primary";
+
+  // automatically toggle after inactivity
+  $scope.switchTimeout = 5 * 60 * 1000; // in milliseconds
+  $scope.hasSwitched = false;
+  var switchRandomly = function() {
+    if(!($scope.hasSwitched)) {
+      $scope.randomMode();
+    }
+    $scope.hasSwitched = false;
+    setTimeout(function(){
+      switchRandomly();
+    }, $scope.switchTimeout);
+  };
+  setTimeout(function(){
+    switchRandomly();
+  }, $scope.switchTimeout);
 
   // debug object
   $scope.debugInfo = {
@@ -174,13 +188,18 @@ angular.module('sos.canvas', [])
       $scope.urlParamConfig[paramName] = paramValue;
       $location.search($scope.urlParamConfig);
     });
-  }
+  };
 
   $scope.toggleKinectOverlay = function() {
-
     var overlay = document.getElementById('kinect-overlay');
     overlay.hidden = $scope.kinectOverlay;
     $scope.kinectOverlay = !$scope.kinectOverlay;
+  };
+
+  $scope.randomMode = function() {
+    var index = Math.floor(Math.random() * $scope.modeModuleList.length);
+    $scope.activeModeCounter = index;
+    $scope.showMode($scope.modeModuleList[$scope.activeModeCounter]);
   };
 
   $scope.goToNextMode = function() {
@@ -267,6 +286,13 @@ angular.module('sos.canvas', [])
       $log.info("init:", mode.id);
       mode.init($scope);
       $scope.activeMode = mode;
+      $scope.hasSwitched = true;
+      if(mode.kinectEnabled && !($scope.kinectOverlay)) {
+        $scope.toggleKinectOverlay();
+      }
+      if(!mode.kinectEnabled && ($scope.kinectOverlay)) {
+        $scope.toggleKinectOverlay();
+      }
     } else {
       $log.warn("Mode not found:", modeName);
     }
@@ -299,6 +325,7 @@ angular.module('sos.canvas', [])
     // set up default module
     $scope.showMode($scope.urlParamConfig.mode);
     $scope.showAudioMode($scope.urlParamConfig.audio);
+
     $scope.showKinectOverlay();
   };
 

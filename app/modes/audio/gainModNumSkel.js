@@ -6,7 +6,7 @@ mode.factory('gainModNumSkel', function($rootScope, audioService, $log) {
   mode.title = "Gain Modulation Num Skels";
   mode.id = "gainModNumSkel";  var mode = {};
 
-  var _cancelListener, _bufferSource;
+  var _cancelListener;
   var _maxBodies = 16;
   var _baseVolume = 0.1;
   var _step = (1 - _baseVolume) / _maxBodies;
@@ -27,7 +27,6 @@ mode.factory('gainModNumSkel', function($rootScope, audioService, $log) {
 
   mode.stop = function() {
     _cancelListener();
-    _bufferSource.stop();
     audioService.clearBufferSourceDeferred();
   }
 

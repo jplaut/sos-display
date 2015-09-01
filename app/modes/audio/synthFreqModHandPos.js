@@ -4,8 +4,8 @@ var mode = angular.module('sos.modes');
 mode.factory('synthFreqModHandPos', function($rootScope, audioService, $log) {
   var mode = {};
   var _osc, _cancelListener;
-  var _maxFrequency = 3000;
-  var _minFrequency = 100;
+  var _maxFrequency = 500;
+  var _minFrequency = 10;
 
   mode.title = "Synth Frequency Mod Hand Pos"
   mode.id = 'synthFreqModHandPos';
@@ -24,7 +24,7 @@ mode.factory('synthFreqModHandPos', function($rootScope, audioService, $log) {
 
   mode.start = function(scope) {
     _osc = audioService.context.createOscillator();
-    _osc.type = 'sine';
+    _osc.type = 'sawtooth';
     _osc.start();
     _osc.connect(audioService.context.destination);
 

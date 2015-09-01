@@ -1,40 +1,40 @@
 var services = angular.module('sos.services');
 services.service('protonEmitterService', function($log) {
-	
-	this.createProton3 = function(canvas) {
-		
-		var hcolor = 0;
-		
-		proton = new Proton;
-		emitter = new Proton.Emitter();
-		//setRate
-		emitter.rate = new Proton.Rate(new Proton.Span(2, 8), new Proton.Span(.01));
-		//addInitialize
-		emitter.addInitialize(new Proton.Position(new Proton.PointZone(0, 0)));
-		emitter.addInitialize(new Proton.Mass(1));
-		emitter.addInitialize(new Proton.Radius(6, 12));
-		emitter.addInitialize(new Proton.Life(2));
-		emitter.addInitialize(new Proton.V(new Proton.Span(0.3), new Proton.Span(0, 360), 'polar'));
-		//addBehaviour
-		emitter.addBehaviour(new Proton.Alpha(1, 0));
-		emitter.addBehaviour(new Proton.Scale(.1, 1.3));
-		var color1 = Color.parse("hsl(" + (hcolor % 360) + ", 100%, 50%)").hexTriplet();
-		var color2 = Color.parse("hsl(" + ((hcolor + 50) % 360) + ", 100%, 50%)").hexTriplet();
-		colorBehaviour = new Proton.Color(color1, color2);
-		emitter.addBehaviour(colorBehaviour);
-		
-		emitter.addBehaviour(new Proton.CrossZone(new Proton.RectZone(0, 0, 100, 100), 'collision'));
-		emitter.p.x = 10;
-		emitter.p.y = 10;
-		emitter.emit();
-		//add emitter
-		proton.addEmitter(emitter);
 
-		return proton;
-	}	
+  this.createProton3 = function(skel) {
+
+    var hcolor = 0;
+    var proton = new Proton;
+    var emitter = new Proton.Emitter();
+    //setRate
+    emitter.rate = new Proton.Rate(new Proton.Span(2, 8), new Proton.Span(.01));
+    //addInitialize
+    emitter.addInitialize(new Proton.Position(new Proton.PointZone(0, 0)));
+    emitter.addInitialize(new Proton.Mass(1));
+    emitter.addInitialize(new Proton.Radius(6, 12));
+    emitter.addInitialize(new Proton.Life(2));
+    emitter.addInitialize(new Proton.V(new Proton.Span(0.3), new Proton.Span(0, 360), 'polar'));
+    //addBehaviour
+    emitter.addBehaviour(new Proton.Alpha(1, 0));
+    emitter.addBehaviour(new Proton.Scale(.1, 1.3));
+    var color1 = Color.parse("hsl(" + (hcolor % 360) + ", 100%, 50%)").hexTriplet();
+    var color2 = Color.parse("hsl(" + ((hcolor + 50) % 360) + ", 100%, 50%)").hexTriplet();
+    var colorBehaviour = new Proton.Color(color1, color2);
+    emitter.addBehaviour(colorBehaviour);
+
+    emitter.addBehaviour(new Proton.CrossZone(new Proton.RectZone(0, 0, 100, 100), 'collision'));
+    var pointer = skel.getHandPointerFn();
+    emitter.p.x = pointer.x;
+    emitter.p.y = pointer.y;
+    emitter.emit();
+    //add emitter
+    proton.addEmitter(emitter);
+
+    return proton;
+  };
 });
 
-/* 
+/*
 		mode.createProton1 = function(image) {
 
 		proton = new Proton;
@@ -90,14 +90,14 @@ services.service('protonEmitterService', function($log) {
 	}
 
 	mode.createProton4 = function(stage) {
-		
+
 		var bitmap = new createjs.Bitmap("media/particle.png");
 		var texture = new createjs.Shape(new createjs.Graphics().beginBitmapFill(bitmap).drawRect(0, 0, 80, 80));
 		console.log("texture:", texture);
 		mode.createProton2(texture);
 	}
 	*/
-	
+
 /*
 	$scope.createProton = function() {
 		proton = new Proton;
@@ -147,4 +147,4 @@ services.service('protonEmitterService', function($log) {
 
 /*
 
-*/	
+*/
